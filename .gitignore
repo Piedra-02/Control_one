@@ -1,0 +1,26 @@
+
+# --- Variables de entorno y credenciales ---
+.env
+.env.local
+*.env
+ 
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+venv/
+env/
+.venv/
+ 
+# --- Archivos de sistema operativo ---
+.DS_Store
+Thumbs.db
+ 
+# --- Editor / IDE ---
+.vscode/
+*.swp
+ 
+# --- Bases de datos locales (por si alguien exporta un dump) ---
+*.sql.bak
+*.dump
+ 
