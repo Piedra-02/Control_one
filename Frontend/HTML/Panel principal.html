@@ -2,8 +2,6 @@
 
 <html lang="es">
 
-
-
 <head>
 
     <meta charset="UTF-8">
@@ -12,43 +10,22 @@
 
     <title>Control One</title>
 
-
-
-    <!-- Google Fonts: Plus Jakarta Sans y Space Grotesk -->
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
-
-
-    <!-- CSS del Panel Principal -->
-
     <link rel="stylesheet" href="../CSS/Panel principal.css">
+    <link rel="stylesheet" href="../CSS/nav-global.css">
 
 </head>
 
-
-
 <body>
-
-
 
     <div class="app">
 
-
-
-        <!-- =========================================
-
-             1. HEADER SUPERIOR (DESKTOP)
-
-        ========================================== -->
-
         <header class="desktop-header">
-
-            <!-- Logo -->
 
             <a href="Panel principal.html" class="header-logo" title="Control One">
 
@@ -58,10 +35,6 @@
 
             </a>
 
-
-
-            <!-- Barra de búsqueda central -->
-
             <div class="desktop-search">
 
                 <i data-lucide="search" class="search-svg" width="18" height="18"></i>
@@ -70,31 +43,16 @@
 
             </div>
 
-
-
-            <!-- Botones de Acción Derecha -->
-
             <div class="desktop-actions">
-
-                <a href="Actividades.html" class="icon-btn" title="Actividades / Capas"><i data-lucide="layers" width="22" height="22"></i></a>
-
-                <a href="Automatizacion.html" class="icon-btn" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i></a>
-
-                <button class="icon-btn" id="btn-chat" title="Chat / Notificaciones"><i data-lucide="message-circle" width="22" height="22"></i></button>
-
-                <a href="Informacion.html" class="icon-btn" title="Información"><i data-lucide="info" width="22" height="22"></i></a>
-
+                <a href="Panel principal.html" class="nav-icon-link active-screen" data-label="Inicio" title="Panel Principal"><i data-lucide="home" width="22" height="22"></i></a>
+                <a href="Organizacion.html" class="nav-icon-link" data-label="Organización" title="Organización"><i data-lucide="layout-dashboard" width="22" height="22"></i></a>
+                <a href="Actividades.html" class="nav-icon-link" data-label="Actividades" title="Actividades"><i data-lucide="layers" width="22" height="22"></i></a>
+                <a href="Automatizacion.html" class="nav-icon-link" data-label="Automatización" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i></a>
+                <a href="Informacion.html" class="nav-icon-link" data-label="Info" title="Información"><i data-lucide="info" width="22" height="22"></i></a>
+                <a href="perfil.html" class="nav-icon-link" data-label="Perfil" title="Perfil"><i data-lucide="user" width="22" height="22"></i></a>
             </div>
 
         </header>
-
-
-
-        <!-- =========================================
-
-             2. HEADER SUPERIOR (MOBILE)
-
-        ========================================== -->
 
         <header class="mobile-header">
 
@@ -118,16 +76,6 @@
 
         </header>
 
-
-
-
-
-        <!-- =========================================
-
-             3. NAVEGACIÓN SECUNDARIA (DESKTOP)
-
-        ========================================== -->
-
         <nav class="desktop-subnav">
 
             <div class="subnav-container">
@@ -142,29 +90,9 @@
 
         </nav>
 
-
-
-
-
-        <!-- =========================================
-
-             4. CONTENIDO PRINCIPAL (DASHBOARD)
-
-        ========================================== -->
-
         <main class="dashboard-main">
 
-
-
-            <!-- =====================================
-
-                 SECCIÓN: EVENTOS
-
-            ====================================== -->
-
             <section id="seccion-eventos" class="section-container section-eventos">
-
-               
 
                 <div class="section-heading">
 
@@ -200,19 +128,11 @@
 
                 </div>
 
-
-
                 <div class="events-content-box">
 
                     <div class="events-grid">
 
-                        <!-- Cuadro Verde Turquesa -->
-
                         <div class="event-teal-card" id="btn-add-event-box" title="Espacio para nuevos eventos"></div>
-
-
-
-                        <!-- Tarjeta de Evento Cumpleaños -->
 
                         <article class="event-main-card">
 
@@ -234,8 +154,6 @@
 
                             </div>
 
-
-
                             <div class="event-card-body">
 
                                 <div class="event-desc-col">
@@ -252,11 +170,7 @@
 
                                 </div>
 
-
-
                                 <div class="event-separator"></div>
-
-
 
                                 <div class="event-info-col">
 
@@ -276,33 +190,11 @@
 
                 </div>
 
-
-
             </section>
-
-
-
-
-
-            <!-- =====================================
-
-                 FILA INFERIOR (TAREAS Y RECORDATORIOS)
-
-            ====================================== -->
 
             <div class="bottom-row-grid">
 
-
-
-                <!-- =====================================
-
-                     SECCIÓN: TAREAS
-
-                ====================================== -->
-
                 <section id="seccion-tareas" class="section-container section-tareas">
-
-                   
 
                     <div class="section-heading">
 
@@ -332,15 +224,9 @@
 
                     </div>
 
-
-
                     <div class="tasks-orange-box">
 
                         <div class="tasks-grid">
-
-                           
-
-                            <!-- Tarea 1 -->
 
                             <article class="task-item-card" data-task-id="t1">
 
@@ -364,10 +250,6 @@
 
                             </article>
 
-
-
-                            <!-- Tarea 2 -->
-
                             <article class="task-item-card" data-task-id="t2">
 
                                 <label class="task-check-wrapper">
@@ -389,10 +271,6 @@
                                 <span class="task-item-text">Hacer las compras del mes</span>
 
                             </article>
-
-
-
-                            <!-- Tarea 3 -->
 
                             <article class="task-item-card" data-task-id="t3">
 
@@ -416,10 +294,6 @@
 
                             </article>
 
-
-
-                            <!-- Tarea 4 -->
-
                             <article class="task-item-card" data-task-id="t4">
 
                                 <label class="task-check-wrapper">
@@ -441,10 +315,6 @@
                                 <span class="task-item-text">Hacer las compras del mes</span>
 
                             </article>
-
-
-
-                            <!-- Tareas extras visibles en mobile según mock -->
 
                             <article class="task-item-card mobile-only-task" data-task-id="t5">
 
@@ -468,8 +338,6 @@
 
                             </article>
 
-
-
                             <article class="task-item-card mobile-only-task" data-task-id="t6">
 
                                 <label class="task-check-wrapper">
@@ -492,29 +360,13 @@
 
                             </article>
 
-
-
                         </div>
 
                     </div>
 
-
-
                 </section>
 
-
-
-
-
-                <!-- =====================================
-
-                     SECCIÓN: RECORDATORIOS
-
-                ====================================== -->
-
                 <section id="seccion-recordatorios" class="section-container section-recordatorios">
-
-                   
 
                     <div class="section-heading">
 
@@ -544,15 +396,9 @@
 
                     </div>
 
-
-
                     <div class="reminders-green-box">
 
                         <div class="reminders-grid">
-
-                           
-
-                            <!-- Recordatorio 1 -->
 
                             <article class="reminder-item-card" data-reminder-id="r1">
 
@@ -582,8 +428,6 @@
 
                                 </div>
 
-
-
                                 <div class="reminder-center-content">
 
                                     <h4>TITULO</h4>
@@ -591,8 +435,6 @@
                                     <p>SUBTITULO</p>
 
                                 </div>
-
-
 
                                 <div class="reminder-bottom-time">
 
@@ -613,10 +455,6 @@
                                 </div>
 
                             </article>
-
-
-
-                            <!-- Recordatorio 2 -->
 
                             <article class="reminder-item-card" data-reminder-id="r2">
 
@@ -646,8 +484,6 @@
 
                                 </div>
 
-
-
                                 <div class="reminder-center-content">
 
                                     <h4>TITULO</h4>
@@ -655,8 +491,6 @@
                                     <p>SUBTITULO</p>
 
                                 </div>
-
-
 
                                 <div class="reminder-bottom-time">
 
@@ -678,37 +512,17 @@
 
                             </article>
 
-
-
                         </div>
 
                     </div>
 
-
-
                 </section>
-
-
 
             </div>
 
-
-
         </main>
 
-
-
-
-
-        <!-- =========================================
-
-             5. BOTTOM NAVIGATION BAR (DOCK EN MOBILE)
-
-        ========================================== -->
-
         <nav class="mobile-bottom-dock">
-
-            <!-- Capas / Actividades -->
 
             <a href="Actividades.html" class="dock-btn" title="Capas">
 
@@ -724,10 +538,6 @@
 
             </a>
 
-
-
-            <!-- Info -->
-
             <a href="Informacion.html" class="dock-btn" title="Información">
 
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -742,10 +552,6 @@
 
             </a>
 
-
-
-            <!-- Botón Central de Búsqueda (Elevado) -->
-
             <button class="dock-search-btn" id="mobile-search-trigger" title="Buscar">
 
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -757,10 +563,6 @@
                 </svg>
 
             </button>
-
-
-
-            <!-- Chip / Automatización -->
 
             <a href="Automatizacion.html" class="dock-btn" title="Automatización">
 
@@ -790,10 +592,6 @@
 
             </a>
 
-
-
-            <!-- Chat -->
-
             <button class="dock-btn" id="mobile-chat-btn" title="Chat">
 
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -806,23 +604,9 @@
 
         </nav>
 
-
-
     </div>
 
-
-
-    <!-- =========================================
-
-         TARJETAS MODALES (EMERGENTES EN LA MISMA PANTALLA)
-
-    ========================================== -->
-
     <div class="modal-overlay" id="modal-overlay">
-
-
-
-        <!-- 1. Tarjeta Modal: Tarea -->
 
         <div class="modal-card" id="modal-tarea">
 
@@ -876,6 +660,13 @@
 
                     </div>
 
+                    <div class="form-group">
+                        <label for="input-tarea-categoria">Categoría</label>
+                        <select id="input-tarea-categoria">
+                            <option value="">DESCONOCIDA</option>
+                        </select>
+                    </div>
+
                 </div>
 
                 <div class="modal-footer">
@@ -891,10 +682,6 @@
             </form>
 
         </div>
-
-
-
-        <!-- 2. Tarjeta Modal: Evento -->
 
         <div class="modal-card" id="modal-evento">
 
@@ -974,10 +761,6 @@
 
         </div>
 
-
-
-        <!-- 3. Tarjeta Modal: Recordatorio -->
-
         <div class="modal-card" id="modal-recordatorio">
 
             <div class="modal-card-header modal-header-recordatorio">
@@ -1038,27 +821,22 @@
 
         </div>
 
-
-
     </div>
 
-
-
-    <!-- Librería de íconos (mismos íconos que Perfil y Automatización) -->
+    <nav class="mobile-bottom-nav">
+        <a href="Panel principal.html" class="dock-item active-screen" title="Inicio"><i data-lucide="home" width="22" height="22"></i><span>Inicio</span><span class="dock-dot"></span></a>
+        <a href="Organizacion.html" class="dock-item" title="Organización"><i data-lucide="layout-dashboard" width="22" height="22"></i><span>Organizar</span><span class="dock-dot"></span></a>
+        <a href="Actividades.html" class="dock-item" title="Actividades"><i data-lucide="layers" width="22" height="22"></i><span>Actividad</span><span class="dock-dot"></span></a>
+        <a href="Automatizacion.html" class="dock-item" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i><span>Auto</span><span class="dock-dot"></span></a>
+        <a href="Informacion.html" class="dock-item" title="Información"><i data-lucide="info" width="22" height="22"></i><span>Info</span><span class="dock-dot"></span></a>
+        <a href="perfil.html" class="dock-item" title="Perfil"><i data-lucide="user" width="22" height="22"></i><span>Perfil</span><span class="dock-dot"></span></a>
+    </nav>
 
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
-
-
-    <!-- Script de interactividad y conexión Python -->
-
     <script src="../../backend/JS/panel_principal.js"></script>
 
-
-
 </body>
-
-
 
 </html> 
 

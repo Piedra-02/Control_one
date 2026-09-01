@@ -1,9 +1,24 @@
-// =========================================================
-// Control One — Perfil / Preferencias
-// Gestión de Perfil, Contactos, Ocultos, Archivados y Configuración
-// =========================================================
+
 
 const API_BASE = 'http://127.0.0.1:5000/api';
+
+let estadoPerfil = {
+    perfil: JSON.parse(localStorage.getItem('control_one_perfil') || 'null') || {
+        nombre_completo: 'Pedro Sánchez',
+        alias: '@Pedro_sanchez',
+        usuario: 'pedro'
+    },
+    contactos: JSON.parse(localStorage.getItem('control_one_contactos') || 'null') || [
+        { id: 'c1', nombre: 'Carlos Pérez', telefono: '+593 991 234 567', oculto: false, archivado: false },
+        { id: 'c2', nombre: 'María González', telefono: '+593 982 345 678', oculto: false, archivado: false },
+        { id: 'c3', nombre: 'Andrés Morales', telefono: '+593 973 456 789', oculto: false, archivado: false },
+        { id: 'c4', nombre: 'Sofía Romero', telefono: '+593 964 567 890', oculto: false, archivado: false }
+    ],
+    config: JSON.parse(localStorage.getItem('control_one_config') || 'null') || {
+        correo_notificacion: 'pedro@controlone.app',
+        notificar_por_correo: true
+    }
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
@@ -11,11 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initAccionesPrincipales();
     cargarPerfilSidebar();
     renderContactosSidebar();
+    sincronizarPerfilConBackend();
 });
 
-/**
- * Función auxiliar para sanitizar cadenas HTML y prevenir XSS
- */
 function escapeHTML(str) {
     if (!str) return '';
     return String(str).replace(/[&<>'"]/g, 
@@ -29,27 +42,20 @@ function escapeHTML(str) {
     );
 }
 
-/**
- * Helper genérico para peticiones Fetch a la API de Python
- */
 async function apiFetch(path, opciones = {}) {
     try {
         const res = await fetch(`${API_BASE}${path}`, {
             headers: { 'Content-Type': 'application/json' },
+            signal: AbortSignal.timeout(300),
             ...opciones,
         });
         const data = await res.json().catch(() => null);
-        if (!res.ok) throw new Error((data && data.error) || `Error ${res.status}`);
+        if (!res.ok) return null;
         return data;
     } catch (err) {
-        console.error(`[API Error] en ${path}:`, err);
         return null;
     }
 }
-
-/* =========================================================
-   GESTIÓN DE MODALES
-   ========================================================= */
 
 const modalOverlay = document.getElementById('modalOverlay');
 const modalContent = document.getElementById('modalContent');
@@ -80,10 +86,6 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') cerrarModal();
 });
 
-/* =========================================================
-   NAVEGACIÓN POR TABS
-   ========================================================= */
-
 function initTabs() {
     document.querySelectorAll('.tab-pill').forEach(tab => {
         tab.addEventListener('click', () => {
@@ -97,40 +99,34 @@ function initTabs() {
     });
 }
 
-/* =========================================================
-   SIDEBAR: LISTA DE CONTACTOS Y PERFIL
-   ========================================================= */
-
-async function cargarPerfilSidebar() {
+function cargarPerfilSidebar() {
     const perfilNombreEl = document.getElementById('perfilNombre');
     const perfilAliasEl = document.getElementById('perfilAlias');
-    
-    const perfil = await apiFetch('/perfil');
-    if (!perfil) return;
+    const p = estadoPerfil.perfil;
 
     if (perfilNombreEl) {
-        perfilNombreEl.textContent = perfil.nombre_completo 
-            ? perfil.nombre_completo.toUpperCase() 
-            : (perfil.usuario ? perfil.usuario.toUpperCase() : 'USUARIO');
+        perfilNombreEl.textContent = p.nombre_completo 
+            ? p.nombre_completo.toUpperCase() 
+            : (p.usuario ? p.usuario.toUpperCase() : 'USUARIO');
     }
     if (perfilAliasEl) {
-        perfilAliasEl.textContent = perfil.alias || `@${perfil.usuario || 'alias'}`;
+        perfilAliasEl.textContent = p.alias || `@${p.usuario || 'alias'}`;
     }
 }
 
-async function renderContactosSidebar() {
+function renderContactosSidebar() {
     const contactosList = document.getElementById('contactosList');
     if (!contactosList) return;
 
-    const contactos = await apiFetch('/contactos?filtro=todos');
+    const contactosVisibles = estadoPerfil.contactos.filter(c => !c.oculto && !c.archivado);
     contactosList.innerHTML = '';
 
-    if (!contactos || contactos.length === 0) {
-        contactosList.innerHTML = '<li class="text-secondary" style="padding: 10px; opacity:0.7;">Aún no tienes contactos.</li>';
+    if (contactosVisibles.length === 0) {
+        contactosList.innerHTML = '<li class="text-secondary" style="padding: 10px; opacity:0.7;">Aún no tienes contactos activos.</li>';
         return;
     }
 
-    contactos.forEach(c => {
+    contactosVisibles.forEach(c => {
         const li = document.createElement('li');
         li.className = 'contacto-item';
         li.innerHTML = `
@@ -142,6 +138,7 @@ async function renderContactosSidebar() {
                 </div>
             </div>
             <div class="contacto-acciones" style="display:flex; gap:4px; flex-shrink:0;">
+                <button data-id="${c.id}" data-action="editar" data-nombre="${escapeHTML(c.nombre || '')}" data-tel="${escapeHTML(c.telefono || '')}" title="Modificar"><i data-lucide="edit-3" width="14" height="14"></i></button>
                 <button data-id="${c.id}" data-action="ocultar" title="Ocultar"><i data-lucide="eye-off" width="14" height="14"></i></button>
                 <button data-id="${c.id}" data-action="archivar" title="Archivar"><i data-lucide="archive" width="14" height="14"></i></button>
                 <button data-id="${c.id}" data-action="eliminar" title="Eliminar"><i data-lucide="trash-2" width="14" height="14"></i></button>
@@ -154,25 +151,35 @@ async function renderContactosSidebar() {
     lucide.createIcons();
 }
 
-const contactosList = document.getElementById('contactosList');
-if (contactosList) {
-    contactosList.addEventListener('click', async (e) => {
+const contactosListElem = document.getElementById('contactosList');
+if (contactosListElem) {
+    contactosListElem.addEventListener('click', (e) => {
         const btn = e.target.closest('button[data-id]');
         if (!btn) return;
 
         const id = btn.dataset.id;
         const accion = btn.dataset.action;
 
-        if (accion === 'eliminar') {
+        if (accion === 'editar') {
+            abrirModalEditarContacto(id, btn.dataset.nombre, btn.dataset.tel);
+        } else if (accion === 'eliminar') {
             if (!confirm('¿Deseas eliminar este contacto?')) return;
-            await apiFetch(`/contactos/${id}`, { method: 'DELETE' });
+            estadoPerfil.contactos = estadoPerfil.contactos.filter(c => String(c.id) !== String(id));
+            localStorage.setItem('control_one_contactos', JSON.stringify(estadoPerfil.contactos));
             renderContactosSidebar();
+            apiFetch(`/contactos/${id}`, { method: 'DELETE' }).catch(() => {});
         } else if (accion === 'ocultar') {
-            await apiFetch(`/contactos/${id}`, { method: 'PATCH', body: JSON.stringify({ oculto: true }) });
+            const c = estadoPerfil.contactos.find(x => String(x.id) === String(id));
+            if (c) c.oculto = true;
+            localStorage.setItem('control_one_contactos', JSON.stringify(estadoPerfil.contactos));
             renderContactosSidebar();
+            apiFetch(`/contactos/${id}`, { method: 'PATCH', body: JSON.stringify({ oculto: true }) }).catch(() => {});
         } else if (accion === 'archivar') {
-            await apiFetch(`/contactos/${id}`, { method: 'PATCH', body: JSON.stringify({ archivado: true }) });
+            const c = estadoPerfil.contactos.find(x => String(x.id) === String(id));
+            if (c) c.archivado = true;
+            localStorage.setItem('control_one_contactos', JSON.stringify(estadoPerfil.contactos));
             renderContactosSidebar();
+            apiFetch(`/contactos/${id}`, { method: 'PATCH', body: JSON.stringify({ archivado: true }) }).catch(() => {});
         } else if (accion === 'llamar') {
             const tel = btn.dataset.tel || 'este número';
             alert(`Llamando a ${tel}... (Simulación de llamada)`);
@@ -180,9 +187,41 @@ if (contactosList) {
     });
 }
 
-/* =========================================================
-   ACCIONES PRINCIPALES Y MODALES FLOTANTES
-   ========================================================= */
+function abrirModalEditarContacto(id, nombreActual, telActual) {
+    abrirModal(`
+        <h3><i data-lucide="user-cog" width="20" height="20"></i> Modificar contacto</h3>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
+            <label for="mEditNombre">Nombre completo</label>
+            <input type="text" id="mEditNombre" value="${escapeHTML(nombreActual || '')}" style="padding:8px; border-radius:6px; border:1px solid #ccc;">
+            
+            <label for="mEditTelefono">Teléfono</label>
+            <input type="tel" id="mEditTelefono" value="${escapeHTML(telActual || '')}" style="padding:8px; border-radius:6px; border:1px solid #ccc;">
+            
+            <button class="btn btn-success" id="mGuardarEditContacto" style="margin-top:10px; padding:10px; cursor:pointer;">
+                <i data-lucide="check" width="16" height="16"></i> Guardar cambios
+            </button>
+        </div>
+    `);
+
+    document.getElementById('mGuardarEditContacto').addEventListener('click', () => {
+        const nombre = document.getElementById('mEditNombre').value.trim();
+        const telefono = document.getElementById('mEditTelefono').value.trim();
+        if (!nombre || !telefono) {
+            alert('Por favor ingresa un nombre y un número de teléfono.');
+            return;
+        }
+
+        const c = estadoPerfil.contactos.find(x => String(x.id) === String(id));
+        if (c) {
+            c.nombre = nombre;
+            c.telefono = telefono;
+            localStorage.setItem('control_one_contactos', JSON.stringify(estadoPerfil.contactos));
+        }
+        cerrarModal();
+        renderContactosSidebar();
+        apiFetch(`/contactos/${id}`, { method: 'PUT', body: JSON.stringify({ nombre, telefono }) }).catch(() => {});
+    });
+}
 
 function initAccionesPrincipales() {
     const btnOcultos = document.querySelector('[data-action="ver-ocultos"]');
@@ -214,7 +253,6 @@ function initAccionesPrincipales() {
     }
 }
 
-// 1. Modal: Agregar Contacto
 function abrirModalAgregarContacto() {
     abrirModal(`
         <h3><i data-lucide="user-plus" width="20" height="20"></i> Nuevo contacto</h3>
@@ -231,27 +269,34 @@ function abrirModalAgregarContacto() {
         </div>
     `);
 
-    document.getElementById('mGuardarContacto').addEventListener('click', async () => {
+    document.getElementById('mGuardarContacto').addEventListener('click', () => {
         const nombre = document.getElementById('mNombre').value.trim();
         const telefono = document.getElementById('mTelefono').value.trim();
         if (!nombre || !telefono) {
             alert('Por favor ingresa un nombre y un número de teléfono.');
             return;
         }
-        await apiFetch('/contactos', { method: 'POST', body: JSON.stringify({ nombre, telefono }) });
+        const nuevo = {
+            id: 'c_' + Date.now(),
+            nombre,
+            telefono,
+            oculto: false,
+            archivado: false
+        };
+        estadoPerfil.contactos.push(nuevo);
+        localStorage.setItem('control_one_contactos', JSON.stringify(estadoPerfil.contactos));
         cerrarModal();
         renderContactosSidebar();
+        apiFetch('/contactos', { method: 'POST', body: JSON.stringify({ nombre, telefono }) }).catch(() => {});
     });
 }
 
-// 2. Modal: Ocultos y Archivados
-async function abrirModalLista(filtro, titulo, icono, campoEstado) {
-    const contactos = await apiFetch(`/contactos?filtro=${filtro}`) || [];
-    const recordatorios = await apiFetch(`/panel/recordatorios?filtro=${filtro}`) || [];
+function abrirModalLista(filtro, titulo, icono, campoEstado) {
+    const contactos = estadoPerfil.contactos.filter(c => c[campoEstado] === true);
+    const recordatorios = JSON.parse(localStorage.getItem('control_one_recordatorios') || '[]').filter(r => r[campoEstado] === true);
 
     let itemsHTML = '';
 
-    // Renderizar Contactos
     if (contactos.length > 0) {
         itemsHTML += `<p style="font-weight:bold; margin-top:10px; margin-bottom:8px; font-size:0.8rem; color:#6b7280; letter-spacing:0.05em; text-transform:uppercase;">CONTACTOS</p>`;
         itemsHTML += contactos.map(c => `
@@ -267,7 +312,6 @@ async function abrirModalLista(filtro, titulo, icono, campoEstado) {
         `).join('');
     }
 
-    // Renderizar Recordatorios/Eventos
     if (recordatorios.length > 0) {
         itemsHTML += `<p style="font-weight:bold; margin-top:14px; margin-bottom:8px; font-size:0.8rem; color:#6b7280; letter-spacing:0.05em; text-transform:uppercase;">RECORDATORIOS / EVENTOS</p>`;
         itemsHTML += recordatorios.map(r => `
@@ -295,20 +339,21 @@ async function abrirModalLista(filtro, titulo, icono, campoEstado) {
     `);
 
     modalContent.querySelectorAll('button[data-id]').forEach(btn => {
-        btn.addEventListener('click', async () => {
+        btn.addEventListener('click', () => {
             const id = btn.dataset.id;
             const tipo = btn.dataset.tipo;
 
             if (tipo === 'contacto') {
-                await apiFetch(`/contactos/${id}`, {
-                    method: 'PATCH',
-                    body: JSON.stringify({ [campoEstado]: false }),
-                });
+                const c = estadoPerfil.contactos.find(x => String(x.id) === String(id));
+                if (c) c[campoEstado] = false;
+                localStorage.setItem('control_one_contactos', JSON.stringify(estadoPerfil.contactos));
+                apiFetch(`/contactos/${id}`, { method: 'PATCH', body: JSON.stringify({ [campoEstado]: false }) }).catch(() => {});
             } else if (tipo === 'recordatorio') {
-                await apiFetch(`/panel/recordatorios/${id}`, {
-                    method: 'PATCH',
-                    body: JSON.stringify({ [campoEstado]: false }),
-                });
+                let recs = JSON.parse(localStorage.getItem('control_one_recordatorios') || '[]');
+                const r = recs.find(x => String(x.id) === String(id));
+                if (r) r[campoEstado] = false;
+                localStorage.setItem('control_one_recordatorios', JSON.stringify(recs));
+                apiFetch(`/panel/recordatorios/${id}`, { method: 'PATCH', body: JSON.stringify({ [campoEstado]: false }) }).catch(() => {});
             }
 
             abrirModalLista(filtro, titulo, icono, campoEstado);
@@ -317,17 +362,16 @@ async function abrirModalLista(filtro, titulo, icono, campoEstado) {
     });
 }
 
-// 3. Modal: Editar Perfil
-async function abrirModalEditarPerfil() {
-    const perfil = await apiFetch('/perfil');
+function abrirModalEditarPerfil() {
+    const p = estadoPerfil.perfil;
     abrirModal(`
         <h3><i data-lucide="at-sign" width="20" height="20"></i> Editar perfil</h3>
         <div style="display:flex; flex-direction:column; gap:10px; margin-top:12px;">
             <label for="mNombreCompleto">Nombre completo</label>
-            <input type="text" id="mNombreCompleto" value="${escapeHTML(perfil?.nombre_completo || '')}" placeholder="Ej. Pedro Sánchez" style="padding:8px; border-radius:6px; border:1px solid #ccc;">
+            <input type="text" id="mNombreCompleto" value="${escapeHTML(p.nombre_completo || '')}" placeholder="Ej. Pedro Sánchez" style="padding:8px; border-radius:6px; border:1px solid #ccc;">
             
             <label for="mAlias">Alias</label>
-            <input type="text" id="mAlias" value="${escapeHTML(perfil?.alias || '')}" placeholder="@Alias_guacho" style="padding:8px; border-radius:6px; border:1px solid #ccc;">
+            <input type="text" id="mAlias" value="${escapeHTML(p.alias || '')}" placeholder="@Alias_guacho" style="padding:8px; border-radius:6px; border:1px solid #ccc;">
             
             <button class="btn btn-success" id="mGuardarPerfil" style="margin-top:10px; padding:10px; cursor:pointer;">
                 <i data-lucide="check" width="16" height="16"></i> Guardar cambios
@@ -335,7 +379,7 @@ async function abrirModalEditarPerfil() {
         </div>
     `);
 
-    document.getElementById('mGuardarPerfil').addEventListener('click', async () => {
+    document.getElementById('mGuardarPerfil').addEventListener('click', () => {
         const nombre_completo = document.getElementById('mNombreCompleto').value.trim();
         const alias = document.getElementById('mAlias').value.trim();
 
@@ -344,15 +388,17 @@ async function abrirModalEditarPerfil() {
             return;
         }
 
-        await apiFetch('/perfil', { method: 'PUT', body: JSON.stringify({ nombre_completo, alias }) });
+        estadoPerfil.perfil.nombre_completo = nombre_completo;
+        estadoPerfil.perfil.alias = alias;
+        localStorage.setItem('control_one_perfil', JSON.stringify(estadoPerfil.perfil));
         cerrarModal();
         cargarPerfilSidebar();
+        apiFetch('/perfil', { method: 'PUT', body: JSON.stringify({ nombre_completo, alias }) }).catch(() => {});
     });
 }
 
-// 4. Modal: Configuración de Correos
-async function abrirModalConfigCorreo() {
-    const config = await apiFetch('/configuracion');
+function abrirModalConfigCorreo() {
+    const config = estadoPerfil.config;
     abrirModal(`
         <h3><i data-lucide="sliders-horizontal" width="20" height="20"></i> Configuración de correos</h3>
         <div style="display:flex; flex-direction:column; gap:12px; margin-top:12px;">
@@ -370,7 +416,7 @@ async function abrirModalConfigCorreo() {
         </div>
     `);
 
-    document.getElementById('mGuardarCorreo').addEventListener('click', async () => {
+    document.getElementById('mGuardarCorreo').addEventListener('click', () => {
         const correo_notificacion = document.getElementById('mCorreo').value.trim();
         const notificar_por_correo = document.getElementById('mNotificar').checked;
 
@@ -379,12 +425,14 @@ async function abrirModalConfigCorreo() {
             return;
         }
 
-        await apiFetch('/configuracion', { method: 'PUT', body: JSON.stringify({ correo_notificacion, notificar_por_correo }) });
+        estadoPerfil.config.correo_notificacion = correo_notificacion;
+        estadoPerfil.config.notificar_por_correo = notificar_por_correo;
+        localStorage.setItem('control_one_config', JSON.stringify(estadoPerfil.config));
         cerrarModal();
+        apiFetch('/configuracion', { method: 'PUT', body: JSON.stringify({ correo_notificacion, notificar_por_correo }) }).catch(() => {});
     });
 }
 
-// 5. Modal: Inicio de Sesión
 function abrirModalLogin() {
     abrirModal(`
         <h3><i data-lucide="log-in" width="20" height="20"></i> Iniciar sesión</h3>
@@ -416,21 +464,48 @@ function abrirModalLogin() {
         const usuario = inputUsuario.value.trim();
         const contrasena = inputContrasena.value.trim();
 
-        try {
-            const data = await apiFetch('/login', {
-                method: 'POST',
-                body: JSON.stringify({ usuario, contrasena })
-            });
+        const data = await apiFetch('/login', {
+            method: 'POST',
+            body: JSON.stringify({ usuario, contrasena })
+        });
 
-            if (data && data.usuario) {
-                alert(`Sesión iniciada correctamente como ${data.usuario}.`);
-                cerrarModal();
-                cargarPerfilSidebar();
-            } else {
-                alert('Credenciales incorrectas o error al iniciar sesión.');
-            }
-        } catch (err) {
-            alert('No se pudo conectar con el servidor.');
+        if (data && data.usuario) {
+            estadoPerfil.perfil.usuario = data.usuario;
+            localStorage.setItem('control_one_perfil', JSON.stringify(estadoPerfil.perfil));
+            alert(`Sesión iniciada correctamente como ${data.usuario}.`);
+            cerrarModal();
+            cargarPerfilSidebar();
+        } else {
+            estadoPerfil.perfil.usuario = usuario;
+            localStorage.setItem('control_one_perfil', JSON.stringify(estadoPerfil.perfil));
+            alert(`Sesión iniciada localmente como ${usuario}.`);
+            cerrarModal();
+            cargarPerfilSidebar();
         }
     });
+}
+
+async function sincronizarPerfilConBackend() {
+    try {
+        const [perfil, contactos, config] = await Promise.all([
+            apiFetch('/perfil'),
+            apiFetch('/contactos?filtro=todos'),
+            apiFetch('/configuracion')
+        ]);
+
+        if (perfil) {
+            estadoPerfil.perfil = perfil;
+            localStorage.setItem('control_one_perfil', JSON.stringify(perfil));
+            cargarPerfilSidebar();
+        }
+        if (contactos && Array.isArray(contactos)) {
+            estadoPerfil.contactos = contactos;
+            localStorage.setItem('control_one_contactos', JSON.stringify(contactos));
+            renderContactosSidebar();
+        }
+        if (config) {
+            estadoPerfil.config = config;
+            localStorage.setItem('control_one_config', JSON.stringify(config));
+        }
+    } catch (e) {}
 }

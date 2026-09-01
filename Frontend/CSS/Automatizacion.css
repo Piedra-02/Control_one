@@ -1,13 +1,9 @@
-/* =========================================================
-   CONTROL ONE — Automatización
-   Hoja de estilos independiente para esta pantalla.
-   Basada en la paleta y tipografía del UI Kit de Figma.
-   ========================================================= */
+
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=IBM+Plex+Mono:wght@500;600;700&family=Iceberg&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
-  /* Paleta (UI Kit) */
+  
   --bg-app: #A8DDF6;
   --bg-search: #FFFBF9;
   --bg-card-neutral: #FDF6F6;
@@ -23,11 +19,6 @@
   --success: #22C55E;
   --error: #EC221F;
 
-  /* Tipografía
-     Nota: "Intel One Mono" e "Iceberg Bold" del Figma se
-     sustituyen por IBM Plex Mono e Iceberg (esta sí es una
-     Google Font real) por ser las más cercanas disponibles.
-     Tamaños escalados de 78/56/48/28/24px del Figma a uso web. */
   --font-display: 'Inter', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
   --font-accent: 'Iceberg', sans-serif;
@@ -61,7 +52,6 @@ body {
   padding: 20px 24px 40px;
 }
 
-/* ---------- Topbar (idéntico al de Organización / Panel Principal) ---------- */
 .desktop-header {
   background: var(--bg-search);
   border-radius: 40px;
@@ -140,7 +130,6 @@ body {
 }
 .icon-btn:hover { transform: scale(1.1); color: #111; }
 
-/* ---------- Tabs (idénticas a subnav de Organización / Panel Principal) ---------- */
 .desktop-subnav {
   display: flex;
   justify-content: center;
@@ -170,7 +159,6 @@ body {
 }
 .subnav-btn:hover, .subnav-btn.active { background: #f0f0f0; }
 
-/* ---------- Tarjetas ---------- */
 .card {
   background: var(--teal-dark);
   border-radius: var(--radius-card);
@@ -198,7 +186,6 @@ body {
   border: 2px solid #111111;
 }
 
-/* ---------- Formularios ---------- */
 label {
   display: block;
   font-family: var(--font-display);
@@ -224,7 +211,6 @@ input[type="text"]:focus, textarea:focus {
 textarea { resize: vertical; min-height: 90px; }
 input::placeholder, textarea::placeholder { color: var(--grey); }
 
-/* ---------- Botones ---------- */
 .btn {
   font-family: var(--font-mono);
   font-weight: 700;
@@ -244,7 +230,6 @@ input::placeholder, textarea::placeholder { color: var(--grey); }
 .btn-success:hover { filter: brightness(1.05); transform: translateY(-1px); }
 .btn:active { transform: translateY(0); }
 
-/* ---------- Historial ---------- */
 .historial-list {
   list-style: none;
   margin: 0;
@@ -267,7 +252,6 @@ input::placeholder, textarea::placeholder { color: var(--grey); }
 .historial-list li:hover { transform: translateX(3px); background: #007a7d; }
 .historial-list li i { color: var(--pale-teal); flex-shrink: 0; }
 
-/* Se aplica por JS al agregar una automatización nueva */
 .historial-item-nuevo {
   animation: historialSlideIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -276,12 +260,8 @@ input::placeholder, textarea::placeholder { color: var(--grey); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* ---------- Utilidades ---------- */
 .text-secondary { font-family: var(--font-accent); color: var(--grey); font-size: var(--fs-texto-sec); }
 
-/* =========================================================
-   Layout específico: Automatización
-   ========================================================= */
 .automatizacion-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -339,7 +319,6 @@ input::placeholder, textarea::placeholder { color: var(--grey); }
   .app-shell { padding: 16px; }
 }
 
-/* ---------- Dock inferior (móvil, igual al resto de la app) ---------- */
 .mobile-bottom-dock { display: none; }
 
 @media (max-width: 768px) {

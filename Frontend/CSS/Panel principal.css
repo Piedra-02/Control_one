@@ -1,40 +1,31 @@
-/* =========================================================
-   CONTROL ONE - PANEL PRINCIPAL (CSS DEFINITIVO)
-   Paleta original respetada + Responsive adaptativo exacto
-   ========================================================= */
+
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
-    /* Paleta Original */
+    
     --bg-blue-app: #a9dced;
     --border-dark: #111111;
     --border-green-dark: #1b4332;
 
-    /* Tareas (Amarillo / Naranja Ámbar) */
     --tasks-box-bg: #e59a00;
     --tasks-card-bg: #bfe8f5;
 
-    /* Eventos (Turquesa / Menta) */
     --events-teal: #00cba9;
     --events-card-bg: #c2f2ee;
     --events-mobile-bg: #0096db;
 
-    /* Recordatorios (Verde Claro / Verde Oscuro) */
     --reminders-card-bg: #d4f5b8;
     --reminders-mobile-bg: #3d6932;
 
-    /* Neutros */
     --white: #ffffff;
     --search-bg: #eaeaea;
     --text-primary: #111111;
     --text-muted: #555555;
 
-    /* Tipografía */
     --font-main: 'Space Grotesk', 'Plus Jakarta Sans', -apple-system, sans-serif;
 }
 
-/* RESET */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
@@ -61,9 +52,6 @@ body {
     padding: 20px 24px 40px;
 }
 
-/* =========================================
-   1. HEADER SUPERIOR (DESKTOP)
-========================================= */
 .desktop-header {
     background: var(--white);
     border-radius: 40px;
@@ -167,16 +155,10 @@ body {
     color: #111111;
 }
 
-/* =========================================
-   2. HEADER SUPERIOR (MOBILE)
-========================================= */
 .mobile-header {
-    display: none; /* Oculto en desktop */
+    display: none; 
 }
 
-/* =========================================
-   3. NAVEGACIÓN SECUNDARIA (DESKTOP)
-========================================= */
 .desktop-subnav {
     display: flex;
     justify-content: center;
@@ -211,9 +193,6 @@ body {
     background: #f0f0f0;
 }
 
-/* =========================================
-   4. SECCIONES Y ENCABEZADOS
-========================================= */
 .section-container {
     margin-bottom: 24px;
 }
@@ -242,13 +221,10 @@ body {
 }
 
 .mobile-chevron {
-    display: none; /* Oculto en desktop */
+    display: none; 
     color: #ffffff;
 }
 
-/* =========================================
-   SECCIÓN: EVENTOS (DESKTOP)
-========================================= */
 .events-grid {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -332,9 +308,6 @@ body {
     margin-top: 2px;
 }
 
-/* =========================================
-   FILA INFERIOR (TAREAS Y RECORDATORIOS)
-========================================= */
 .bottom-row-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -342,9 +315,6 @@ body {
     align-items: start;
 }
 
-/* =========================================
-   SECCIÓN: TAREAS (DESKTOP)
-========================================= */
 .tasks-orange-box {
     background: var(--tasks-box-bg);
     border: 1.8px solid var(--border-dark);
@@ -421,12 +391,9 @@ body {
 }
 
 .mobile-only-task {
-    display: none; /* Oculto en desktop 2x2, visible en mobile 2x3 */
+    display: none; 
 }
 
-/* =========================================
-   SECCIÓN: RECORDATORIOS (DESKTOP)
-========================================= */
 .reminders-green-box {
     background: transparent;
 }
@@ -517,34 +484,25 @@ body {
     color: var(--border-green-dark);
 }
 
-/* =========================================
-   5. BOTTOM DOCK (MOBILE EXCLUSIVO)
-========================================= */
 .mobile-bottom-dock {
-    display: none; /* Oculto en Desktop */
+    display: none; 
 }
 
-
-/* =========================================================
-   📱 RESPONSIVE: MÓVIL (<= 768px) SEGÚN MOCKUP
-   ========================================================= */
 @media (max-width: 768px) {
 
     body {
-        padding-bottom: 85px; /* Espacio para el dock inferior */
+        padding-bottom: 85px; 
     }
 
     .app {
         padding: 12px 14px 20px;
     }
 
-    /* Ocultar elementos exclusivos de Desktop */
     .desktop-header,
     .desktop-subnav {
         display: none;
     }
 
-    /* 1. Header Móvil */
     .mobile-header {
         display: flex;
         align-items: center;
@@ -601,14 +559,13 @@ body {
         background: #f0f0f0;
     }
 
-    /* 2. Reordenamiento de Secciones en Móvil (Tareas -> Recordatorios -> Eventos) */
     .dashboard-main {
         display: flex;
         flex-direction: column;
     }
 
     .bottom-row-grid {
-        display: contents; /* Permite reordenar hijos individualmente */
+        display: contents; 
     }
 
     .section-tareas {
@@ -638,7 +595,6 @@ body {
         border: 1.8px solid rgba(0, 0, 0, 0.1);
     }
 
-    /* Encabezados blancos dentro de los bloques en Móvil */
     .section-tareas .heading-left h2,
     .section-recordatorios .heading-left h2,
     .section-eventos .heading-left h2,
@@ -654,7 +610,6 @@ body {
         cursor: pointer;
     }
 
-    /* Tareas en Móvil (6 tarjetas en 2 columnas) */
     .tasks-orange-box {
         background: transparent;
         border: none;
@@ -674,12 +629,10 @@ body {
         font-size: 10px;
     }
 
-    /* Recordatorios en Móvil */
     .reminders-green-box {
         padding: 0;
     }
 
-    /* Eventos en Móvil */
     .events-grid {
         grid-template-columns: 1fr;
         gap: 12px;
@@ -715,7 +668,6 @@ body {
         font-size: 12px;
     }
 
-    /* 3. Dock Inferior Flotante en Móvil */
     .mobile-bottom-dock {
         position: fixed;
         bottom: 14px;
@@ -761,9 +713,6 @@ body {
     }
 }
 
-/* =========================================================
-   TARJETAS MODALES EMERGENTES (UI FLOTANTE EN LA MISMA PANTALLA)
-   ========================================================= */
 .modal-overlay {
     position: fixed;
     top: 0;

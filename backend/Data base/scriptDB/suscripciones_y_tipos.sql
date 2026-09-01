@@ -1,11 +1,4 @@
--- =========================================================
--- Control One - Suscripciones + ampliar tipos de Favoritos/Historial
--- Ejecutar después de todos los scripts anteriores.
--- =========================================================
 
--- ---------------------------------------------------------
--- SUSCRIPCIONES  (pantalla Información)
--- ---------------------------------------------------------
 CREATE TABLE suscripciones (
     id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nombre         VARCHAR(150) NOT NULL,
@@ -17,12 +10,6 @@ CREATE TABLE suscripciones (
     fecha_creacion TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- ---------------------------------------------------------
--- Ampliar los tipos permitidos en FAVORITOS e HISTORIAL
--- para que también puedan referenciar una suscripción.
--- (Se identifica y reemplaza el CHECK automáticamente, sin
--- depender de que el nombre de la restricción sea exacto.)
--- ---------------------------------------------------------
 DO $$
 DECLARE
     nombre_restriccion TEXT;
@@ -56,7 +43,3 @@ BEGIN
     ALTER TABLE historial ADD CONSTRAINT historial_tipo_elemento_check
         CHECK (tipo_elemento IN ('tarea','evento','nota','archivo','suscripcion'));
 END $$;
-
--- =========================================================
--- Fin del script
--- =========================================================

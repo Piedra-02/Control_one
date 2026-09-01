@@ -1,33 +1,25 @@
-/* =========================================================
-   CONTROL ONE - ORGANIZACIÓN (CSS DEFINITIVO)
-   Calendario Interactivo, Categorías, Estadísticas y Modales
-   ========================================================= */
+
 
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
-    /* Paleta Principal */
+    
     --bg-blue-app: #a9dced;
     --border-dark: #111111;
     --white: #ffffff;
     --search-bg: #eaeaea;
 
-    /* Calendario (Morado Oscuro / Menta) */
     --calendar-dark: #160c38;
     --calendar-grid-bg: #ebfbee;
     --calendar-accent: #8b5cf6;
 
-    /* Categorías (Cyan / Turquesa) */
     --cat-cyan: #00bcd4;
 
-    /* Estadísticas (Azul) */
     --stats-blue: #1976d2;
 
-    /* Tipografía */
     --font-main: 'Space Grotesk', 'Plus Jakarta Sans', -apple-system, sans-serif;
 }
 
-/* RESET */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
@@ -54,9 +46,6 @@ body {
     padding: 20px 24px 40px;
 }
 
-/* =========================================
-   1. HEADER SUPERIOR (DESKTOP)
-========================================= */
 .desktop-header {
     background: var(--white);
     border-radius: 40px;
@@ -160,16 +149,10 @@ body {
     color: #111111;
 }
 
-/* =========================================
-   2. HEADER SUPERIOR (MOBILE)
-========================================= */
 .mobile-header {
     display: none;
 }
 
-/* =========================================
-   3. NAVEGACIÓN SECUNDARIA (DESKTOP)
-========================================= */
 .desktop-subnav {
     display: flex;
     justify-content: center;
@@ -204,9 +187,6 @@ body {
     background: #f0f0f0;
 }
 
-/* =========================================
-   4. DISTRIBUCIÓN PRINCIPAL DE ORGANIZACIÓN
-========================================= */
 .organizacion-grid {
     display: grid;
     grid-template-columns: 1.15fr 1fr;
@@ -214,9 +194,6 @@ body {
     align-items: start;
 }
 
-/* =========================================
-   COLUMNA IZQUIERDA: CALENDARIO
-========================================= */
 .calendar-dark-card {
     background: var(--calendar-dark);
     border: 2px solid var(--border-dark);
@@ -275,7 +252,6 @@ body {
     letter-spacing: 0.3px;
 }
 
-/* Tabla del Calendario */
 .calendar-table-box {
     background: var(--calendar-grid-bg);
     border: 1.8px solid var(--border-dark);
@@ -363,16 +339,12 @@ body {
     background: rgba(255, 255, 255, 0.28);
 }
 
-/* =========================================
-   COLUMNA DERECHA: CATEGORÍAS Y ESTADÍSTICAS
-========================================= */
 .organizacion-right-col {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-/* 1. Tarjetas de Categorías (Cyan) */
 .categories-section-wrapper {
     display: flex;
     flex-direction: column;
@@ -516,7 +488,6 @@ body {
     word-break: break-word;
 }
 
-/* 2. Tarjeta Azul de Estadísticas de Actividad */
 .stats-blue-card {
     background: var(--stats-blue);
     border: 1.8px solid var(--border-dark);
@@ -614,7 +585,6 @@ body {
     height: 100%;
 }
 
-/* Animación suave en el gráfico de actividad */
 #stats-chart-line,
 #stats-chart-area {
     transition: d 0.6s ease;
@@ -709,17 +679,10 @@ body {
     font-variant-numeric: tabular-nums;
 }
 
-/* =========================================
-   5. BOTTOM DOCK (MOBILE EXCLUSIVO)
-========================================= */
 .mobile-bottom-dock {
     display: none;
 }
 
-
-/* =========================================================
-   📱 RESPONSIVE: MÓVIL (<= 768px)
-   ========================================================= */
 @media (max-width: 768px) {
 
     body {
@@ -791,7 +754,6 @@ body {
         background: #f0f0f0;
     }
 
-    /* Grid en Móvil: Apilado Vertical */
     .organizacion-grid {
         grid-template-columns: 1fr;
         gap: 16px;
@@ -801,7 +763,6 @@ body {
         grid-template-columns: 1fr;
     }
 
-    /* Dock Inferior Flotante */
     .mobile-bottom-dock {
         position: fixed;
         bottom: 14px;
@@ -847,9 +808,6 @@ body {
     }
 }
 
-/* =========================================================
-   TARJETAS MODALES EMERGENTES (UI FLOTANTE)
-   ========================================================= */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -1034,7 +992,6 @@ body {
     margin-right: auto;
 }
 
-/* Modal Ampliado de Todas las Categorías */
 .modal-card-large {
     width: min(96%, 760px);
     max-height: 88vh;

@@ -1,10 +1,5 @@
-/**
- * Control One - Interacción Frontend para la vista de Información
- * Conecta las tarjetas de Historial, Suscripciones y Favoritos con el backend en Python.
- * Incluye modales interactivos en la misma página para crear, modificar y eliminar.
- */
 
-// Estado global en memoria para sincronización inmediata
+
 let estadoInformacion = {
     favoritos: [],
     historial: [],
@@ -20,14 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initLiveSearch();
     initMobileCollapsibles();
 
-    // Cargar datos locales y sincronizar con backend Python
     cargarDatosLocales();
     sincronizarConBackendPython();
 });
 
-/* =========================================================
-   1. NAVEGACIÓN Y DESPLAZAMIENTO SUAVE
-   ========================================================= */
 function initNavScroll() {
     const navLinks = document.querySelectorAll('.subnav-btn, .nav-pill');
 
@@ -53,9 +44,6 @@ function initNavScroll() {
     });
 }
 
-/* =========================================================
-   2. GESTIÓN DE SUSCRIPCIONES (TOGGLES Y MODALES)
-   ========================================================= */
 function initSubscriptionToggles() {
     const listContainer = document.getElementById('subscriptions-list-container');
     if (!listContainer) return;
@@ -72,25 +60,21 @@ function initSubscriptionToggles() {
             const isActive = toggleBtn.classList.toggle('active');
             row.classList.toggle('paused', !isActive);
 
-            // Enviar a Python Backend
             fetch('http://127.0.0.1:5000/api/informacion/suscripciones/toggle', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: subId, activa: isActive })
             }).catch(() => {});
 
-            // Actualizar estado local
             const sub = estadoInformacion.suscripciones.find(s => String(s.id) === String(subId));
             if (sub) sub.activa = isActive;
             localStorage.setItem('control_one_suscripciones', JSON.stringify(estadoInformacion.suscripciones));
             return;
         }
 
-        // Clic en la fila -> Abrir modal de detalle/edición
         abrirModalSuscripcion(subId);
     });
 
-    // Botón "+" en la cabecera para agregar suscripción
     const btnAgregarSub = document.getElementById('btn-agregar-suscripcion');
     if (btnAgregarSub) {
         btnAgregarSub.addEventListener('click', (e) => {
@@ -99,7 +83,6 @@ function initSubscriptionToggles() {
         });
     }
 
-    // Botón para agregar suscripción en cabecera (doble clic, se conserva como atajo)
     const headerSuscripciones = document.querySelector('.subscriptions-main-card .card-header-row');
     if (headerSuscripciones) {
         headerSuscripciones.style.cursor = 'pointer';
@@ -116,6 +99,8 @@ function abrirModalSuscripcion(subId = null) {
     const inputMonto = document.getElementById('input-sub-monto');
     const inputCat = document.getElementById('input-sub-categoria');
     const btnEliminar = document.getElementById('btn-eliminar-sub');
+    const btnPagar = document.getElementById('btn-pagar-sub');
+    const btnCancelar = document.getElementById('btn-cancelar-sub');
     const modalTit = document.getElementById('modal-sub-titulo');
 
     if (subId) {
@@ -127,20 +112,83 @@ function abrirModalSuscripcion(subId = null) {
         inputNombre.value = sub.nombre;
         inputMonto.value = sub.monto || 9.99;
         inputCat.value = sub.categoria || 'General';
-        btnEliminar.style.display = 'inline-block';
+        if (btnEliminar) btnEliminar.style.display = 'inline-block';
+        if (btnPagar) btnPagar.style.display = 'inline-block';
+        if (btnCancelar) btnCancelar.style.display = 'inline-block';
     } else {
         modalTit.textContent = 'Nueva Suscripción';
         inputId.value = '';
         inputNombre.value = '';
         inputMonto.value = '9.99';
         inputCat.value = 'General';
-        btnEliminar.style.display = 'none';
+        if (btnEliminar) btnEliminar.style.display = 'none';
+        if (btnPagar) btnPagar.style.display = 'none';
+        if (btnCancelar) btnCancelar.style.display = 'none';
     }
 
     overlay.classList.add('active');
     modal.classList.add('active');
     inputNombre.focus();
 }
+
+function realizarPagoSuscripcionModal() {
+    const id = document.getElementById('input-sub-id').value;
+    const nombre = document.getElementById('input-sub-nombre').value.trim();
+    const monto = document.getElementById('input-sub-monto').value;
+    if (!nombre) return;
+
+    const fecha = new Date().toLocaleDateString('es-EC');
+    alert(`Pago exitoso de $${monto} para "${nombre}" realizado el ${fecha}.`);
+
+    let subs = JSON.parse(localStorage.getItem('control_one_suscripciones') || '[]');
+    const sub = subs.find(s => String(s.id) === String(id));
+    if (sub) {
+        sub.ultimo_pago = fecha;
+        sub.estado_pago = 'al_dia';
+        localStorage.setItem('control_one_suscripciones', JSON.stringify(subs));
+    }
+
+    fetch('http://127.0.0.1:5000/api/informacion/suscripciones/pago', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, monto, fecha })
+    }).catch(() => {});
+
+    cerrarModales();
+}
+
+function cancelarSuscripcionModal() {
+    const id = document.getElementById('input-sub-id').value;
+    const nombre = document.getElementById('input-sub-nombre').value.trim();
+    if (!id) return;
+
+    if (confirm(`¿Deseas cancelar la suscripción a "${nombre}"?`)) {
+        let subs = JSON.parse(localStorage.getItem('control_one_suscripciones') || '[]');
+        const sub = subs.find(s => String(s.id) === String(id));
+        if (sub) {
+            sub.activa = false;
+            localStorage.setItem('control_one_suscripciones', JSON.stringify(subs));
+        }
+
+        const row = document.querySelector(`.subscription-item-row[data-sub-id="${id}"]`);
+        if (row) {
+            row.classList.add('paused');
+            const toggle = row.querySelector('.sub-toggle-btn');
+            if (toggle) toggle.classList.remove('active');
+        }
+
+        fetch('http://127.0.0.1:5000/api/informacion/suscripciones/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, activa: false })
+        }).catch(() => {});
+
+        cerrarModales();
+    }
+}
+
+window.realizarPagoSuscripcionModal = realizarPagoSuscripcionModal;
+window.cancelarSuscripcionModal = cancelarSuscripcionModal;
 
 function guardarSuscripcionModal(e) {
     e.preventDefault();
@@ -150,6 +198,32 @@ function guardarSuscripcionModal(e) {
     const cat = document.getElementById('input-sub-categoria').value;
 
     if (!nombre) return;
+
+    let subs = JSON.parse(localStorage.getItem('control_one_suscripciones') || '[]');
+    if (id) {
+        const sub = subs.find(s => String(s.id) === String(id));
+        if (sub) {
+            sub.nombre = nombre;
+            sub.monto = monto;
+            sub.categoria = cat;
+        }
+        const row = document.querySelector(`.subscription-item-row[data-sub-id="${id}"]`);
+        if (row) {
+            const span = row.querySelector('.sub-name-text');
+            if (span) span.textContent = nombre;
+        }
+    } else {
+        const nuevaSub = {
+            id: 'sub_' + Date.now(),
+            nombre,
+            monto,
+            categoria: cat,
+            activa: true
+        };
+        subs.push(nuevaSub);
+        renderizarSuscripcionEnLista(nuevaSub, true);
+    }
+    localStorage.setItem('control_one_suscripciones', JSON.stringify(subs));
 
     fetch('http://127.0.0.1:5000/api/informacion/suscripciones', {
         method: 'POST',
@@ -212,9 +286,6 @@ function eliminarSuscripcionModal() {
     }
 }
 
-/* =========================================================
-   3. GESTIÓN DE FAVORITOS
-   ========================================================= */
 function initFavoritesInteractions() {
     const btnEditFavs = document.getElementById('btn-edit-favoritos');
     if (btnEditFavs) {
@@ -270,10 +341,7 @@ function guardarFavoritoModal(e) {
     if (!titulo) return;
 
     if (id) {
-        // Nota: el título de un favorito existente se deriva del elemento
-        // real al que apunta (tarea, evento, nota...), así que renombrarlo
-        // aquí solo actualiza la vista; para cambiarlo de verdad hay que
-        // editar el elemento original desde su propia pantalla.
+
         const row = document.querySelector(`.favorite-item-row[data-fav-id="${id}"]`);
         if (row) {
             const span = row.querySelector('.fav-item-text');
@@ -333,9 +401,6 @@ function eliminarFavoritoModal() {
     }
 }
 
-/* =========================================================
-   4. GESTIÓN DE HISTORIAL
-   ========================================================= */
 function initHistoryInteractions() {
     const histItems = document.querySelectorAll('.history-item-row');
     histItems.forEach(item => {
@@ -347,9 +412,6 @@ function initHistoryInteractions() {
     });
 }
 
-/* =========================================================
-   5. BÚSQUEDA EN TIEMPO REAL
-   ========================================================= */
 function initLiveSearch() {
     const desktopSearch = document.getElementById('desktop-search-input');
     const mobileSearchBtn = document.getElementById('mobile-search-trigger');
@@ -357,19 +419,16 @@ function initLiveSearch() {
     function ejecutarBusqueda(query) {
         const q = query.toLowerCase().trim();
 
-        // 1. Filtrar Favoritos
         document.querySelectorAll('.favorite-item-row').forEach(row => {
             const text = row.textContent.toLowerCase();
             row.style.display = (!q || text.includes(q)) ? 'flex' : 'none';
         });
 
-        // 2. Filtrar Historial
         document.querySelectorAll('.history-item-row').forEach(row => {
             const text = row.textContent.toLowerCase();
             row.style.display = (!q || text.includes(q)) ? 'flex' : 'none';
         });
 
-        // 3. Filtrar Suscripciones
         document.querySelectorAll('.subscription-item-row').forEach(row => {
             const text = row.textContent.toLowerCase();
             row.style.display = (!q || text.includes(q)) ? 'flex' : 'none';
@@ -388,9 +447,6 @@ function initLiveSearch() {
     }
 }
 
-/* =========================================================
-   6. COLAPSABLES EN MÓVIL
-   ========================================================= */
 function initMobileCollapsibles() {
     const chevrons = document.querySelectorAll('.mobile-chevron, .card-chevron-btn');
 
@@ -411,9 +467,6 @@ function initMobileCollapsibles() {
     });
 }
 
-/* =========================================================
-   7. CONTROL DE MODALES FLOTANTES
-   ========================================================= */
 function cerrarModales() {
     const overlay = document.getElementById('modal-overlay');
     if (overlay) overlay.classList.remove('active');
@@ -431,9 +484,6 @@ if (overlayElem) {
     });
 }
 
-/* =========================================================
-   8. PERSISTENCIA LOCAL Y SINCRONIZACIÓN CON PYTHON
-   ========================================================= */
 function cargarDatosLocales() {
     const favsGuardados = JSON.parse(localStorage.getItem('control_one_favoritos') || 'null');
     if (favsGuardados) estadoInformacion.favoritos = favsGuardados;
@@ -461,12 +511,8 @@ async function sincronizarConBackendPython() {
     }
 }
 
-/**
- * Reemplaza las tarjetas de ejemplo por las reales de la base de datos,
- * usando la misma estructura y clases CSS del diseño original.
- */
 function renderizarDesdeBackend(data) {
-    // --- FAVORITOS ---
+    
     const favList = document.getElementById('favorites-list-container');
     if (favList && Array.isArray(data.favoritos)) {
         favList.innerHTML = data.favoritos.map(f => `
@@ -481,7 +527,6 @@ function renderizarDesdeBackend(data) {
         `).join('') || '<p style="padding:8px;opacity:.7;">Aún no tienes favoritos.</p>';
     }
 
-    // --- HISTORIAL ---
     const histList = document.getElementById('history-items-container');
     if (histList && Array.isArray(data.historial)) {
         histList.innerHTML = data.historial.map(h => `
@@ -498,7 +543,6 @@ function renderizarDesdeBackend(data) {
         initHistoryInteractions();
     }
 
-    // --- SUSCRIPCIONES ---
     const subList = document.getElementById('subscriptions-list-container');
     if (subList && Array.isArray(data.suscripciones)) {
         subList.innerHTML = data.suscripciones.map(s => `

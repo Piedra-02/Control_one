@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Control One — Automatización</title>
 <link rel="stylesheet" href="../CSS/automatizacion.css">
+<link rel="stylesheet" href="../CSS/nav-global.css">
 </head>
 <body>
 <div class="app-shell">
 
-  <!-- Topbar (idéntico al de Organización / Panel Principal) -->
   <header class="desktop-header">
-    <a href="Automatizacion.html" class="header-logo" title="Control One">
+    <a href="Panel principal.html" class="header-logo" title="Control One">
       <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
       <span class="logo-fallback">1</span>
     </a>
@@ -20,14 +20,15 @@
       <input type="text" placeholder="BUSCAR">
     </div>
     <div class="desktop-actions">
-      <a href="Actividades.html" class="icon-btn" title="Actividades"><i data-lucide="layers" width="22" height="22"></i></a>
-      <a href="Panel principal.html" class="icon-btn" title="Panel principal"><i data-lucide="cpu" width="22" height="22"></i></a>
-      <button class="icon-btn" title="Chat / Notificaciones"><i data-lucide="message-circle" width="22" height="22"></i></button>
-      <a href="Informacion.html" class="icon-btn" title="Información"><i data-lucide="info" width="22" height="22"></i></a>
+      <a href="Panel principal.html" class="nav-icon-link" data-label="Inicio" title="Panel Principal"><i data-lucide="home" width="22" height="22"></i></a>
+      <a href="Organizacion.html" class="nav-icon-link" data-label="Organización" title="Organización"><i data-lucide="layout-dashboard" width="22" height="22"></i></a>
+      <a href="Actividades.html" class="nav-icon-link" data-label="Actividades" title="Actividades"><i data-lucide="layers" width="22" height="22"></i></a>
+      <a href="Automatizacion.html" class="nav-icon-link active-screen" data-label="Automatización" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i></a>
+      <a href="Informacion.html" class="nav-icon-link" data-label="Info" title="Información"><i data-lucide="info" width="22" height="22"></i></a>
+      <a href="perfil.html" class="nav-icon-link" data-label="Perfil" title="Perfil"><i data-lucide="user" width="22" height="22"></i></a>
     </div>
   </header>
 
-  <!-- Tabs: en móvil cambian de panel, en escritorio solo resaltan -->
   <nav class="desktop-subnav">
     <div class="subnav-container">
       <button class="subnav-btn tab-pill" data-target="panel-reglas">REGLAS</button>
@@ -38,15 +39,23 @@
 
   <main class="automatizacion-grid">
 
-    <!-- ACCIONES -->
     <section class="card panel active" id="panel-acciones">
       <h2><i data-lucide="square-pen" width="20" height="20"></i> Acciones</h2>
 
       <label for="nombre">Nombre</label>
       <input type="text" id="nombre" placeholder="Ingrese el nombre">
 
-      <label for="descripcion">Descripción</label>
-      <input type="text" id="descripcion" placeholder="Ingrese la descripción">
+      <label for="area">Área a automatizar</label>
+      <select id="area" style="width:100%; padding:10px; border-radius:8px; border:1px solid #cbd5e1; margin-bottom:12px; font-family:inherit;">
+        <option value="Tareas">Tareas</option>
+        <option value="Recordatorios">Recordatorios</option>
+        <option value="Notas">Notas</option>
+        <option value="Categorías">Categorías</option>
+        <option value="Correo electrónico">Correo electrónico</option>
+      </select>
+
+      <label for="descripcion">Descripción / Acción configurada</label>
+      <input type="text" id="descripcion" placeholder="Ingrese la acción o descripción">
 
       <button class="btn btn-success" id="btnGuardar" style="margin-top:18px;">
         <i data-lucide="check" width="16" height="16"></i> Guardar automatización
@@ -54,11 +63,10 @@
 
       <h3 style="margin-top:24px;">Historial de acciones</h3>
       <ul class="historial-list" id="historialList">
-        <!-- Se llenan por JS; queda vacío hasta que se cree la primera automatización -->
+        
       </ul>
     </section>
 
-    <!-- REGLAS -->
     <section class="card panel" id="panel-reglas">
       <h2># Reglas</h2>
       <div class="regla-options" id="reglaOptions">
@@ -83,7 +91,6 @@
       <textarea id="condicion" placeholder="Ingrese la condición"></textarea>
     </section>
 
-    <!-- VISTA PREVIA -->
     <section class="card-neutral panel" id="panel-vista-previa">
       <h2 style="color:var(--navy);"><i data-lucide="scan-eye" width="20" height="20"></i> Vista previa</h2>
       <div id="previewBox" class="preview-box">
@@ -94,13 +101,13 @@
   </main>
 </div>
 
-<!-- Dock inferior (solo visible en móvil) -->
-<nav class="mobile-bottom-dock">
-  <a href="Actividades.html" class="dock-btn" title="Actividades"><i data-lucide="layers" width="22" height="22"></i></a>
-  <a href="Informacion.html" class="dock-btn" title="Información"><i data-lucide="info" width="22" height="22"></i></a>
-  <button class="dock-search-btn" title="Buscar"><i data-lucide="search" width="20" height="20"></i></button>
-  <a href="Panel principal.html" class="dock-btn" title="Panel principal"><i data-lucide="cpu" width="22" height="22"></i></a>
-  <button class="dock-btn" title="Chat"><i data-lucide="message-circle" width="22" height="22"></i></button>
+<nav class="mobile-bottom-nav">
+    <a href="Panel principal.html" class="dock-item" title="Inicio"><i data-lucide="home" width="22" height="22"></i><span>Inicio</span><span class="dock-dot"></span></a>
+    <a href="Organizacion.html" class="dock-item" title="Organización"><i data-lucide="layout-dashboard" width="22" height="22"></i><span>Organizar</span><span class="dock-dot"></span></a>
+    <a href="Actividades.html" class="dock-item" title="Actividades"><i data-lucide="layers" width="22" height="22"></i><span>Actividad</span><span class="dock-dot"></span></a>
+    <a href="Automatizacion.html" class="dock-item active-screen" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i><span>Auto</span><span class="dock-dot"></span></a>
+    <a href="Informacion.html" class="dock-item" title="Información"><i data-lucide="info" width="22" height="22"></i><span>Info</span><span class="dock-dot"></span></a>
+    <a href="perfil.html" class="dock-item" title="Perfil"><i data-lucide="user" width="22" height="22"></i><span>Perfil</span><span class="dock-dot"></span></a>
 </nav>
 
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>

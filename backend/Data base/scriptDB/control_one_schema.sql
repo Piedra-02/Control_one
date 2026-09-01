@@ -1,19 +1,6 @@
--- =========================================================
--- Control One - Esquema de base de datos (v2)
--- Aplicación de un solo usuario (sin login).
--- Basado en: Mapa de afinidad, Patrones encontrados y
--- Estructura general de navegación.
--- Motor objetivo: PostgreSQL
--- =========================================================
 
-CREATE EXTENSION IF NOT EXISTS "pgcrypto"; -- para gen_random_uuid()
+CREATE EXTENSION IF NOT EXISTS "pgcrypto"; 
 
--- ---------------------------------------------------------
--- USUARIOS
--- Login simple con un único usuario fijo. La contraseña
--- se guarda como hash (bcrypt vía pgcrypto), nunca en texto
--- plano.
--- ---------------------------------------------------------
 CREATE TABLE usuarios (
     id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     usuario          VARCHAR(50) NOT NULL UNIQUE,
@@ -21,15 +8,9 @@ CREATE TABLE usuarios (
     fecha_creacion   TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Usuario inicial: douglas123 / cruz123
 INSERT INTO usuarios (usuario, contrasena_hash)
 VALUES ('douglas123', crypt('cruz123', gen_salt('bf')));
 
--- ---------------------------------------------------------
--- CONFIGURACION
--- Fila única con los ajustes generales de la app,
--- incluido el correo donde llegan los avisos.
--- ---------------------------------------------------------
 CREATE TABLE configuracion (
     id                    SMALLINT PRIMARY KEY DEFAULT 1,
     correo_notificacion   VARCHAR(160) NOT NULL,
@@ -38,19 +19,12 @@ CREATE TABLE configuracion (
     CONSTRAINT solo_una_fila CHECK (id = 1)
 );
 
--- ---------------------------------------------------------
--- CATEGORIAS  (patrón: "Categorías y filtros")
--- Transversal: tareas, eventos, notas y archivos
--- ---------------------------------------------------------
 CREATE TABLE categorias (
     id      UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nombre  VARCHAR(80) NOT NULL UNIQUE,
     color   VARCHAR(20)
 );
 
--- ---------------------------------------------------------
--- TAREAS  (Organización > Tareas y actividades)
--- ---------------------------------------------------------
 CREATE TABLE tareas (
     id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     categoria_id        UUID REFERENCES categorias(id) ON DELETE SET NULL,
@@ -67,9 +41,6 @@ CREATE TABLE tareas (
 CREATE INDEX idx_tareas_estado ON tareas(estado);
 CREATE INDEX idx_tareas_categoria ON tareas(categoria_id);
 
--- ---------------------------------------------------------
--- EVENTOS  (Organización > Calendario)
--- ---------------------------------------------------------
 CREATE TABLE eventos (
     id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     categoria_id   UUID REFERENCES categorias(id) ON DELETE SET NULL,
@@ -83,10 +54,6 @@ CREATE TABLE eventos (
 );
 CREATE INDEX idx_eventos_fecha ON eventos(fecha_inicio);
 
--- ---------------------------------------------------------
--- RECORDATORIOS  (patrón: "Recordatorios y notificaciones")
--- Puede asociarse a una tarea O a un evento (no ambos)
--- ---------------------------------------------------------
 CREATE TABLE recordatorios (
     id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tarea_id       UUID REFERENCES tareas(id) ON DELETE CASCADE,
@@ -103,9 +70,6 @@ CREATE TABLE recordatorios (
 );
 CREATE INDEX idx_recordatorios_pendientes ON recordatorios(fecha_hora) WHERE enviado = FALSE;
 
--- ---------------------------------------------------------
--- NOTAS  (Información > Notas)
--- ---------------------------------------------------------
 CREATE TABLE notas (
     id                  UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     categoria_id        UUID REFERENCES categorias(id) ON DELETE SET NULL,
@@ -115,9 +79,6 @@ CREATE TABLE notas (
     fecha_actualizacion TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- ---------------------------------------------------------
--- ARCHIVOS  (Información > Archivos y documentos)
--- ---------------------------------------------------------
 CREATE TABLE archivos (
     id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     categoria_id   UUID REFERENCES categorias(id) ON DELETE SET NULL,
@@ -128,12 +89,6 @@ CREATE TABLE archivos (
     fecha_subida   TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- ---------------------------------------------------------
--- FAVORITOS  (Información > Favoritos)
--- Referencia polimórfica: tipo_elemento indica a qué tabla
--- apunta elemento_id ('tarea', 'evento', 'nota', 'archivo')
--- La integridad referencial se valida a nivel de aplicación.
--- ---------------------------------------------------------
 CREATE TABLE favoritos (
     id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tipo_elemento  VARCHAR(20) NOT NULL CHECK (tipo_elemento IN ('tarea','evento','nota','archivo')),
@@ -142,10 +97,6 @@ CREATE TABLE favoritos (
     UNIQUE (tipo_elemento, elemento_id)
 );
 
--- ---------------------------------------------------------
--- HISTORIAL  (Información > Historial)
--- Registro de actividad reciente, también polimórfico
--- ---------------------------------------------------------
 CREATE TABLE historial (
     id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tipo_elemento  VARCHAR(20) NOT NULL CHECK (tipo_elemento IN ('tarea','evento','nota','archivo')),
@@ -155,13 +106,5 @@ CREATE TABLE historial (
 );
 CREATE INDEX idx_historial_fecha ON historial(fecha DESC);
 
--- ---------------------------------------------------------
--- Fila inicial de configuración
--- Reemplaza el correo por el que vaya a recibir los avisos
--- ---------------------------------------------------------
 INSERT INTO configuracion (id, correo_notificacion, notificar_por_correo)
 VALUES (1, 'tu_correo@gmail.com', TRUE);
-
--- =========================================================
--- Fin del script
--- =========================================================

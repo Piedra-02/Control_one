@@ -1,5 +1,2 @@
--- =========================================================
--- Control One - Ocultar/Archivar recordatorios
--- =========================================================
 ALTER TABLE recordatorios ADD COLUMN oculto BOOLEAN NOT NULL DEFAULT FALSE;
 ALTER TABLE recordatorios ADD COLUMN archivado BOOLEAN NOT NULL DEFAULT FALSE;

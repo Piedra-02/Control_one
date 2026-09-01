@@ -1,18 +1,7 @@
-/**
- * Control One - Interacción de la pantalla de Organización
- * 
- * Funcionalidades:
- * 1. CRUD Completo de Categorías: Crear, Modificar y Eliminar.
- * 2. Visualización de todas las tareas por categoría.
- * 3. REGLA ESTRICTA: Una tarea solo puede pertenecer a UNA categoría simultáneamente.
- * 4. Estadísticas Funcionales en Tiempo Real:
- *    - Tiempo conectado / activo (temporizador en vivo HH:MM:SS).
- *    - Contador de movimientos / acciones / interacciones en la web.
- *    - Gráfico dinámico SVG y modal con historial detallado de actividad.
- */
+
 
 let anioActual = 2026;
-let mesActual = 7; // 0-indexed: 7 es Agosto
+let mesActual = 7; 
 let fechaSeleccionada = '2026-08-27';
 
 const NOMBRES_MESES = [
@@ -20,7 +9,6 @@ const NOMBRES_MESES = [
     'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
 ];
 
-// Estado de Categorías (Colección relacional)
 let categoriasList = [
     { id: 'cat1', nombre: 'IMPORTANTE', color: '#00bcd4' },
     { id: 'cat2', nombre: 'OBLIGATORIO', color: '#00bcd4' },
@@ -29,7 +17,6 @@ let categoriasList = [
     { id: 'cat5', nombre: 'NO IMPORTANTE', color: '#00bcd4' }
 ];
 
-// Estado de Tareas (Cada tarea tiene una sola categoria_id)
 let tareasList = [
     { id: 't1', titulo: 'Hacer las compras del mes', categoria_id: 'cat1', prioridad: 'alta' },
     { id: 't2', titulo: 'Hablar al licenciado de Filosofía', categoria_id: 'cat1', prioridad: 'media' },
@@ -41,20 +28,16 @@ let tareasList = [
     { id: 't8', titulo: 'Diseñar mockups de interfaz', categoria_id: 'cat4', prioridad: 'media' }
 ];
 
-// IDs de las categorías mostradas en las dos tarjetas principales del dashboard
 let visibleCard1CatId = 'cat1';
 let visibleCard2CatId = 'cat2';
 
-// -------------------------------------------------------------
-// ESTADO DE ESTADÍSTICAS Y ACTIVIDAD EN VIVO
-// -------------------------------------------------------------
 let tiempoInicioSesion = null;
 let totalMovimientos = 0;
 let historialAcciones = [];
-// Buffer circular de actividad: 7 muestras (cada una = movimientos en ese intervalo de 30s)
+
 const CHART_SAMPLES = 7;
-let activityBuffer = new Array(CHART_SAMPLES).fill(0); // muestras históricas
-let currentIntervalMoves = 0;                          // movimientos en el intervalo en curso
+let activityBuffer = new Array(CHART_SAMPLES).fill(0); 
+let currentIntervalMoves = 0;                          
 
 document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
@@ -66,16 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileSearchOrg();
     renderizarTarjetasPrincipales();
 
-    // Sincronización con backend Python
     cargarDatosBackend();
 });
 
-/* =========================================================
-   1. TRACKER DE ACTIVIDAD, TIEMPO Y MOVIMIENTOS EN VIVO
-   ========================================================= */
-
 function initEstadisticasTracker() {
-    // 1. Tiempo de sesión
+    
     const savedStart = sessionStorage.getItem('control_one_inicio_sesion');
     if (savedStart) {
         tiempoInicioSesion = parseInt(savedStart, 10);
@@ -84,7 +62,6 @@ function initEstadisticasTracker() {
         sessionStorage.setItem('control_one_inicio_sesion', tiempoInicioSesion.toString());
     }
 
-    // 2. Movimientos guardados
     const savedMovs = localStorage.getItem('control_one_movimientos');
     if (savedMovs) {
         totalMovimientos = parseInt(savedMovs, 10) || 0;
@@ -95,11 +72,9 @@ function initEstadisticasTracker() {
         try { historialAcciones = JSON.parse(savedHist); } catch (e) {}
     }
 
-    // Actualizar timer cada 1 segundo
     actualizarTimerSesion();
     setInterval(actualizarTimerSesion, 1000);
 
-    // Rotar buffer de actividad cada 30 segundos y redibujar gráfico
     setInterval(() => {
         activityBuffer.push(currentIntervalMoves);
         if (activityBuffer.length > CHART_SAMPLES) activityBuffer.shift();
@@ -107,10 +82,8 @@ function initEstadisticasTracker() {
         redrawActivityChart();
     }, 30000);
 
-    // Dibujo inicial del gráfico con datos vacíos
     redrawActivityChart();
 
-    // Escuchar cualquier interacción / movimiento en la web
     document.addEventListener('click', (e) => {
         registrarMovimiento('Clic / Interacción');
     }, true);
@@ -148,7 +121,6 @@ function actualizarTimerSesion() {
         elemInicio.textContent = `${String(fecha.getHours()).padStart(2, '0')}:${String(fecha.getMinutes()).padStart(2, '0')}`;
     }
 
-    // Calcular velocidad de actividad (acciones por minuto)
     const minTranscurridos = Math.max(difSegundos / 60, 0.1);
     const velocidad = (totalMovimientos / minTranscurridos).toFixed(1);
     const elemVel = document.getElementById('modal-stat-velocidad');
@@ -157,7 +129,7 @@ function actualizarTimerSesion() {
 
 function registrarMovimiento(tipo = 'Acción', registrarEnHistorial = true) {
     totalMovimientos++;
-    currentIntervalMoves++;                       // acumular en el intervalo actual
+    currentIntervalMoves++;                       
     localStorage.setItem('control_one_movimientos', totalMovimientos.toString());
 
     const elem = document.getElementById('stat-movimientos-count');
@@ -166,15 +138,8 @@ function registrarMovimiento(tipo = 'Acción', registrarEnHistorial = true) {
     const elemModal = document.getElementById('modal-stat-movimientos');
     if (elemModal) elemModal.textContent = totalMovimientos.toString();
 
-    // Redibujar el gráfico con el valor actualizado del intervalo en curso
     redrawActivityChart();
 }
-
-/* ---------------------------------------------------------
-   GRÁFICO SVG DE ACTIVIDAD EN TIEMPO REAL
-   ViewBox: 0 0 380 135
-   Área de datos: X [25, 355]  Y [25 = pico, 105 = base]
-   --------------------------------------------------------- */
 
 function redrawActivityChart() {
     const lineElem  = document.getElementById('stats-chart-line');
@@ -183,22 +148,20 @@ function redrawActivityChart() {
 
     if (!lineElem || !areaElem || !ptsGroup) return;
 
-    // Construir array de 7 valores: buffer histórico + el intervalo actual en curso
     const samples = [...activityBuffer];
-    // El último punto es siempre el intervalo en curso (aún no rotado)
+    
     if (samples.length > 0) {
         samples[samples.length - 1] = activityBuffer[activityBuffer.length - 1];
     }
-    // Sustituir el "slot" más reciente por currentIntervalMoves para verlo en vivo
+    
     const displaySamples = [...activityBuffer.slice(0, CHART_SAMPLES - 1), currentIntervalMoves];
 
-    const maxVal = Math.max(...displaySamples, 1); // evitar división entre 0
+    const maxVal = Math.max(...displaySamples, 1); 
 
-    // Coordenadas SVG
     const X_START = 25;
     const X_END   = 355;
-    const Y_BASE  = 105;   // sin actividad → base
-    const Y_PEAK  = 25;    // máxima actividad → arriba
+    const Y_BASE  = 105;   
+    const Y_PEAK  = 25;    
     const step    = (X_END - X_START) / (CHART_SAMPLES - 1);
 
     const points = displaySamples.map((v, i) => {
@@ -207,7 +170,6 @@ function redrawActivityChart() {
         return { x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
     });
 
-    // ── Curva Bezier suavizada (Catmull-Rom → convertido a cúbica) ──
     function buildSmoothPath(pts) {
         if (pts.length === 0) return '';
         let d = `M ${pts[0].x},${pts[0].y}`;
@@ -229,7 +191,6 @@ function redrawActivityChart() {
 
     const linePath = buildSmoothPath(points);
 
-    // Área bajo la curva: cerrar el polígono en la línea base
     const areaPath = linePath
         + ` L ${points[points.length - 1].x},${Y_BASE}`
         + ` L ${points[0].x},${Y_BASE} Z`;
@@ -237,7 +198,6 @@ function redrawActivityChart() {
     lineElem.setAttribute('d', linePath);
     areaElem.setAttribute('d', areaPath);
 
-    // ── Puntos de datos (círculos) ──
     ptsGroup.innerHTML = '';
     points.forEach((pt, i) => {
         const isLast = i === points.length - 1;
@@ -249,7 +209,6 @@ function redrawActivityChart() {
         circle.setAttribute('stroke', '#8b5cf6');
         circle.setAttribute('stroke-width', '2');
 
-        // Tooltip nativo con el valor
         const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
         title.textContent = `${displaySamples[i]} movs`;
         circle.appendChild(title);
@@ -267,7 +226,6 @@ function registrarAccion(descripcion) {
         hora: horaStr
     });
 
-    // Guardar solo las últimas 15 acciones
     if (historialAcciones.length > 15) {
         historialAcciones = historialAcciones.slice(0, 15);
     }
@@ -308,7 +266,6 @@ function reiniciarEstadisticas() {
         historialAcciones = [];
         localStorage.setItem('control_one_historial_acciones', JSON.stringify([]));
 
-        // Resetear el gráfico de actividad
         activityBuffer = new Array(CHART_SAMPLES).fill(0);
         currentIntervalMoves = 0;
 
@@ -318,10 +275,6 @@ function reiniciarEstadisticas() {
         abrirModalEstadisticasDetalle();
     }
 }
-
-/* =========================================================
-   2. RENDERIZADO DE CATEGORÍAS Y TAREAS EN PANTALLA
-   ========================================================= */
 
 function renderizarTarjetasPrincipales() {
     if (!categoriasList.find(c => c.id === visibleCard1CatId)) {
@@ -353,7 +306,6 @@ function renderizarTarjetaIndividual(cardNum, catId) {
 
     titleElem.textContent = cat.nombre;
 
-    // Tareas exclusivas de esta categoría
     const tareasCat = tareasList.filter(t => t.categoria_id === cat.id);
 
     listElem.innerHTML = '';
@@ -411,10 +363,6 @@ function alternarCategoriaTarjeta(cardNum) {
     renderizarTarjetasPrincipales();
 }
 
-/* =========================================================
-   3. MODAL AMPLIADO: VER TODAS LAS CATEGORÍAS
-   ========================================================= */
-
 function abrirModalTodasCategorias() {
     cerrarModalesOrg();
     registrarAccion('Abrió vista ampliada de categorías');
@@ -459,13 +407,33 @@ function abrirModalTodasCategorias() {
         container.appendChild(catBox);
     });
 
+    const tareasDesconocidas = tareasList.filter(t => !t.categoria_id || t.categoria_id === 'cat_desconocida' || !categoriasList.some(c => c.id === t.categoria_id));
+    if (tareasDesconocidas.length > 0) {
+        const descBox = document.createElement('div');
+        descBox.className = 'expanded-category-box';
+        const itemsHTML = tareasDesconocidas.map(t => `
+            <li onclick="abrirModalTarea('${t.id}')" title="Clic para editar tarea">
+                <strong>&gt;&gt;</strong> ${escapeHTML(t.titulo)}
+            </li>
+        `).join('');
+        descBox.innerHTML = `
+            <div>
+                <div class="expanded-cat-header">
+                    <h4>DESCONOCIDA (${tareasDesconocidas.length})</h4>
+                    <small style="color:#64748b; font-size:11px;">Tareas sin categoría asignada</small>
+                </div>
+                <ul class="expanded-cat-list">
+                    ${itemsHTML}
+                </ul>
+            </div>
+            <button class="btn-add-task-to-cat" onclick="abrirModalNuevaTareaParaCat('cat_desconocida')">+ Agregar Tarea</button>
+        `;
+        container.appendChild(descBox);
+    }
+
     overlay.classList.add('active');
     modal.classList.add('active');
 }
-
-/* =========================================================
-   4. CRUD DE CATEGORÍAS
-   ========================================================= */
 
 function crearNuevaCategoriaPrompt() {
     abrirModalCrearCategoria();
@@ -608,10 +576,6 @@ function eliminarCategoriaOrg() {
     }
 }
 
-/* =========================================================
-   5. GESTIÓN DE TAREAS (UNA SOLA CATEGORÍA POR TAREA)
-   ========================================================= */
-
 function abrirModalNuevaTareaParaCat(catId) {
     cerrarModalesOrg();
     const overlay = document.getElementById('modal-overlay-org');
@@ -686,13 +650,18 @@ function guardarTareaDesdeOrg(e) {
             registrarAccion(`Modificó tarea "${texto}"`);
         }
     } else {
-        const nueva = {
+        let nueva = {
             id: 't_' + Date.now(),
             titulo: texto,
             categoria_id: nuevaCatId,
             prioridad: 'media',
             estado: 'pendiente'
         };
+
+        if (typeof evaluarAutomatizaciones === 'function') {
+            nueva = evaluarAutomatizaciones('Tareas', nueva);
+        }
+
         tareasList.push(nueva);
         registrarAccion(`Creó tarea "${texto}"`);
 
@@ -722,10 +691,6 @@ function eliminarTareaDesdeOrg() {
         cerrarModalesOrg();
     }
 }
-
-/* =========================================================
-   6. CALENDARIO Y EVENTOS
-   ========================================================= */
 
 function initCalendario() {
     renderizarCalendario(anioActual, mesActual);
@@ -891,7 +856,6 @@ if (overlayElemOrg) {
     });
 }
 
-// Modal Evento Calendario
 function abrirModalEventoOrg(id = null, datos = {}) {
     cerrarModalesOrg();
     const overlay = document.getElementById('modal-overlay-org');
@@ -903,6 +867,25 @@ function abrirModalEventoOrg(id = null, datos = {}) {
     const inputFecha = document.getElementById('input-org-evento-fecha');
     const inputCat = document.getElementById('input-org-evento-cat');
     const btnEliminar = document.getElementById('btn-org-eliminar-evento');
+    const inputImgData = document.getElementById('input-org-evento-imagen-data');
+    const inputImgFile = document.getElementById('input-org-evento-imagen');
+    const previewDiv = document.getElementById('preview-org-evento-imagen');
+    const previewImg = document.getElementById('img-org-evento-preview');
+
+    if (inputImgFile) {
+        inputImgFile.value = '';
+        inputImgFile.onchange = function () {
+            const file = this.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (ev) {
+                if (inputImgData) inputImgData.value = ev.target.result;
+                if (previewImg) previewImg.src = ev.target.result;
+                if (previewDiv) previewDiv.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        };
+    }
 
     if (id) {
         tit.textContent = 'Modificar Evento';
@@ -912,6 +895,14 @@ function abrirModalEventoOrg(id = null, datos = {}) {
         inputFecha.value = datos.fecha || fechaSeleccionada;
         inputCat.value = datos.categoria || 'General';
         btnEliminar.style.display = 'inline-block';
+        if (datos.imagen && previewImg && previewDiv) {
+            inputImgData.value = datos.imagen;
+            previewImg.src = datos.imagen;
+            previewDiv.style.display = 'block';
+        } else {
+            if (inputImgData) inputImgData.value = '';
+            if (previewDiv) previewDiv.style.display = 'none';
+        }
     } else {
         tit.textContent = 'Nuevo Evento en Calendario';
         inputId.value = '';
@@ -920,6 +911,8 @@ function abrirModalEventoOrg(id = null, datos = {}) {
         inputFecha.value = datos.fecha || fechaSeleccionada;
         inputCat.value = 'General';
         btnEliminar.style.display = 'none';
+        if (inputImgData) inputImgData.value = '';
+        if (previewDiv) previewDiv.style.display = 'none';
     }
 
     overlay.classList.add('active');
@@ -934,6 +927,7 @@ function guardarEventoOrg(e) {
     const desc = document.getElementById('input-org-evento-desc').value.trim();
     const fecha = document.getElementById('input-org-evento-fecha').value;
     const cat = document.getElementById('input-org-evento-cat').value;
+    const imagen = document.getElementById('input-org-evento-imagen-data')?.value || '';
 
     if (!nombre) return;
 
@@ -942,7 +936,8 @@ function guardarEventoOrg(e) {
         titulo: nombre,
         descripcion: desc,
         fecha: fecha,
-        categoria: cat
+        categoria: cat,
+        imagen: imagen
     };
 
     let eventos = obtenerEventosStorage();
@@ -988,10 +983,6 @@ function eliminarEventoOrg() {
         cerrarModalesOrg();
     }
 }
-
-/* =========================================================
-   7. PERSISTENCIA Y SINCRONIZACIÓN
-   ========================================================= */
 
 function guardarDatosStorage() {
     localStorage.setItem('control_one_categorias_list', JSON.stringify(categoriasList));
@@ -1074,4 +1065,52 @@ function escapeHTML(str) {
             '"': '&quot;'
         }[tag] || tag)
     );
+}
+
+function evaluarAutomatizaciones(area, entidad) {
+    const reglas = JSON.parse(localStorage.getItem('control_one_historial_auto') || '[]').filter(r => r.activa !== false && (r.area === area || r.area === 'General'));
+    if (reglas.length === 0) return entidad;
+
+    let resultado = { ...entidad };
+    reglas.forEach(regla => {
+        const condicion = (regla.condicion || '').toLowerCase().trim();
+        const textoEntidad = `${entidad.titulo || ''} ${entidad.descripcion || ''}`.toLowerCase();
+
+        let cumple = false;
+        if (!condicion) {
+            cumple = true;
+        } else if (regla.tipo_regla === 'solo_si_no_se_cumple_condicion') {
+            cumple = !textoEntidad.includes(condicion);
+        } else {
+            cumple = textoEntidad.includes(condicion);
+        }
+
+        if (cumple) {
+            if (area === 'Tareas') {
+                const descUpper = (regla.descripcion || '').toUpperCase();
+                const cats = JSON.parse(localStorage.getItem('control_one_categorias_list') || '[]');
+                const catMatch = cats.find(c => descUpper.includes(c.nombre.toUpperCase()));
+                if (catMatch) {
+                    resultado.categoria_id = catMatch.id;
+                }
+                if (descUpper.includes('ALTA') || descUpper.includes('URGENTE')) {
+                    resultado.prioridad = 'alta';
+                }
+            }
+
+            let historial = JSON.parse(localStorage.getItem('control_one_historial_auto') || '[]');
+            historial.unshift({
+                id: 'exec_' + Date.now(),
+                automatizacion_nombre: regla.automatizacion_nombre || regla.nombre || 'Automatización',
+                area: area,
+                descripcion: `Auto-ejecutado: "${regla.descripcion || regla.nombre}" sobre "${entidad.titulo || 'Tarea'}"`,
+                fecha_ejecucion: new Date().toISOString(),
+                activa: true,
+                estado: 'ejecutada'
+            });
+            localStorage.setItem('control_one_historial_auto', JSON.stringify(historial.slice(0, 50)));
+        }
+    });
+
+    return resultado;
 }

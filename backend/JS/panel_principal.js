@@ -1,8 +1,4 @@
-/**
- * Control One - Interacción Frontend para Panel Principal
- * Incluye gestión de Tarjetas Modales para Crear, Modificar y Eliminar
- * Tareas, Eventos y Recordatorios en la misma pantalla.
- */
+
 
 document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
@@ -15,14 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initReminderStars();
     initMobileCollapsibles();
 
-    // Cargar datos sincronizados de LocalStorage / Backend
     cargarDatosLocales();
     sincronizarConBackendPython();
 });
 
-/**
- * Desplazamiento suave para los botones de navegación
- */
 function initNavScroll() {
     const navLinks = document.querySelectorAll('.subnav-btn, .nav-pill');
 
@@ -43,9 +35,6 @@ function initNavScroll() {
     });
 }
 
-/**
- * Checkbox interactivo en las tarjetas de tareas
- */
 function initTaskCheckboxes() {
     const checkboxes = document.querySelectorAll('.task-item-card input[type="checkbox"]');
 
@@ -78,9 +67,6 @@ function initTaskCheckboxes() {
     });
 }
 
-/**
- * Al hacer clic en una tarea se abre el modal para modificar o eliminar
- */
 function initTaskClickToEdit() {
     const taskCards = document.querySelectorAll('.task-item-card');
     taskCards.forEach(card => {
@@ -101,9 +87,6 @@ function initTaskClickToEdit() {
     }
 }
 
-/**
- * Al hacer clic en eventos se abre modal de eventos
- */
 function initEventClickToEdit() {
     const addBox = document.getElementById('btn-add-event-box');
     if (addBox) {
@@ -123,9 +106,6 @@ function initEventClickToEdit() {
     });
 }
 
-/**
- * Al hacer clic en recordatorios se abre modal de recordatorios
- */
 function initReminderClickToEdit() {
     const remCards = document.querySelectorAll('.reminder-item-card');
     remCards.forEach(card => {
@@ -141,17 +121,12 @@ function initReminderClickToEdit() {
     });
 }
 
-/* =========================================================
-   FUNCIONES DE TARJETAS MODALES (UI POPUP EN LA MISMA PANTALLA)
-   ========================================================= */
-
 function cerrarModales() {
     const overlay = document.getElementById('modal-overlay');
     if (overlay) overlay.classList.remove('active');
     document.querySelectorAll('.modal-card').forEach(m => m.classList.remove('active'));
 }
 
-// Cerrar con Escape o clic fuera
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') cerrarModales();
 });
@@ -163,7 +138,6 @@ if (overlayElem) {
     });
 }
 
-// 1. MODAL TAREA
 function abrirModalTarea(id = null, texto = '') {
     cerrarModales();
     const overlay = document.getElementById('modal-overlay');
@@ -172,17 +146,33 @@ function abrirModalTarea(id = null, texto = '') {
     const inputId = document.getElementById('input-tarea-id');
     const inputTexto = document.getElementById('input-tarea-texto');
     const btnEliminar = document.getElementById('btn-eliminar-tarea');
+    const selectCat = document.getElementById('input-tarea-categoria');
+
+    if (selectCat) {
+        selectCat.innerHTML = '<option value="">DESCONOCIDA</option>';
+        const cats = JSON.parse(localStorage.getItem('control_one_categorias_list') || '[]');
+        cats.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = c.nombre;
+            selectCat.appendChild(opt);
+        });
+    }
 
     if (id) {
         tit.textContent = 'Modificar Tarea';
         inputId.value = id;
         inputTexto.value = texto;
         btnEliminar.style.display = 'inline-block';
+        const tareas = JSON.parse(localStorage.getItem('control_one_tareas_list') || '[]');
+        const tarea = tareas.find(t => String(t.id) === String(id));
+        if (tarea && selectCat) selectCat.value = tarea.categoria_id || '';
     } else {
         tit.textContent = 'Nueva Tarea';
         inputId.value = '';
         inputTexto.value = '';
         btnEliminar.style.display = 'none';
+        if (selectCat) selectCat.value = '';
     }
 
     overlay.classList.add('active');
@@ -194,10 +184,19 @@ function guardarTareaModal(e) {
     e.preventDefault();
     const id = document.getElementById('input-tarea-id').value;
     const texto = document.getElementById('input-tarea-texto').value.trim();
+    const categoriaId = document.getElementById('input-tarea-categoria')?.value || '';
 
     if (!texto) return;
 
+    let tareas = JSON.parse(localStorage.getItem('control_one_tareas_list') || '[]');
+
     if (id) {
+        const tarea = tareas.find(t => String(t.id) === String(id));
+        if (tarea) {
+            tarea.titulo = texto;
+            tarea.categoria_id = categoriaId || null;
+        }
+
         const card = document.querySelector(`.task-item-card[data-task-id="${id}"]`);
         if (card) {
             const textElem = card.querySelector('.task-item-text');
@@ -207,18 +206,33 @@ function guardarTareaModal(e) {
         fetch(`http://127.0.0.1:5000/api/panel/tareas/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ titulo: texto })
+            body: JSON.stringify({ titulo: texto, categoria_id: categoriaId })
         }).catch(() => {});
     } else {
+        let nueva = {
+            id: 'tp_' + Date.now(),
+            titulo: texto,
+            categoria_id: categoriaId || null,
+            prioridad: document.getElementById('input-tarea-prioridad')?.value || 'media',
+            estado: 'pendiente'
+        };
+
+        if (typeof evaluarAutomatizaciones === 'function') {
+            nueva = evaluarAutomatizaciones('Tareas', nueva);
+        }
+
+        tareas.push(nueva);
+
         fetch('http://127.0.0.1:5000/api/panel/tareas', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ titulo: texto })
+            body: JSON.stringify(nueva)
         })
             .then(() => sincronizarConBackendPython())
             .catch(() => {});
     }
 
+    localStorage.setItem('control_one_tareas_list', JSON.stringify(tareas));
     cerrarModales();
 }
 
@@ -234,7 +248,6 @@ function eliminarTareaModal() {
     }
 }
 
-// 2. MODAL EVENTO
 function abrirModalEvento(id = null, datos = {}) {
     cerrarModales();
     const overlay = document.getElementById('modal-overlay');
@@ -299,7 +312,7 @@ function eliminarEventoModal() {
     if (!id) return;
 
     if (confirm('¿Eliminar este evento?')) {
-        // Limpiar de localStorage también
+        
         let eventos = JSON.parse(localStorage.getItem('control_one_eventos') || '[]');
         eventos = eventos.filter(e => String(e.id) !== String(id));
         localStorage.setItem('control_one_eventos', JSON.stringify(eventos));
@@ -316,7 +329,6 @@ function eliminarEventoModal() {
     }
 }
 
-// 3. MODAL RECORDATORIO
 function abrirModalRecordatorio(id = null, datos = {}) {
     cerrarModales();
     const overlay = document.getElementById('modal-overlay');
@@ -391,9 +403,6 @@ function eliminarRecordatorioModal() {
     }
 }
 
-/**
- * Sincronización LocalStorage entre Panel Principal y Organización
- */
 function guardarEventoEnStorage(evento) {
     let eventos = JSON.parse(localStorage.getItem('control_one_eventos') || '[]');
     const idx = eventos.findIndex(e => e.id === evento.id);
@@ -408,18 +417,38 @@ function guardarEventoEnStorage(evento) {
 function cargarDatosLocales() {
     const eventos = JSON.parse(localStorage.getItem('control_one_eventos') || '[]');
     if (eventos.length > 0) {
-        const ultimo = eventos[eventos.length - 1];
+        const hoy = new Date().toISOString().split('T')[0];
+        let eventoMostrar = eventos.find(e => e.fecha === hoy);
+        if (!eventoMostrar) {
+            const futuros = eventos.filter(e => e.fecha >= hoy).sort((a, b) => a.fecha.localeCompare(b.fecha));
+            eventoMostrar = futuros[0] || eventos[eventos.length - 1];
+        }
         const eventCard = document.querySelector('.event-main-card');
-        if (eventCard && ultimo) {
+        if (eventCard && eventoMostrar) {
+            eventCard.setAttribute('data-event-id', eventoMostrar.id);
             const tit = eventCard.querySelector('.event-card-header h3');
-            if (tit) tit.textContent = ultimo.titulo;
+            if (tit) tit.textContent = eventoMostrar.titulo;
+            const desc = eventCard.querySelector('.event-card-text');
+            if (desc) desc.textContent = eventoMostrar.descripcion || '';
+            const fecha = eventCard.querySelector('.event-card-date');
+            if (fecha) fecha.textContent = eventoMostrar.fecha || '';
+            let imgElem = eventCard.querySelector('.event-card-img');
+            if (eventoMostrar.imagen) {
+                if (!imgElem) {
+                    imgElem = document.createElement('img');
+                    imgElem.className = 'event-card-img';
+                    imgElem.style.cssText = 'max-height:80px; border-radius:8px; object-fit:cover; margin-top:8px;';
+                    eventCard.appendChild(imgElem);
+                }
+                imgElem.src = eventoMostrar.imagen;
+                imgElem.alt = eventoMostrar.titulo;
+            } else if (imgElem) {
+                imgElem.remove();
+            }
         }
     }
 }
 
-/**
- * Búsqueda en vivo
- */
 function initLiveSearch() {
     const desktopSearch = document.getElementById('desktop-search-input');
     const mobileSearchBtn = document.getElementById('mobile-search-trigger');
@@ -454,9 +483,6 @@ function initLiveSearch() {
     }
 }
 
-/**
- * Alternar estrella en los recordatorios
- */
 function initReminderStars() {
     const starButtons = document.querySelectorAll('.reminder-star-icon');
 
@@ -478,9 +504,6 @@ function initReminderStars() {
     });
 }
 
-/**
- * Colapsables opcionales en móvil
- */
 function initMobileCollapsibles() {
     const chevrons = document.querySelectorAll('.mobile-chevron');
 
@@ -523,13 +546,8 @@ async function sincronizarConBackendPython() {
     } catch (e) {}
 }
 
-/**
- * Reemplaza las tarjetas de ejemplo (tareas, recordatorios, eventos)
- * por las que realmente existen en la base de datos y muestra mensaje de
- * lista vacía si no hay elementos.
- */
 function renderizarDesdeBackend(data) {
-    // --- TAREAS ---
+    
     const tasksGrid = document.querySelector('.tasks-grid');
     if (tasksGrid) {
         if (Array.isArray(data.tareas) && data.tareas.length > 0) {
@@ -551,7 +569,6 @@ function renderizarDesdeBackend(data) {
         }
     }
 
-    // --- RECORDATORIOS ---
     const remindersGrid = document.querySelector('.reminders-grid');
     if (remindersGrid) {
         if (Array.isArray(data.recordatorios) && data.recordatorios.length > 0) {
@@ -603,7 +620,6 @@ function renderizarDesdeBackend(data) {
         }
     }
 
-    // --- EVENTOS ---
     const eventsGrid = document.querySelector('.events-grid');
     if (eventsGrid) {
         const addBox = document.getElementById('btn-add-event-box');
@@ -647,7 +663,6 @@ function renderizarDesdeBackend(data) {
         }
     }
 
-    // Volver a activar los clics/checkboxes sobre las tarjetas nuevas
     initTaskCheckboxes();
     initTaskClickToEdit();
     initEventClickToEdit();
@@ -656,15 +671,12 @@ function renderizarDesdeBackend(data) {
     initReminderFlagButtons();
 }
 
-/**
- * Botones de ocultar/archivar en cada recordatorio.
- */
 function initReminderFlagButtons() {
     document.querySelectorAll('.reminder-flag-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             e.stopPropagation();
             const id = btn.getAttribute('data-reminder-flag-id');
-            const campo = btn.getAttribute('data-flag'); // 'oculto' o 'archivado'
+            const campo = btn.getAttribute('data-flag'); 
             try {
                 await fetch(`http://127.0.0.1:5000/api/panel/recordatorios/${id}`, {
                     method: 'PATCH',
@@ -675,4 +687,52 @@ function initReminderFlagButtons() {
             } catch (err) {}
         });
     });
+}
+
+function evaluarAutomatizaciones(area, entidad) {
+    const reglas = JSON.parse(localStorage.getItem('control_one_historial_auto') || '[]').filter(r => r.activa !== false && (r.area === area || r.area === 'General'));
+    if (reglas.length === 0) return entidad;
+
+    let resultado = { ...entidad };
+    reglas.forEach(regla => {
+        const condicion = (regla.condicion || '').toLowerCase().trim();
+        const textoEntidad = `${entidad.titulo || ''} ${entidad.descripcion || ''}`.toLowerCase();
+
+        let cumple = false;
+        if (!condicion) {
+            cumple = true;
+        } else if (regla.tipo_regla === 'solo_si_no_se_cumple_condicion') {
+            cumple = !textoEntidad.includes(condicion);
+        } else {
+            cumple = textoEntidad.includes(condicion);
+        }
+
+        if (cumple) {
+            if (area === 'Tareas') {
+                const descUpper = (regla.descripcion || '').toUpperCase();
+                const cats = JSON.parse(localStorage.getItem('control_one_categorias_list') || '[]');
+                const catMatch = cats.find(c => descUpper.includes(c.nombre.toUpperCase()));
+                if (catMatch) {
+                    resultado.categoria_id = catMatch.id;
+                }
+                if (descUpper.includes('ALTA') || descUpper.includes('URGENTE')) {
+                    resultado.prioridad = 'alta';
+                }
+            }
+
+            let historial = JSON.parse(localStorage.getItem('control_one_historial_auto') || '[]');
+            historial.unshift({
+                id: 'exec_' + Date.now(),
+                automatizacion_nombre: regla.automatizacion_nombre || regla.nombre || 'Automatización',
+                area: area,
+                descripcion: `Auto-ejecutado: "${regla.descripcion || regla.nombre}" sobre "${entidad.titulo || 'Tarea'}"`,
+                fecha_ejecucion: new Date().toISOString(),
+                activa: true,
+                estado: 'ejecutada'
+            });
+            localStorage.setItem('control_one_historial_auto', JSON.stringify(historial.slice(0, 50)));
+        }
+    });
+
+    return resultado;
 }

@@ -1,10 +1,5 @@
-/**
- * Control One - Interacción Frontend para la vista de Actividades
- * Conecta las tarjetas de Correos, Documentos y Notas con el backend en Python.
- * Incluye modales interactivos en la misma página para crear, ver, editar y eliminar.
- */
 
-// Estado global en memoria para sincronización inmediata
+
 let estadoActividades = {
     correos: [],
     carpetas: [],
@@ -22,14 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initLiveSearch();
     initMobileCollapsibles();
 
-    // Cargar datos locales y sincronizar con backend Python
     cargarDatosLocales();
     sincronizarConBackendPython();
 });
 
-/* =========================================================
-   1. NAVEGACIÓN Y DESPLAZAMIENTO SUAVE
-   ========================================================= */
 function initNavScroll() {
     const navLinks = document.querySelectorAll('.subnav-btn, .nav-pill');
 
@@ -39,16 +30,14 @@ function initNavScroll() {
             if (targetId && targetId.startsWith('#')) {
                 e.preventDefault();
                 navLinks.forEach(l => l.classList.remove('active'));
-                
-                // Activar el link clickeado y su par en mobile/desktop
+
                 document.querySelectorAll(`.subnav-btn[href="${targetId}"], .nav-pill[href="${targetId}"]`)
                     .forEach(el => el.classList.add('active'));
 
                 const targetElem = document.querySelector(targetId);
                 if (targetElem) {
                     targetElem.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    
-                    // Efecto visual de resalte suave en la tarjeta
+
                     targetElem.classList.add('card-highlight');
                     setTimeout(() => targetElem.classList.remove('card-highlight'), 1200);
                 }
@@ -57,11 +46,8 @@ function initNavScroll() {
     });
 }
 
-/* =========================================================
-   2. GESTIÓN DE CORREOS
-   ========================================================= */
 function initEmailInteractions() {
-    // Botón Redactar
+    
     const btnRedactar = document.getElementById('btn-redactar-correo');
     if (btnRedactar) {
         btnRedactar.addEventListener('click', (e) => {
@@ -70,7 +56,6 @@ function initEmailInteractions() {
         });
     }
 
-    // Botones de filtro de correos (Bandeja, Grupos/Social, Etiquetas)
     const filterBtns = document.querySelectorAll('.email-filter-icon-btn');
     filterBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -82,7 +67,6 @@ function initEmailInteractions() {
         });
     });
 
-    // Delegación de eventos para filas de correos
     const emailList = document.getElementById('email-items-container');
     if (emailList) {
         emailList.addEventListener('click', (e) => {
@@ -91,7 +75,6 @@ function initEmailInteractions() {
 
             const correoId = row.getAttribute('data-email-id');
 
-            // Clic en el Checkbox
             if (e.target.closest('.email-check-wrapper')) {
                 e.stopPropagation();
                 const chk = row.querySelector('.email-check-wrapper input');
@@ -101,14 +84,12 @@ function initEmailInteractions() {
                 return;
             }
 
-            // Clic en la Estrella (Favorito / Destacado)
             if (e.target.closest('.email-star-btn')) {
                 e.stopPropagation();
                 toggleEstrellaCorreo(correoId, row);
                 return;
             }
 
-            // Clic en la fila -> Abrir detalle del correo
             abrirModalDetalleCorreo(correoId);
         });
     }
@@ -117,8 +98,7 @@ function initEmailInteractions() {
 function toggleEstrellaCorreo(correoId, rowElem) {
     const starBtn = rowElem.querySelector('.email-star-btn');
     const isDestacado = starBtn.classList.toggle('active');
-    
-    // Actualizar SVG
+
     const svg = starBtn.querySelector('svg polygon');
     if (isDestacado) {
         svg.setAttribute('fill', '#f59e0b');
@@ -128,7 +108,6 @@ function toggleEstrellaCorreo(correoId, rowElem) {
         svg.setAttribute('stroke', 'currentColor');
     }
 
-    // Enviar a Python
     fetch('http://127.0.0.1:5000/api/actividades/correos/destacado', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -169,7 +148,7 @@ function guardarCorreoNuevo(e) {
     if (!dest || !asunto) return;
 
     const newId = 'c_' + Date.now();
-    const nuevoCorreo = {
+    let nuevoCorreo = {
         id: newId,
         remitente: 'Equipos de Gmail',
         email_remitente: 'usuario@controlone.app',
@@ -182,10 +161,12 @@ function guardarCorreoNuevo(e) {
         categoria: cat
     };
 
-    // Agregar a la UI
+    if (typeof evaluarAutomatizaciones === 'function') {
+        nuevoCorreo = evaluarAutomatizaciones('Correo electrónico', nuevoCorreo);
+    }
+
     renderizarCorreoEnLista(nuevoCorreo, true);
 
-    // Guardar en Storage y Backend
     guardarCorreoEnStorage(nuevoCorreo);
     fetch('http://127.0.0.1:5000/api/actividades/correos', {
         method: 'POST',
@@ -284,9 +265,6 @@ function eliminarCorreoDetalle() {
     }
 }
 
-/* =========================================================
-   3. GESTIÓN DE DOCUMENTOS Y CARPETAS
-   ========================================================= */
 function initFolderInteractions() {
     const folderItems = document.querySelectorAll('.folder-item');
     folderItems.forEach(item => {
@@ -307,15 +285,32 @@ function abrirModalCarpeta(folderId, folderName) {
     document.getElementById('modal-carpeta-titulo').textContent = `Carpeta: ${folderName}`;
     document.getElementById('modal-carpeta-id').value = folderId;
 
-    // Buscar archivos en estado o generar archivos de muestra acordes
     const carpeta = estadoActividades.carpetas.find(c => c.id === folderId || c.nombre.toLowerCase() === folderName.toLowerCase());
     const filesList = document.getElementById('carpeta-archivos-lista');
     filesList.innerHTML = '';
 
-    const archivos = (carpeta && carpeta.archivos) ? carpeta.archivos : [
+    let archivos = (carpeta && carpeta.archivos) ? [...carpeta.archivos] : [
         { id: 'a1', nombre: `${folderName}_Reporte.pdf`, tamano: '1.8 MB', tipo: 'pdf', fecha: '2026-08-31' },
         { id: 'a2', nombre: `Respaldo_${folderName}.zip`, tamano: '4.2 MB', tipo: 'zip', fecha: '2026-08-30' }
     ];
+
+    if (folderId === 'f_documentos' || folderName.toLowerCase() === 'documentos') {
+        const notas = JSON.parse(localStorage.getItem('control_one_notas') || '[]');
+        const notaActiva = JSON.parse(localStorage.getItem('control_one_nota_activa') || 'null');
+        const todasNotas = [...notas];
+        if (notaActiva && !todasNotas.find(n => n.id === notaActiva.id)) {
+            todasNotas.unshift(notaActiva);
+        }
+        todasNotas.forEach(nota => {
+            archivos.unshift({
+                id: 'nota_' + nota.id,
+                nombre: (nota.titulo || 'Sin título') + '.txt',
+                tamano: ((nota.contenido || '').length / 1024).toFixed(1) + ' KB',
+                tipo: 'nota',
+                fecha: nota.fecha || new Date().toISOString().split('T')[0]
+            });
+        });
+    }
 
     archivos.forEach(arch => {
         const item = document.createElement('div');
@@ -391,16 +386,12 @@ function eliminarArchivoUI(archivoId, folderId) {
     }
 }
 
-/* =========================================================
-   4. GESTIÓN Y EDITOR DE NOTAS
-   ========================================================= */
 function initNotesEditor() {
     const titleInput = document.getElementById('nota-titulo-input');
     const contentTextarea = document.getElementById('nota-contenido-textarea');
     const btnEditTitle = document.getElementById('btn-edit-title-icon');
     const btnEditContent = document.getElementById('btn-edit-content-icon');
 
-    // Botones de lápiz enfocan los campos
     if (btnEditTitle && titleInput) {
         btnEditTitle.addEventListener('click', () => {
             titleInput.focus();
@@ -414,7 +405,6 @@ function initNotesEditor() {
         });
     }
 
-    // Auto-guardado con debounce al escribir en Título o Contenido
     let timeoutGuardado = null;
     function autoGuardarNota() {
         clearTimeout(timeoutGuardado);
@@ -425,9 +415,12 @@ function initNotesEditor() {
             estadoActividades.notaActual.titulo = tit;
             estadoActividades.notaActual.contenido = cont;
 
+            if (typeof evaluarAutomatizaciones === 'function') {
+                evaluarAutomatizaciones('Notas', { titulo: tit, contenido: cont });
+            }
+
             localStorage.setItem('control_one_nota_activa', JSON.stringify(estadoActividades.notaActual));
 
-            // Enviar a Python Backend
             fetch('http://127.0.0.1:5000/api/actividades/notas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -440,9 +433,6 @@ function initNotesEditor() {
     if (contentTextarea) contentTextarea.addEventListener('input', autoGuardarNota);
 }
 
-/* =========================================================
-   5. BÚSQUEDA EN TIEMPO REAL
-   ========================================================= */
 function initLiveSearch() {
     const desktopSearch = document.getElementById('desktop-search-input');
     const mobileSearchBtn = document.getElementById('mobile-search-trigger');
@@ -450,21 +440,18 @@ function initLiveSearch() {
     function ejecutarBusqueda(query) {
         const q = query.toLowerCase().trim();
 
-        // 1. Filtrar Correos
         const emailRows = document.querySelectorAll('.email-item-row');
         emailRows.forEach(row => {
             const text = row.textContent.toLowerCase();
             row.style.display = (!q || text.includes(q)) ? 'flex' : 'none';
         });
 
-        // 2. Filtrar Carpetas
         const folders = document.querySelectorAll('.folder-item');
         folders.forEach(f => {
             const text = f.textContent.toLowerCase();
             f.style.opacity = (!q || text.includes(q)) ? '1' : '0.25';
         });
 
-        // 3. Filtrar / Resaltar Notas
         const noteCard = document.querySelector('.notes-main-card');
         if (noteCard) {
             const tit = document.getElementById('nota-titulo-input')?.value.toLowerCase() || '';
@@ -489,9 +476,6 @@ function initLiveSearch() {
     }
 }
 
-/* =========================================================
-   6. COLAPSABLES EN MÓVIL
-   ========================================================= */
 function initMobileCollapsibles() {
     const chevrons = document.querySelectorAll('.mobile-chevron, .card-chevron-btn');
 
@@ -512,9 +496,6 @@ function initMobileCollapsibles() {
     });
 }
 
-/* =========================================================
-   7. CONTROL DE MODALES FLOTANTES
-   ========================================================= */
 function cerrarModales() {
     const overlay = document.getElementById('modal-overlay');
     if (overlay) overlay.classList.remove('active');
@@ -532,9 +513,6 @@ if (overlayElem) {
     });
 }
 
-/* =========================================================
-   8. PERSISTENCIA LOCAL Y SINCRONIZACIÓN CON PYTHON
-   ========================================================= */
 function guardarCorreoEnStorage(correo) {
     let correos = JSON.parse(localStorage.getItem('control_one_correos') || '[]');
     correos.unshift(correo);
@@ -542,7 +520,7 @@ function guardarCorreoEnStorage(correo) {
 }
 
 function cargarDatosLocales() {
-    // Cargar nota activa guardada
+    
     const notaGuardada = JSON.parse(localStorage.getItem('control_one_nota_activa') || 'null');
     if (notaGuardada) {
         estadoActividades.notaActual = notaGuardada;
@@ -588,4 +566,47 @@ function escapeHTML(str) {
             '"': '&quot;'
         }[tag] || tag)
     );
+}
+
+function evaluarAutomatizaciones(area, entidad) {
+    const reglas = JSON.parse(localStorage.getItem('control_one_historial_auto') || '[]').filter(r => r.activa !== false && (r.area === area || r.area === 'General'));
+    if (reglas.length === 0) return entidad;
+
+    let resultado = { ...entidad };
+    reglas.forEach(regla => {
+        const condicion = (regla.condicion || '').toLowerCase().trim();
+        const textoEntidad = `${entidad.titulo || ''} ${entidad.descripcion || ''} ${entidad.contenido || ''} ${entidad.asunto || ''}`.toLowerCase();
+
+        let cumple = false;
+        if (!condicion) {
+            cumple = true;
+        } else if (regla.tipo_regla === 'solo_si_no_se_cumple_condicion') {
+            cumple = !textoEntidad.includes(condicion);
+        } else {
+            cumple = textoEntidad.includes(condicion);
+        }
+
+        if (cumple) {
+            if (area === 'Correo electrónico') {
+                const descLower = (regla.descripcion || '').toLowerCase();
+                if (descLower.includes('social')) resultado.categoria = 'social';
+                else if (descLower.includes('promocion')) resultado.categoria = 'promociones';
+                else if (descLower.includes('suscripcion')) resultado.categoria = 'suscripciones';
+            }
+
+            let historial = JSON.parse(localStorage.getItem('control_one_historial_auto') || '[]');
+            historial.unshift({
+                id: 'exec_' + Date.now(),
+                automatizacion_nombre: regla.automatizacion_nombre || regla.nombre || 'Automatización',
+                area: area,
+                descripcion: `Auto-ejecutado: "${regla.descripcion || regla.nombre}" sobre "${entidad.titulo || entidad.asunto || 'Elemento'}"`,
+                fecha_ejecucion: new Date().toISOString(),
+                activa: true,
+                estado: 'ejecutada'
+            });
+            localStorage.setItem('control_one_historial_auto', JSON.stringify(historial.slice(0, 50)));
+        }
+    });
+
+    return resultado;
 }

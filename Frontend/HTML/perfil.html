@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Control One — Perfil</title>
 <link rel="stylesheet" href="../CSS/perfil.css">
+<link rel="stylesheet" href="../CSS/nav-global.css">
 </head>
 <body>
 <div class="app-shell">
 
-  <!-- Topbar (idéntico al de Organización / Panel Principal) -->
   <header class="desktop-header">
-    <a href="perfil.html" class="header-logo" title="Control One">
+    <a href="Panel principal.html" class="header-logo" title="Control One">
       <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
       <span class="logo-fallback">1</span>
     </a>
@@ -20,10 +20,12 @@
       <input type="text" placeholder="BUSCAR">
     </div>
     <div class="desktop-actions">
-      <a href="Actividades.html" class="icon-btn" title="Actividades"><i data-lucide="layers" width="22" height="22"></i></a>
-      <a href="Automatizacion.html" class="icon-btn" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i></a>
-      <button class="icon-btn" title="Chat / Notificaciones"><i data-lucide="message-circle" width="22" height="22"></i></button>
-      <a href="Informacion.html" class="icon-btn" title="Información"><i data-lucide="info" width="22" height="22"></i></a>
+      <a href="Panel principal.html" class="nav-icon-link" data-label="Inicio" title="Panel Principal"><i data-lucide="home" width="22" height="22"></i></a>
+      <a href="Organizacion.html" class="nav-icon-link" data-label="Organización" title="Organización"><i data-lucide="layout-dashboard" width="22" height="22"></i></a>
+      <a href="Actividades.html" class="nav-icon-link" data-label="Actividades" title="Actividades"><i data-lucide="layers" width="22" height="22"></i></a>
+      <a href="Automatizacion.html" class="nav-icon-link" data-label="Automatización" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i></a>
+      <a href="Informacion.html" class="nav-icon-link" data-label="Info" title="Información"><i data-lucide="info" width="22" height="22"></i></a>
+      <a href="perfil.html" class="nav-icon-link active-screen" data-label="Perfil" title="Perfil"><i data-lucide="user" width="22" height="22"></i></a>
     </div>
   </header>
 
@@ -37,7 +39,6 @@
 
   <main class="perfil-grid">
 
-    <!-- Sidebar: avatar + contactos (igual al Figma, siempre visible) -->
     <aside class="perfil-sidebar">
       <div class="avatar-wrap">
         <div class="avatar-circle">
@@ -50,7 +51,6 @@
       <ul class="contactos-list" id="contactosList"></ul>
     </aside>
 
-    <!-- Panel principal: siempre el listado de "Otros", igual al Figma -->
     <section class="panel-otros">
       <div class="otros-row" data-action="ver-ocultos">
         <i data-lucide="eye" width="18" height="18"></i> Ocultos
@@ -78,16 +78,15 @@
   </main>
 </div>
 
-<!-- Dock inferior (solo visible en móvil) -->
-<nav class="mobile-bottom-dock">
-  <a href="Actividades.html" class="dock-btn" title="Actividades"><i data-lucide="layers" width="22" height="22"></i></a>
-  <a href="Informacion.html" class="dock-btn" title="Información"><i data-lucide="info" width="22" height="22"></i></a>
-  <button class="dock-search-btn" title="Buscar"><i data-lucide="search" width="20" height="20"></i></button>
-  <a href="Automatizacion.html" class="dock-btn" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i></a>
-  <button class="dock-btn" title="Chat"><i data-lucide="message-circle" width="22" height="22"></i></button>
+<nav class="mobile-bottom-nav">
+    <a href="Panel principal.html" class="dock-item" title="Inicio"><i data-lucide="home" width="22" height="22"></i><span>Inicio</span><span class="dock-dot"></span></a>
+    <a href="Organizacion.html" class="dock-item" title="Organización"><i data-lucide="layout-dashboard" width="22" height="22"></i><span>Organizar</span><span class="dock-dot"></span></a>
+    <a href="Actividades.html" class="dock-item" title="Actividades"><i data-lucide="layers" width="22" height="22"></i><span>Actividad</span><span class="dock-dot"></span></a>
+    <a href="Automatizacion.html" class="dock-item" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i><span>Auto</span><span class="dock-dot"></span></a>
+    <a href="Informacion.html" class="dock-item" title="Información"><i data-lucide="info" width="22" height="22"></i><span>Info</span><span class="dock-dot"></span></a>
+    <a href="perfil.html" class="dock-item active-screen" title="Perfil"><i data-lucide="user" width="22" height="22"></i><span>Perfil</span><span class="dock-dot"></span></a>
 </nav>
 
-<!-- Modal genérico: aquí se inyecta el contenido de cada tarjeta -->
 <div class="modal-overlay hidden" id="modalOverlay">
   <div class="modal-card">
     <button class="modal-close" id="modalClose"><i data-lucide="x" width="18" height="18"></i></button>
