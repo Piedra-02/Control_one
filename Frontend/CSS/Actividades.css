@@ -1,0 +1,1144 @@
+/* =========================================================
+   CONTROL ONE - ACTIVIDADES (CSS DEFINITIVO)
+   Paleta original + Diseño exacto según Mockup de Referencia
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap');
+
+:root {
+    /* Fondo General de la App */
+    --bg-blue-app: #a9dced;
+    --border-dark: #111111;
+
+    /* Tarjeta Correos (Púrpura / Violeta Intenso) */
+    --emails-bg: #594ae2;
+    --emails-header-text: #ffffff;
+    --emails-row-bg: #ffffff;
+    --emails-btn-bg: #ffffff;
+    --emails-btn-text: #594ae2;
+
+    /* Tarjeta Documentos (Amarillo Oro / Mostaza) */
+    --documents-bg: #f5b800;
+    --documents-header-text: #111111;
+    --documents-icon-color: #111111;
+
+    /* Tarjeta Notas (Gris Oscuro Antracita) */
+    --notes-bg: #353535;
+    --notes-header-text: #ffffff;
+    --notes-input-bg: #ffffff;
+
+    /* Neutros */
+    --white: #ffffff;
+    --search-bg: #eaeaea;
+    --text-primary: #111111;
+    --text-muted: #555555;
+
+    /* Tipografía */
+    --font-main: 'Space Grotesk', 'Plus Jakarta Sans', -apple-system, sans-serif;
+}
+
+/* RESET GENERAL */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 20px;
+}
+
+body {
+    min-height: 100vh;
+    background-color: var(--bg-blue-app);
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    -webkit-font-smoothing: antialiased;
+}
+
+.app {
+    width: min(100%, 1060px);
+    margin: 0 auto;
+    padding: 18px 22px 40px;
+}
+
+/* =========================================
+   1. HEADER SUPERIOR (DESKTOP)
+========================================= */
+.desktop-header {
+    background: var(--white);
+    border-radius: 40px;
+    height: 58px;
+    padding: 6px 20px 6px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.header-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    text-decoration: none;
+    overflow: hidden;
+}
+
+.header-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.logo-fallback {
+    display: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2.5px solid #1a365d;
+    color: #1a365d;
+    font-size: 20px;
+    font-weight: 800;
+    align-items: center;
+    justify-content: center;
+}
+
+.desktop-search {
+    flex: 1;
+    max-width: 440px;
+    height: 38px;
+    background: var(--search-bg);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 10px;
+}
+
+.search-svg {
+    color: #555555;
+    flex-shrink: 0;
+}
+
+.desktop-search input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: #222222;
+    letter-spacing: 0.5px;
+}
+
+.desktop-search input::placeholder {
+    color: #666666;
+    font-weight: 600;
+}
+
+.desktop-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    color: #2d3748;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 4px;
+    border-radius: 8px;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.icon-btn:hover,
+.icon-btn.active-icon {
+    transform: scale(1.1);
+    color: #111111;
+}
+
+/* =========================================
+   2. HEADER SUPERIOR (MOBILE)
+========================================= */
+.mobile-header {
+    display: none; /* Oculto en desktop */
+}
+
+/* =========================================
+   3. NAVEGACIÓN SECUNDARIA (DESKTOP)
+========================================= */
+.desktop-subnav {
+    display: flex;
+    justify-content: center;
+    margin: 16px 0 24px;
+}
+
+.subnav-container {
+    background: var(--white);
+    border-radius: 30px;
+    padding: 6px 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.subnav-btn {
+    background: transparent;
+    border: 1.5px solid var(--border-dark);
+    border-radius: 20px;
+    padding: 5px 22px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: all 0.15s ease;
+}
+
+.subnav-btn:hover,
+.subnav-btn.active {
+    background: #f0f0f0;
+}
+
+/* =========================================
+   4. LAYOUT PRINCIPAL DE ACTIVIDADES (DESKTOP)
+========================================= */
+.actividades-main-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.35fr;
+    gap: 20px;
+    align-items: stretch;
+}
+
+.actividades-right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Tarjetas Base */
+.activity-card {
+    border: 1.8px solid var(--border-dark);
+    border-radius: 16px;
+    padding: 14px 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.activity-card.card-highlight {
+    outline: 3px solid #00cba9;
+    animation: pulseHighlight 1s ease-in-out;
+}
+
+@keyframes pulseHighlight {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.015); }
+    100% { transform: scale(1); }
+}
+
+.card-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.card-title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-title-group h2 {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+}
+
+.card-chevron-btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border-radius: 4px;
+}
+
+/* =========================================
+   SECCIÓN: CORREOS (PÚRPURA)
+========================================= */
+.emails-main-card {
+    background: var(--emails-bg);
+    color: var(--emails-header-text);
+    display: flex;
+    flex-direction: column;
+}
+
+.emails-main-card .card-chevron-btn {
+    color: var(--white);
+}
+
+.emails-body-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+}
+
+.email-actions-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.btn-redactar {
+    background: var(--emails-btn-bg);
+    color: var(--emails-btn-text);
+    border: 1.5px solid var(--border-dark);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.btn-redactar:hover {
+    transform: scale(1.04);
+    background: #f8fafc;
+}
+
+.btn-redactar .plus-symbol {
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.email-category-icons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.email-filter-icon-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.85);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    border-radius: 6px;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.email-filter-icon-btn:hover,
+.email-filter-icon-btn.active {
+    color: #ffffff;
+    transform: scale(1.15);
+}
+
+.emails-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.email-item-row {
+    background: var(--emails-row-bg);
+    border: 1.5px solid var(--border-dark);
+    border-radius: 24px;
+    padding: 5px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+    cursor: pointer;
+    transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.email-item-row:hover {
+    transform: translateX(2px);
+    background: #fdfdfd;
+}
+
+.email-check-wrapper {
+    position: relative;
+    display: inline-flex;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.email-check-wrapper input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.custom-checkmark {
+    width: 17px;
+    height: 17px;
+    background: var(--white);
+    border: 1.4px solid var(--border-dark);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--border-dark);
+}
+
+.email-check-wrapper input:not(:checked) ~ .custom-checkmark svg {
+    display: none;
+}
+
+.email-star-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #666666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+}
+
+.email-star-btn:hover,
+.email-star-btn.active {
+    transform: scale(1.15);
+}
+
+.email-sender-col {
+    flex-shrink: 0;
+    min-width: 96px;
+}
+
+.email-sender-name {
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--text-primary);
+    white-space: nowrap;
+}
+
+.email-subject-col {
+    flex: 1;
+    overflow: hidden;
+}
+
+.email-subject-text {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #222222;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+/* =========================================
+   SECCIÓN: DOCUMENTOS (AMARILLO ORO)
+========================================= */
+.documents-main-card {
+    background: var(--documents-bg);
+    color: var(--documents-header-text);
+}
+
+.documents-grid-container {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 6px;
+    padding-top: 4px;
+}
+
+.folder-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    cursor: pointer;
+    padding: 6px 2px;
+    border-radius: 8px;
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.folder-item:hover {
+    transform: translateY(-3px);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.folder-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--documents-icon-color);
+}
+
+.folder-base-svg {
+    stroke: var(--documents-icon-color);
+}
+
+.folder-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--documents-header-text);
+    text-align: center;
+    white-space: nowrap;
+    line-height: 1.1;
+}
+
+/* =========================================
+   SECCIÓN: NOTAS (GRIS OSCURO ANTRACITA)
+========================================= */
+.notes-main-card {
+    background: var(--notes-bg);
+    color: var(--notes-header-text);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.notes-main-card .card-chevron-btn {
+    color: var(--white);
+}
+
+.notes-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+}
+
+.note-input-container {
+    background: var(--notes-input-bg);
+    border: 1.6px solid var(--border-dark);
+    border-radius: 12px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    position: relative;
+}
+
+.note-title-box {
+    height: 42px;
+}
+
+.note-title-box input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.note-content-box {
+    flex: 1;
+    min-height: 140px;
+    align-items: flex-start;
+}
+
+.note-content-box textarea {
+    width: 100%;
+    height: 100%;
+    min-height: 125px;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: #222222;
+    resize: none;
+    line-height: 1.4;
+}
+
+.note-edit-icon-btn {
+    background: transparent;
+    border: none;
+    color: #444444;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    flex-shrink: 0;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.note-edit-icon-btn:hover {
+    color: #111111;
+    transform: scale(1.15);
+}
+
+.note-content-pencil {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+}
+
+/* =========================================
+   5. BOTTOM DOCK (MOBILE EXCLUSIVO)
+========================================= */
+.mobile-bottom-dock {
+    display: none; /* Oculto en Desktop */
+}
+
+
+/* =========================================================
+   📱 RESPONSIVE: TABLET (769px - 1024px)
+   ========================================================= */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .actividades-main-layout {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .actividades-right-col {
+        display: contents; /* Permite reorganizar notas abajo */
+    }
+
+    .emails-main-card {
+        grid-column: 1 / 2;
+    }
+
+    .documents-main-card {
+        grid-column: 2 / 3;
+    }
+
+    .documents-grid-container {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+    }
+
+    .notes-main-card {
+        grid-column: 1 / 3;
+    }
+}
+
+
+/* =========================================================
+   📱 RESPONSIVE: MÓVIL (<= 768px) SEGÚN MOCKUP
+   ========================================================= */
+@media (max-width: 768px) {
+
+    body {
+        padding-bottom: 85px; /* Espacio para el dock inferior flotante */
+    }
+
+    .app {
+        padding: 12px 14px 20px;
+    }
+
+    /* Ocultar elementos exclusivos de Desktop */
+    .desktop-header,
+    .desktop-subnav {
+        display: none;
+    }
+
+    /* 1. Header Móvil */
+    .mobile-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    .mobile-logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        text-decoration: none;
+    }
+
+    .mobile-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .mobile-nav-pills {
+        flex: 1;
+        background: var(--white);
+        border-radius: 30px;
+        height: 36px;
+        padding: 3px 6px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4px;
+    }
+
+    .nav-pill {
+        flex: 1;
+        text-align: center;
+        background: transparent;
+        border: 1.5px solid var(--border-dark);
+        border-radius: 20px;
+        padding: 4px 2px;
+        font-size: 9.5px;
+        font-weight: 800;
+        color: var(--text-primary);
+        text-decoration: none;
+        letter-spacing: 0.2px;
+        white-space: nowrap;
+    }
+
+    .nav-pill.active {
+        background: #f0f0f0;
+    }
+
+    /* 2. Reordenamiento Vertical en Móvil: Notas -> Documentos -> Correos */
+    .actividades-main-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .actividades-right-col {
+        display: contents; /* Permite reordenar Documentos y Notas independientemente */
+    }
+
+    .notes-main-card {
+        order: 1;
+    }
+
+    .documents-main-card {
+        order: 2;
+    }
+
+    .emails-main-card {
+        order: 3;
+    }
+
+    .documents-grid-container {
+        grid-template-columns: repeat(5, 1fr);
+        row-gap: 12px;
+        column-gap: 6px;
+    }
+
+    .folder-item {
+        padding: 4px 0;
+    }
+
+    .folder-label {
+        font-size: 8.5px;
+    }
+
+    .email-sender-col {
+        min-width: 80px;
+    }
+
+    .email-sender-name,
+    .email-subject-text {
+        font-size: 9.5px;
+    }
+
+    /* 3. Dock Inferior Flotante en Móvil */
+    .mobile-bottom-dock {
+        position: fixed;
+        bottom: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: min(92%, 360px);
+        height: 52px;
+        background: var(--white);
+        border-radius: 35px;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        border: 1.8px solid #6cbcd8;
+        z-index: 1000;
+    }
+
+    .dock-btn {
+        background: transparent;
+        border: none;
+        color: #1e3a5f;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        padding: 6px;
+    }
+
+    .dock-btn.active {
+        color: #0096db;
+        transform: scale(1.15);
+    }
+
+    .dock-search-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--white);
+        border: 2.2px solid #0096db;
+        color: #0096db;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transform: translateY(-5px);
+        box-shadow: 0 3px 8px rgba(0, 150, 219, 0.3);
+    }
+}
+
+
+/* =========================================================
+   TARJETAS MODALES EMERGENTES (UI FLOTANTE EN LA MISMA PANTALLA)
+   ========================================================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2500;
+    padding: 16px;
+}
+
+.modal-overlay.active {
+    display: flex;
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-card {
+    background: var(--white);
+    width: min(100%, 460px);
+    border-radius: 16px;
+    border: 2px solid var(--border-dark);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
+    display: none;
+    overflow: hidden;
+    animation: modalPopIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-card.modal-card-large {
+    width: min(100%, 540px);
+}
+
+.modal-card.active {
+    display: block;
+}
+
+@keyframes modalPopIn {
+    from { transform: scale(0.92); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-card-header {
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--border-dark);
+}
+
+.modal-header-icon-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-header-correo {
+    background: var(--emails-bg);
+    color: var(--white);
+}
+
+.modal-header-documentos {
+    background: var(--documents-bg);
+    color: var(--text-primary);
+}
+
+.modal-card-header h3 {
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.modal-close-btn {
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    line-height: 1;
+    font-weight: 800;
+    color: inherit;
+    cursor: pointer;
+    padding: 0 4px;
+    transition: transform 0.15s ease;
+}
+
+.modal-close-btn:hover {
+    transform: scale(1.2);
+}
+
+.modal-body {
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1.6px solid var(--border-dark);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    color: #111111;
+    outline: none;
+    background: #fbfbfb;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #0096db;
+    background: var(--white);
+}
+
+.form-row {
+    display: flex;
+    gap: 10px;
+}
+
+.flex-1 { flex: 1; }
+.flex-2 { flex: 2; }
+
+.modal-footer {
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    background: #f8fafc;
+    border-top: 1.5px solid #e2e8f0;
+}
+
+.btn-primary {
+    border: 1.5px solid var(--border-dark);
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-primary-correo {
+    background: var(--emails-bg);
+    color: var(--white);
+}
+
+.btn-secondary {
+    background: #e2e8f0;
+    border: 1.5px solid #cbd5e1;
+    color: #334155;
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-danger {
+    background: #ef4444;
+    border: 1.5px solid #b91c1c;
+    color: var(--white);
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-right: auto;
+}
+
+/* Detalle Correo Modal */
+.email-detail-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.email-avatar-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #ea4335;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 16px;
+}
+
+.email-meta-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.email-meta-text strong {
+    font-size: 13px;
+    color: #111111;
+}
+
+.email-meta-text span {
+    font-size: 11px;
+    color: #666666;
+}
+
+.email-detail-body {
+    padding: 10px 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #222222;
+}
+
+/* Modal Carpeta y Archivos */
+.carpeta-actions-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.carpeta-count-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: #333333;
+}
+
+.btn-add-file {
+    background: var(--documents-bg);
+    border: 1.5px solid var(--border-dark);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.carpeta-archivos-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.archivo-item-row {
+    background: #f8fafc;
+    border: 1.4px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.archivo-info-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #334155;
+}
+
+.archivo-info-left strong {
+    font-size: 12.5px;
+    display: block;
+    color: #0f172a;
+}
+
+.archivo-info-left small {
+    font-size: 10.5px;
+    color: #64748b;
+}
+
+.archivo-actions-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-icon-action {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 3px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon-action:hover {
+    background: #e2e8f0;
+}
