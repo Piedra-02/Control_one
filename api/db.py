@@ -426,6 +426,16 @@ class ArchivoRepository:
         return {'eliminado': True}
 
 class NotificadorCorreo:
+    """Envía un correo por Gmail cada vez que se crea una suscripción,
+    recordatorio, tarea o evento, si el usuario lo tiene activado en
+    Configuración de correos."""
+
+    ICONOS = {
+        'tarea': '📋',
+        'evento': '📅',
+        'recordatorio': '🔔',
+        'suscripción': '💳',
+    }
 
     def __init__(self, bd: BaseDeDatos):
         self.bd = bd
@@ -439,14 +449,40 @@ class NotificadorCorreo:
         config = self.bd.ejecutar('SELECT correo_notificacion, notificar_por_correo FROM configuracion WHERE id = 1', retornar='one')
         if not config or not config.get('notificar_por_correo') or (not config.get('correo_notificacion')):
             return
-        asunto = f'Control One: nuevo/a {tipo} — {titulo}'
-        cuerpo = f"Se creó {tipo} '{titulo}' en Control One.\n\n{detalle}"
+
+        icono = self.ICONOS.get(tipo, '✅')
+        asunto = f'{icono} Nuevo {tipo} en Control One: {titulo}'
+        cuerpo_texto = f"Se creó {tipo} '{titulo}' en Control One.\n\n{detalle}"
+        cuerpo_html = f"""
+        <div style="font-family: Arial, Helvetica, sans-serif; background:#A8DDF6; padding:32px 16px;">
+          <div style="max-width:480px; margin:0 auto; background:#FFFBF9; border-radius:16px; overflow:hidden; border:2px solid #1B0942;">
+            <div style="background:#1B0942; padding:20px 24px; display:flex; align-items:center;">
+              <div style="width:36px; height:36px; border-radius:50%; background:#fff; color:#1B0942; display:inline-block; text-align:center; line-height:36px; font-weight:bold; font-size:18px; vertical-align:middle;">1</div>
+              <span style="color:#fff; font-size:16px; font-weight:bold; margin-left:12px; vertical-align:middle;">Control One</span>
+            </div>
+            <div style="padding:28px 24px;">
+              <div style="font-size:34px; margin-bottom:6px;">{icono}</div>
+              <h2 style="color:#1B0942; margin:0 0 4px; font-size:20px;">Nuevo {tipo} creado</h2>
+              <p style="color:#747474; margin:0 0 20px; font-size:13px;">Este es un aviso automático de tu cuenta de Control One.</p>
+              <div style="background:#DAFFFD; border-left:4px solid #00C8B3; border-radius:8px; padding:14px 16px; margin-bottom:18px;">
+                <p style="margin:0; font-size:16px; font-weight:bold; color:#1B0942;">{titulo}</p>
+              </div>
+              <p style="color:#3A3A3A; font-size:13.5px; line-height:1.6; white-space:pre-line; margin:0;">{detalle}</p>
+            </div>
+            <div style="background:#F1E6F0; padding:14px 24px; text-align:center;">
+              <p style="margin:0; font-size:11px; color:#747474;">Puedes desactivar estos avisos en Perfil &gt; Configuración de correos.</p>
+            </div>
+          </div>
+        </div>
+        """
+
         try:
-            mensaje = MIMEMultipart()
+            mensaje = MIMEMultipart('alternative')
             mensaje['From'] = self.remitente
             mensaje['To'] = config['correo_notificacion']
             mensaje['Subject'] = asunto
-            mensaje.attach(MIMEText(cuerpo, 'plain'))
+            mensaje.attach(MIMEText(cuerpo_texto, 'plain'))
+            mensaje.attach(MIMEText(cuerpo_html, 'html'))
             contexto = ssl.create_default_context()
             with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=contexto) as servidor:
                 servidor.login(self.remitente, self.contrasena_app)
