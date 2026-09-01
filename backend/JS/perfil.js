@@ -26,6 +26,14 @@ async function apiFetch(path, opciones = {}) {
   }
 }
 
+// ---------- Utilidad ----------
+function escapeHTML(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>'"]/g,
+    tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+  );
+}
+
 // ---------- Modal genérico ----------
 const modalOverlay = document.getElementById('modalOverlay');
 const modalContent = document.getElementById('modalContent');
@@ -160,25 +168,45 @@ function abrirModalAgregarContacto() {
 
 // ---------- Modal: Ocultos / Archivados ----------
 async function abrirModalLista(filtro, titulo, icono, accionInversa) {
-  const contactos = await apiFetch(`/contactos?filtro=${filtro}`);
-  const items = (contactos || []).map(c => `
+  const [contactos, recordatorios] = await Promise.all([
+    apiFetch(`/contactos?filtro=${filtro}`),
+    apiFetch(`/panel/recordatorios?filtro=${filtro}`),
+  ]);
+
+  const itemsContactos = (contactos || []).map(c => `
     <li class="contacto-item">
       <i data-lucide="meh" width="16" height="16" class="contacto-icono"></i>
       <span class="contacto-telefono">${c.telefono}</span>
-      <button data-id="${c.id}" title="Restaurar"><i data-lucide="undo-2" width="14" height="14"></i></button>
+      <button data-tipo="contacto" data-id="${c.id}" title="Restaurar"><i data-lucide="undo-2" width="14" height="14"></i></button>
+    </li>
+  `).join('');
+
+  const itemsRecordatorios = (recordatorios || []).map(r => `
+    <li class="contacto-item">
+      <i data-lucide="bell" width="16" height="16" class="contacto-icono"></i>
+      <span class="contacto-telefono">${escapeHTML(r.titulo)}</span>
+      <button data-tipo="recordatorio" data-id="${r.id}" title="Restaurar"><i data-lucide="undo-2" width="14" height="14"></i></button>
     </li>
   `).join('');
 
   abrirModal(`
     <h3><i data-lucide="${icono}" width="20" height="20"></i> ${titulo}</h3>
+    <p class="text-secondary" style="margin:12px 0 6px;">Contactos</p>
     <ul class="modal-list">
-      ${items || '<li class="text-secondary">No hay contactos aquí.</li>'}
+      ${itemsContactos || '<li class="text-secondary">No hay contactos aquí.</li>'}
+    </ul>
+    <p class="text-secondary" style="margin:16px 0 6px;">Recordatorios</p>
+    <ul class="modal-list">
+      ${itemsRecordatorios || '<li class="text-secondary">No hay recordatorios aquí.</li>'}
     </ul>
   `);
 
   modalContent.querySelectorAll('button[data-id]').forEach(btn => {
     btn.addEventListener('click', async () => {
-      await apiFetch(`/contactos/${btn.dataset.id}`, {
+      const endpoint = btn.dataset.tipo === 'contacto'
+        ? `/contactos/${btn.dataset.id}`
+        : `/panel/recordatorios/${btn.dataset.id}`;
+      await apiFetch(endpoint, {
         method: 'PATCH',
         body: JSON.stringify({ [accionInversa]: false }),
       });
@@ -297,9 +325,9 @@ function abrirModalLogin() {
         </svg>
       </div>
       <label class="login-label" for="mUsuario">Nombre de usuario</label>
-      <input class="login-input" type="text" id="mUsuario" autocomplete="username">
+      <input class="login-input" type="text" id="mUsuario" placeholder="Ingresa tu usuario" autocomplete="username">
       <label class="login-label" for="mContrasena">Contraseña</label>
-      <input class="login-input" type="password" id="mContrasena" autocomplete="current-password">
+      <input class="login-input" type="password" id="mContrasena" placeholder="Ingresa tu contraseña" autocomplete="current-password">
       <p class="login-error hidden" id="loginError"></p>
       <button class="login-submit-btn estado-normal" id="mBtnLogin">Iniciar sesión</button>
       <div class="login-footer">

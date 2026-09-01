@@ -542,6 +542,9 @@ input::placeholder { color: var(--grey); }
   color: #1B0942;
   outline: none;
 }
+.login-input::placeholder {
+  color: #7a7a9a;
+}
 .login-error {
   color: #ffd3d3;
   background: rgba(236, 34, 31, 0.18);
