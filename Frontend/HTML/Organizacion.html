@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control One - Organización</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS de Organización -->
+    <link rel="stylesheet" href="../CSS/Organizacion.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- =========================================
+             1. HEADER SUPERIOR (DESKTOP)
+        ========================================== -->
+        <header class="desktop-header">
+            <!-- Logo -->
+            <a href="Panel principal.html" class="header-logo" title="Volver al Panel Principal">
+                <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="logo-fallback">1</span>
+            </a>
+
+            <!-- Barra de búsqueda central -->
+            <div class="desktop-search">
+                <svg class="search-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="organizacion-search" placeholder="BUSCAR" autocomplete="off">
+            </div>
+
+            <!-- Botones de Acción Derecha -->
+            <div class="desktop-actions">
+                <a href="Actividades.html" class="icon-btn" title="Capas / Actividades">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </a>
+
+                <a href="Automatizacion.html" class="icon-btn" title="Automatización">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                        <rect x="9" y="9" width="6" height="6"></rect>
+                        <line x1="9" y1="1" x2="9" y2="4"></line>
+                        <line x1="15" y1="1" x2="15" y2="4"></line>
+                        <line x1="9" y1="20" x2="9" y2="23"></line>
+                        <line x1="15" y1="20" x2="15" y2="23"></line>
+                        <line x1="20" y1="9" x2="23" y2="9"></line>
+                        <line x1="20" y1="14" x2="23" y2="14"></line>
+                        <line x1="1" y1="9" x2="4" y2="9"></line>
+                        <line x1="1" y1="14" x2="4" y2="14"></line>
+                    </svg>
+                </a>
+
+                <button class="icon-btn" id="btn-chat-org" title="Chat">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- =========================================
+             2. HEADER SUPERIOR (MOBILE)
+        ========================================== -->
+        <header class="mobile-header">
+            <a href="Panel principal.html" class="mobile-logo" title="Inicio">
+                <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="logo-fallback">1</span>
+            </a>
+            <div class="mobile-nav-pills">
+                <a href="#seccion-calendario" class="nav-pill active">CALENDARIO</a>
+                <a href="#seccion-categorias" class="nav-pill">CATEGORIAS</a>
+                <a href="#seccion-estadisticas" class="nav-pill">ESTADISTICAS</a>
+            </div>
+        </header>
+
+
+        <!-- =========================================
+             3. NAVEGACIÓN SECUNDARIA (DESKTOP)
+        ========================================== -->
+        <nav class="desktop-subnav">
+            <div class="subnav-container">
+                <a href="#seccion-calendario" class="subnav-btn active">CALENDARIO</a>
+                <a href="#seccion-categorias" class="subnav-btn">CATEGORIAS</a>
+                <a href="#seccion-estadisticas" class="subnav-btn">ESTADISTICAS</a>
+            </div>
+        </nav>
+
+
+        <!-- =========================================
+             4. CONTENIDO PRINCIPAL DE ORGANIZACIÓN
+        ========================================== -->
+        <main class="organizacion-grid">
+
+            <!-- =====================================
+                 COLUMNA IZQUIERDA: CALENDARIO
+            ====================================== -->
+            <section id="seccion-calendario" class="calendar-card-container">
+                <div class="calendar-dark-card">
+                    <!-- Cabecera del Calendario -->
+                    <div class="calendar-header">
+                        <div class="calendar-title-wrap">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <h2>Calendario</h2>
+                        </div>
+
+                        <div class="calendar-month-selector">
+                            <button class="month-arrow-btn" id="prev-month-btn" title="Mes anterior">&lt;</button>
+                            <span class="month-name-display" id="calendar-month-label">agosto de 2026</span>
+                            <button class="month-arrow-btn" id="next-month-btn" title="Mes siguiente">&gt;</button>
+                        </div>
+                    </div>
+
+                    <!-- Tabla del Calendario -->
+                    <div class="calendar-table-box">
+                        <!-- Días de la semana -->
+                        <div class="calendar-weekdays-row">
+                            <span>dom</span>
+                            <span>lun</span>
+                            <span>mar</span>
+                            <span>mié</span>
+                            <span>jue</span>
+                            <span>vie</span>
+                            <span>sáb</span>
+                        </div>
+
+                        <!-- Grilla de Días Dinámica -->
+                        <div class="calendar-days-grid" id="calendar-days-container">
+                            <!-- Los días se renderizan automáticamente con JS -->
+                        </div>
+                    </div>
+
+                    <!-- Botón para añadir evento al día seleccionado -->
+                    <div class="calendar-bottom-action">
+                        <button class="calendar-add-btn" id="btn-add-calendar-event">
+                            + Agregar Evento en Fecha Seleccionada
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- =====================================
+                 COLUMNA DERECHA: CATEGORÍAS/PRIORIDADES Y ESTADÍSTICAS
+            ====================================== -->
+            <div class="organizacion-right-col">
+
+                <!-- 1. Fila de Tarjetas de Categorías / Importancia -->
+                <section id="seccion-categorias" class="categories-section-wrapper">
+                    
+                    <div class="categories-top-bar">
+                        <span class="cat-section-label">Categorías de Proyectos / Prioridades</span>
+                        <button class="btn-expand-categories" onclick="abrirModalTodasCategorias()" title="Ver todas las categorías">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <polyline points="9 21 3 21 3 15"></polyline>
+                                <line x1="21" y1="3" x2="14" y2="10"></line>
+                                <line x1="3" y1="21" x2="10" y2="14"></line>
+                            </svg>
+                            Ampliar Categorías
+                        </button>
+                    </div>
+
+                    <div class="categories-row">
+                        <!-- Tarjeta Categoría 1: IMPORTANTE -->
+                        <article class="category-cyan-card" id="card-cat-1">
+                            <div class="cat-card-header">
+                                <button class="cat-icon-btn cat-btn-back" title="Alternar Categoría" onclick="alternarCategoria('cat1')">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 8 8 12 12 16"></polyline>
+                                        <line x1="16" y1="12" x2="8" y2="12"></line>
+                                    </svg>
+                                </button>
+                                <div class="cat-header-title">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    </svg>
+                                    <h3 id="cat-title-1">IMPORTANTE</h3>
+                                </div>
+                                <button class="cat-icon-btn cat-btn-edit" title="Modificar Categoría / Agregar Tarea" onclick="abrirModalCategoria('cat1')">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <ul class="cat-items-list" id="list-cat-1">
+                                <!-- Ítems de tareas clasificadas -->
+                            </ul>
+                        </article>
+
+                        <!-- Tarjeta Categoría 2: OBLIGATORIO / SECUNDARIO -->
+                        <article class="category-cyan-card" id="card-cat-2">
+                            <div class="cat-card-header">
+                                <button class="cat-icon-btn cat-btn-back" title="Alternar Categoría" onclick="alternarCategoria('cat2')">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 8 8 12 12 16"></polyline>
+                                        <line x1="16" y1="12" x2="8" y2="12"></line>
+                                    </svg>
+                                </button>
+                                <div class="cat-header-title">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    </svg>
+                                    <h3 id="cat-title-2">OBLIGATORIO</h3>
+                                </div>
+                                <button class="cat-icon-btn cat-btn-edit" title="Modificar Categoría / Agregar Tarea" onclick="abrirModalCategoria('cat2')">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <ul class="cat-items-list" id="list-cat-2">
+                                <!-- Ítems de tareas clasificadas -->
+                            </ul>
+                        </article>
+                    </div>
+
+                </section>
+
+
+                <!-- 2. Tarjeta Azul de Estadísticas de Actividad -->
+                <section id="seccion-estadisticas" class="stats-blue-card" onclick="abrirModalEstadisticasDetalle()" title="Clic para ver detalle de actividad">
+                    <div class="stats-header">
+                        <div class="stats-title-left">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="12" r="2"></circle>
+                            </svg>
+                            <h2>Estadisticas</h2>
+                        </div>
+                        <span class="stats-badge-live">● EN VIVO</span>
+                    </div>
+
+                    <!-- Métricas de tiempo de conexión y movimientos -->
+                    <div class="stats-live-metrics-row">
+                        <div class="stat-metric-pill">
+                            <span class="metric-label">Tiempo Conectado</span>
+                            <strong class="metric-value" id="stat-tiempo-activo">00:00:00</strong>
+                        </div>
+                        <div class="stat-metric-pill">
+                            <span class="metric-label">Movimientos</span>
+                            <strong class="metric-value" id="stat-movimientos-count">0</strong>
+                        </div>
+                    </div>
+
+                    <div class="stats-chart-wrapper">
+                        <!-- Gráfico SVG dinámico y funcional de actividad -->
+                        <svg class="stats-svg-chart" id="stats-svg-chart-elem" viewBox="0 0 380 135">
+                            <defs>
+                                <!-- Gradiente para el área bajo la curva -->
+                                <linearGradient id="activity-gradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4" />
+                                    <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02" />
+                                </linearGradient>
+                            </defs>
+
+                            <!-- Líneas de guía horizontales -->
+                            <line x1="20" y1="25" x2="360" y2="25" stroke="rgba(255,255,255,0.18)" stroke-dasharray="3,3" />
+                            <line x1="20" y1="65" x2="360" y2="65" stroke="rgba(255,255,255,0.18)" stroke-dasharray="3,3" />
+                            <line x1="20" y1="105" x2="360" y2="105" stroke="rgba(255,255,255,0.3)" />
+
+                            <!-- Área sombreada bajo la curva -->
+                            <path id="stats-chart-area" fill="url(#activity-gradient)" d="M 25,105 L 25,105 L 355,105 Z" />
+
+                            <!-- Línea de tendencia continua en vivo -->
+                            <path id="stats-chart-line" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M 25,105 L 355,105" />
+
+                            <!-- Grupo de puntos dinámicos en los picos -->
+                            <g id="stats-chart-points-group">
+                                <!-- Se renderizan dinámicamente con JS -->
+                            </g>
+
+                            <!-- Etiquetas del eje de tiempo X -->
+                            <g class="chart-x-labels" fill="rgba(255,255,255,0.75)" font-size="9.5" font-weight="700" text-anchor="middle">
+                                <text x="25" y="122">Inicio</text>
+                                <text x="80" y="122">-4m</text>
+                                <text x="135" y="122">-3m</text>
+                                <text x="190" y="122">-2m</text>
+                                <text x="245" y="122">-1m</text>
+                                <text x="300" y="122">-30s</text>
+                                <text x="355" y="122">Ahora</text>
+                            </g>
+                        </svg>
+                    </div>
+                </section>
+
+            </div>
+
+        </main>
+
+
+        <!-- =========================================
+             5. BOTTOM NAVIGATION BAR (MOBILE)
+        ========================================== -->
+        <nav class="mobile-bottom-dock">
+            <a href="Actividades.html" class="dock-btn" title="Capas">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+            </a>
+
+            <a href="Informacion.html" class="dock-btn" title="Información">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+            </a>
+
+            <button class="dock-search-btn" id="mobile-search-trigger-org" title="Buscar">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+
+            <a href="Automatizacion.html" class="dock-btn" title="Automatización">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                    <rect x="9" y="9" width="6" height="6"></rect>
+                    <line x1="9" y1="1" x2="9" y2="4"></line>
+                    <line x1="15" y1="1" x2="15" y2="4"></line>
+                    <line x1="9" y1="20" x2="9" y2="23"></line>
+                    <line x1="15" y1="20" x2="15" y2="23"></line>
+                    <line x1="20" y1="9" x2="23" y2="9"></line>
+                    <line x1="20" y1="14" x2="23" y2="14"></line>
+                    <line x1="1" y1="9" x2="4" y2="9"></line>
+                    <line x1="1" y1="14" x2="4" y2="14"></line>
+                </svg>
+            </a>
+
+            <button class="dock-btn" id="mobile-chat-btn-org" title="Chat">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- =========================================
+         TARJETAS MODALES (FLOTANTES EN LA MISMA PANTALLA)
+    ========================================== -->
+    <div class="modal-overlay" id="modal-overlay-org">
+
+        <!-- 1. Modal: Evento del Calendario (Crear / Modificar / Eliminar) -->
+        <div class="modal-card" id="modal-evento-org">
+            <div class="modal-card-header modal-header-calendario">
+                <h3 id="modal-evento-org-titulo">Evento en Calendario</h3>
+                <button class="modal-close-btn" onclick="cerrarModalesOrg()">&times;</button>
+            </div>
+            <form id="form-evento-org" onsubmit="guardarEventoOrg(event)">
+                <input type="hidden" id="input-org-evento-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="input-org-evento-nombre">Título del Evento</label>
+                        <input type="text" id="input-org-evento-nombre" placeholder="Ej. Cumpleaños Mama" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-org-evento-desc">Descripción</label>
+                        <textarea id="input-org-evento-desc" rows="2" placeholder="Ej. hoy es el cumpleaños de tu Mama"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="input-org-evento-fecha">Fecha del Evento</label>
+                            <input type="date" id="input-org-evento-fecha" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-org-evento-cat">Categoría</label>
+                            <select id="input-org-evento-cat">
+                                <option value="Familia">Familia</option>
+                                <option value="Trabajo">Trabajo</option>
+                                <option value="Personal">Personal</option>
+                                <option value="General" selected>General</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-danger" id="btn-org-eliminar-evento" style="display: none;" onclick="eliminarEventoOrg()">Eliminar</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModalesOrg()">Cancelar</button>
+                    <button type="submit" class="btn-primary btn-primary-calendario">Guardar Evento</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 2. Modal: Modificar / Crear Categoría -->
+        <div class="modal-card" id="modal-categoria-org">
+            <div class="modal-card-header modal-header-cat">
+                <h3 id="modal-cat-org-titulo">Categoría / Nivel de Prioridad</h3>
+                <button class="modal-close-btn" onclick="cerrarModalesOrg()">&times;</button>
+            </div>
+            <form id="form-cat-org" onsubmit="guardarCategoriaOrg(event)">
+                <input type="hidden" id="input-org-cat-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="input-org-cat-nombre">Nombre de la Categoría o Nivel</label>
+                        <input type="text" id="input-org-cat-nombre" placeholder="Ej. IMPORTANTE, OBLIGATORIO, NO IMPORTANTE" required>
+                    </div>
+                    <div class="form-group" id="group-add-task-to-cat">
+                        <label for="input-org-cat-item">Agregar nueva tarea/proyecto a esta categoría</label>
+                        <input type="text" id="input-org-cat-item" placeholder="Ej. Acabar el proyecto integrador">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-danger" id="btn-org-eliminar-cat" style="display: none;" onclick="eliminarCategoriaOrg()">Eliminar Categoría</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModalesOrg()">Cancelar</button>
+                    <button type="submit" class="btn-primary btn-primary-cat">Guardar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 3. Modal: Tarea Individual desde Categoría -->
+        <div class="modal-card" id="modal-tarea-org">
+            <div class="modal-card-header modal-header-cat">
+                <h3 id="modal-tarea-org-titulo">Tarea / Proyecto</h3>
+                <button class="modal-close-btn" onclick="cerrarModalesOrg()">&times;</button>
+            </div>
+            <form id="form-tarea-org" onsubmit="guardarTareaDesdeOrg(event)">
+                <input type="hidden" id="input-org-tarea-id">
+                <input type="hidden" id="input-org-tarea-cat">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="input-org-tarea-texto">Descripción</label>
+                        <input type="text" id="input-org-tarea-texto" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-org-tarea-cat-select">Categoría / Importancia</label>
+                        <select id="input-org-tarea-cat-select">
+                            <option value="IMPORTANTE">IMPORTANTE</option>
+                            <option value="OBLIGATORIO">OBLIGATORIO</option>
+                            <option value="NO IMPORTANTE">NO IMPORTANTE</option>
+                            <option value="PROYECTO">PROYECTO</option>
+                            <option value="UNIVERSIDAD">UNIVERSIDAD</option>
+                            <option value="HOGAR">HOGAR</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-danger" id="btn-org-eliminar-tarea" onclick="eliminarTareaDesdeOrg()">Eliminar</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModalesOrg()">Cancelar</button>
+                    <button type="submit" class="btn-primary btn-primary-cat">Guardar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 4. Modal Ampliado: Ver Todas las Categorías -->
+        <div class="modal-card modal-card-large" id="modal-todas-categorias">
+            <div class="modal-card-header modal-header-cat">
+                <div class="modal-header-with-action">
+                    <h3>Todas las Categorías y Proyectos</h3>
+                    <button type="button" class="btn-new-category" onclick="crearNuevaCategoriaPrompt()">+ Nueva Categoría</button>
+                </div>
+                <button class="modal-close-btn" onclick="cerrarModalesOrg()">&times;</button>
+            </div>
+            <div class="modal-body modal-body-expanded">
+                <p class="modal-subtitle-text">Aquí puedes visualizar todas las tareas agrupadas por sus niveles de importancia o categorías:</p>
+                <div class="all-categories-grid" id="all-categories-container">
+                    <!-- Se genera dinámicamente con JS -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="cerrarModalesOrg()">Cerrar</button>
+            </div>
+        </div>
+
+        <!-- 5. Modal Detalle: Estadísticas de Actividad en la Web -->
+        <div class="modal-card" id="modal-estadisticas-detalle">
+            <div class="modal-card-header modal-header-stats">
+                <h3>📊 Detalle de Actividad y Conexión</h3>
+                <button class="modal-close-btn" onclick="cerrarModalesOrg()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="stats-summary-grid">
+                    <div class="stats-summary-box">
+                        <span class="stats-box-title">⏱️ Tiempo Conectado</span>
+                        <strong class="stats-box-value" id="modal-stat-tiempo">00:00:00</strong>
+                        <small class="stats-box-sub">Sesión actual activa</small>
+                    </div>
+                    <div class="stats-summary-box">
+                        <span class="stats-box-title">🖱️ Movimientos</span>
+                        <strong class="stats-box-value" id="modal-stat-movimientos">0</strong>
+                        <small class="stats-box-sub">Clics e interacciones</small>
+                    </div>
+                    <div class="stats-summary-box">
+                        <span class="stats-box-title">⚡ Velocidad</span>
+                        <strong class="stats-box-value" id="modal-stat-velocidad">0 act/min</strong>
+                        <small class="stats-box-sub">Ritmo de interacción</small>
+                    </div>
+                    <div class="stats-summary-box">
+                        <span class="stats-box-title">📅 Hora de Inicio</span>
+                        <strong class="stats-box-value" id="modal-stat-inicio">--:--</strong>
+                        <small class="stats-box-sub">Inicio de sesión</small>
+                    </div>
+                </div>
+
+                <div class="recent-actions-section">
+                    <label class="form-group-label">Últimas acciones registradas:</label>
+                    <ul class="recent-actions-list" id="modal-stat-acciones-list">
+                        <!-- Se llena dinámicamente con las acciones del usuario -->
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-danger" onclick="reiniciarEstadisticas()">Reiniciar Métricas</button>
+                <button type="button" class="btn-secondary" onclick="cerrarModalesOrg()">Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script de Organización -->
+    <script src="../../backend/JS/organizacion.js"></script>
+
+</body>
+
+</html>
