@@ -840,3 +840,18 @@ body {
     cursor: pointer;
     margin-right: auto;
 }
+
+#modal-suscripcion .modal-footer {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#modal-suscripcion .modal-footer > button {
+    width: 100%;
+    min-width: 0;
+    padding-inline: 10px;
+}
+
+#modal-suscripcion .modal-footer .btn-danger {
+    margin-right: 0;
+}

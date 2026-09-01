@@ -228,6 +228,7 @@ function initAccionesPrincipales() {
     const btnArchivados = document.querySelector('[data-action="ver-archivados"]');
     const btnEditarPerfil = document.querySelector('[data-action="editar-perfil"]');
     const btnConfigCorreo = document.querySelector('[data-action="config-correo"]');
+    const btnLimpiarHistorial = document.querySelector('[data-action="limpiar-historial"]');
     const btnGuardarGen = document.getElementById('btnGuardarGeneral');
     const btnCerrarSesion = document.getElementById('btnCerrarSesion');
 
@@ -243,6 +244,9 @@ function initAccionesPrincipales() {
     if (btnConfigCorreo) {
         btnConfigCorreo.addEventListener('click', abrirModalConfigCorreo);
     }
+    if (btnLimpiarHistorial) {
+        btnLimpiarHistorial.addEventListener('click', limpiarHistorial);
+    }
     if (btnGuardarGen) {
         btnGuardarGen.addEventListener('click', () => {
             alert('Los cambios se guardan automáticamente al confirmar en cada modal.');
@@ -250,6 +254,17 @@ function initAccionesPrincipales() {
     }
     if (btnCerrarSesion) {
         btnCerrarSesion.addEventListener('click', abrirModalLogin);
+    }
+}
+
+async function limpiarHistorial() {
+    if (!confirm('¿Deseas borrar todo el historial? Esta acción no se puede deshacer.')) return;
+
+    const resultado = await apiFetch('/informacion/historial/limpiar', { method: 'POST' });
+    if (resultado && resultado.success) {
+        alert('El historial fue borrado.');
+    } else {
+        alert('No se pudo borrar el historial.');
     }
 }
 
