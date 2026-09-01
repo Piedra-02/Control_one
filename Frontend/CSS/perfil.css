@@ -1,13 +1,9 @@
-/* =========================================================
-   CONTROL ONE — Perfil / Preferencias
-   Hoja de estilos independiente para esta pantalla.
-   Basada en la paleta y tipografía del UI Kit de Figma.
-   ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=IBM+Plex+Mono:wght@500;600;700&family=Iceberg&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=IBM+Plex+Mono:wght@500;600;700&family=Iceberg&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
-  /* Paleta (UI Kit) */
+  
   --bg-app: #A8DDF6;
   --bg-search: #FFFBF9;
   --bg-card-neutral: #FDF6F6;
@@ -22,16 +18,8 @@
   --success: #22C55E;
   --error: #EC221F;
 
-  /* Panel "Otros": derivado de teal-dark con transparencia,
-     para el tono grisáceo-azulado que se ve en el Figma sin
-     inventar un color fuera de la paleta oficial. */
   --slate-panel: rgba(56, 100, 109, 0.55);
 
-  /* Tipografía
-     Nota: "Intel One Mono" e "Iceberg Bold" del Figma se
-     sustituyen por IBM Plex Mono e Iceberg (esta sí es una
-     Google Font real) por ser las más cercanas disponibles.
-     Tamaños escalados de 78/56/48/28/24px del Figma a uso web. */
   --font-display: 'Inter', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
   --font-accent: 'Iceberg', sans-serif;
@@ -48,6 +36,8 @@
 
 * { box-sizing: border-box; }
 
+html { scroll-behavior: smooth; scrollbar-gutter: stable; }
+
 body {
   margin: 0;
   background: var(--bg-app);
@@ -57,21 +47,24 @@ body {
 }
 
 .app-shell {
-  max-width: 1400px;
+  width: min(100%, 1020px);
   margin: 0 auto;
-  padding: 24px 32px 48px;
+  padding: 20px 24px 40px;
 }
 
-/* ---------- Topbar ---------- */
-.topbar {
+.desktop-header {
+  background: var(--bg-search);
+  border-radius: 40px;
+  height: 58px;
+  padding: 6px 20px 6px 14px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  background: var(--bg-search);
-  border-radius: var(--radius-pill);
-  padding: 10px 16px;
+  justify-content: space-between;
+  gap: 18px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', -apple-system, sans-serif;
 }
-.logo-mark {
+.header-logo {
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -80,74 +73,98 @@ body {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 2px solid var(--navy);
+  text-decoration: none;
+  overflow: hidden;
 }
-.logo-mark svg { color: var(--navy); }
-.searchbar {
+.header-logo img { width: 100%; height: 100%; object-fit: contain; }
+.logo-fallback {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2.5px solid var(--navy);
+  color: var(--navy);
+  font-size: 20px;
+  font-weight: 800;
+  align-items: center;
+  justify-content: center;
+}
+.desktop-search {
   flex: 1;
+  max-width: 440px;
+  height: 38px;
+  background: #EAEAEA;
+  border-radius: 30px;
   display: flex;
   align-items: center;
+  padding: 0 16px;
   gap: 10px;
-  background: #EFECE6;
-  border-radius: var(--radius-pill);
-  padding: 10px 18px;
 }
-.searchbar input {
-  border: none;
-  background: transparent;
-  outline: none;
+.search-svg { color: #555; flex-shrink: 0; }
+.desktop-search input[type="text"] {
   width: 100%;
-  font-family: var(--font-mono);
+  border: none !important;
+  background: transparent !important;
+  outline: none;
+  font-family: inherit;
+  font-size: 15px;
   font-weight: 600;
-  font-size: var(--fs-texto);
-  color: var(--grey-dark);
-  letter-spacing: 0.03em;
+  color: #222 !important;
+  letter-spacing: 0.5px;
+  padding: 0;
 }
-.searchbar input::placeholder { color: var(--grey); }
-.searchbar svg { color: var(--grey); flex-shrink: 0; }
-.topbar-icons {
+.desktop-search input[type="text"]::placeholder { color: #666 !important; font-weight: 600; }
+.desktop-actions { display: flex; align-items: center; gap: 12px; }
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: #2d3748;
   display: flex;
-  gap: 14px;
-  padding-right: 8px;
-  color: var(--blue);
-  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: transform 0.15s ease, opacity 0.15s ease;
 }
-.topbar-icons svg { cursor: pointer; }
+.icon-btn:hover { transform: scale(1.1); color: #111; }
 
-/* ---------- Tabs ---------- */
-.tabs-primary {
+.desktop-subnav {
   display: flex;
   justify-content: center;
-  gap: 14px;
-  margin: 18px 0 28px;
-  flex-wrap: wrap;
+  margin: 16px 0 24px;
 }
-.tab-pill {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: var(--fs-boton);
-  letter-spacing: 0.04em;
-  padding: 10px 26px;
-  border-radius: var(--radius-pill);
-  border: 2px solid var(--cyan);
-  background: var(--bg-search);
+.subnav-container {
+  background: #fff;
+  border-radius: 30px;
+  padding: 6px 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+.subnav-btn {
+  background: transparent;
+  border: 1.5px solid var(--navy);
+  border-radius: 20px;
+  padding: 5px 22px;
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
   color: var(--navy);
+  letter-spacing: 0.5px;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: all 0.15s ease;
 }
-.tab-pill.active {
-  background: var(--teal-bright);
-  border-color: var(--teal-bright);
-  color: #fff;
-}
-.tab-pill:hover:not(.active) { background: #DAFFFD; }
+.subnav-btn:hover, .subnav-btn.active { background: #f0f0f0; }
 
-/* ---------- Tarjetas ---------- */
 .card-neutral {
   background: var(--bg-card-neutral);
   border-radius: var(--radius-card);
   padding: 20px;
   color: var(--navy);
+  border: 2px solid #111111;
 }
 .card-neutral h2 {
   font-family: var(--font-display);
@@ -159,7 +176,6 @@ body {
   gap: 8px;
 }
 
-/* ---------- Formularios ---------- */
 label {
   display: block;
   font-family: var(--font-display);
@@ -172,14 +188,18 @@ input[type="text"], input[type="email"], input[type="tel"] {
   font-family: var(--font-mono);
   font-size: var(--fs-texto);
   padding: 10px 14px;
-  border: none;
+  border: 1.5px solid transparent;
   border-radius: var(--radius-input);
   background: #fff;
   color: var(--grey-dark);
+  transition: border-color 0.15s ease;
+}
+input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus {
+  border-color: var(--purple);
+  outline: none;
 }
 input::placeholder { color: var(--grey); }
 
-/* ---------- Botones ---------- */
 .btn {
   font-family: var(--font-mono);
   font-weight: 700;
@@ -193,10 +213,18 @@ input::placeholder { color: var(--grey); }
   align-items: center;
   gap: 8px;
   color: #fff;
+  transition: transform 0.15s ease, filter 0.15s ease;
 }
 .btn-success { background: var(--success); }
 .btn-danger { background: var(--error); }
-.btn-success:hover, .btn-danger:hover { filter: brightness(1.05); }
+.btn-success:hover, .btn-danger:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: none;
+  transform: none;
+}
 .icon-btn {
   background: none;
   border: none;
@@ -204,15 +232,13 @@ input::placeholder { color: var(--grey); }
   color: inherit;
   display: inline-flex;
   align-items: center;
+  transition: transform 0.15s ease;
 }
+.icon-btn:hover { transform: scale(1.12); }
 
-/* ---------- Utilidades ---------- */
 .hidden { display: none !important; }
 .text-secondary { font-family: var(--font-accent); color: var(--grey); font-size: var(--fs-texto-sec); }
 
-/* =========================================================
-   Layout específico: Perfil
-   ========================================================= */
 .perfil-grid {
   display: grid;
   grid-template-columns: 280px 1fr;
@@ -235,7 +261,9 @@ input::placeholder { color: var(--grey); }
   align-items: center;
   justify-content: center;
   color: var(--navy);
+  transition: transform 0.2s ease;
 }
+.avatar-circle:hover { transform: scale(1.05); }
 .perfil-nombre {
   font-family: var(--font-display);
   font-weight: 800;
@@ -278,8 +306,18 @@ input::placeholder { color: var(--grey); }
   display: flex;
 }
 .contacto-item.contacto-oculto { opacity: 0.55; }
+.contacto-item {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.contacto-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(97, 85, 245, 0.15);
+}
+.contacto-item button {
+  transition: transform 0.15s ease;
+}
+.contacto-item button:hover { transform: scale(1.2); }
 
-/* Panel "Otros" — siempre visible, igual al Figma */
 .panel-otros {
   background: var(--slate-panel);
   border-radius: var(--radius-card);
@@ -287,6 +325,7 @@ input::placeholder { color: var(--grey); }
   min-height: 380px;
   display: flex;
   flex-direction: column;
+  border: 2px solid #111111;
 }
 .otros-row {
   display: flex;
@@ -299,8 +338,9 @@ input::placeholder { color: var(--grey); }
   padding: 12px 6px;
   cursor: pointer;
   border-radius: 8px;
+  transition: background 0.15s ease, transform 0.15s ease;
 }
-.otros-row:hover { background: rgba(255,255,255,0.25); }
+.otros-row:hover { background: rgba(255,255,255,0.25); transform: translateX(2px); }
 
 .acciones-perfil {
   display: flex;
@@ -309,15 +349,20 @@ input::placeholder { color: var(--grey); }
 }
 .otros-actions { margin-top: auto; }
 
-/* ---------- Modal (tarjetas flotantes) ---------- */
 .modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(27, 9, 66, 0.45);
+  backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 50;
+  animation: modalFadeIn 0.1s ease-out;
+}
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 .modal-card {
   background: var(--bg-card-neutral);
@@ -327,6 +372,13 @@ input::placeholder { color: var(--grey); }
   max-height: 85vh;
   overflow-y: auto;
   position: relative;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
+  border: 2px solid #111111;
+  animation: modalPopIn 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes modalPopIn {
+  from { opacity: 0; transform: scale(0.96) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 .modal-close {
   position: absolute;
@@ -336,7 +388,9 @@ input::placeholder { color: var(--grey); }
   border: none;
   cursor: pointer;
   color: var(--navy);
+  transition: transform 0.15s ease;
 }
+.modal-close:hover { transform: scale(1.2) rotate(90deg); }
 .modal-card h3 {
   font-family: var(--font-display);
   font-weight: 700;
@@ -371,4 +425,53 @@ input::placeholder { color: var(--grey); }
 }
 @media (max-width: 860px) {
   .app-shell { padding: 16px; }
+}
+
+.mobile-bottom-dock { display: none; }
+
+@media (max-width: 768px) {
+  body { padding-bottom: 85px; }
+
+  .mobile-bottom-dock {
+    position: fixed;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(92%, 360px);
+    height: 52px;
+    background: #fff;
+    border-radius: 35px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+    border: 1.8px solid #6cbcd8;
+    z-index: 1000;
+  }
+  .dock-btn {
+    background: transparent;
+    border: none;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 6px;
+    cursor: pointer;
+  }
+  .dock-search-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2.2px solid #0096db;
+    color: #0096db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transform: translateY(-5px);
+    box-shadow: 0 3px 8px rgba(0, 150, 219, 0.3);
+  }
 }

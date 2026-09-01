@@ -1,10 +1,5 @@
-/**
- * Control One - Interacción Frontend para la vista de Información
- * Conecta las tarjetas de Historial, Suscripciones y Favoritos con el backend en Python.
- * Incluye modales interactivos en la misma página para crear, modificar y eliminar.
- */
 
-// Estado global en memoria para sincronización inmediata
+
 let estadoInformacion = {
     favoritos: [],
     historial: [],
@@ -12,6 +7,7 @@ let estadoInformacion = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
     initNavScroll();
     initSubscriptionToggles();
     initFavoritesInteractions();
@@ -19,14 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     initLiveSearch();
     initMobileCollapsibles();
 
-    // Cargar datos locales y sincronizar con backend Python
     cargarDatosLocales();
     sincronizarConBackendPython();
 });
 
-/* =========================================================
-   1. NAVEGACIÓN Y DESPLAZAMIENTO SUAVE
-   ========================================================= */
 function initNavScroll() {
     const navLinks = document.querySelectorAll('.subnav-btn, .nav-pill');
 
@@ -52,9 +44,6 @@ function initNavScroll() {
     });
 }
 
-/* =========================================================
-   2. GESTIÓN DE SUSCRIPCIONES (TOGGLES Y MODALES)
-   ========================================================= */
 function initSubscriptionToggles() {
     const listContainer = document.getElementById('subscriptions-list-container');
     if (!listContainer) return;
@@ -71,25 +60,29 @@ function initSubscriptionToggles() {
             const isActive = toggleBtn.classList.toggle('active');
             row.classList.toggle('paused', !isActive);
 
-            // Enviar a Python Backend
-            fetch('http://localhost:8003/api/informacion/suscripciones/toggle', {
+            fetch('http://127.0.0.1:5000/api/informacion/suscripciones/toggle', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: subId, activa: isActive })
             }).catch(() => {});
 
-            // Actualizar estado local
             const sub = estadoInformacion.suscripciones.find(s => String(s.id) === String(subId));
             if (sub) sub.activa = isActive;
             localStorage.setItem('control_one_suscripciones', JSON.stringify(estadoInformacion.suscripciones));
             return;
         }
 
-        // Clic en la fila -> Abrir modal de detalle/edición
         abrirModalSuscripcion(subId);
     });
 
-    // Botón para agregar suscripción en cabecera
+    const btnAgregarSub = document.getElementById('btn-agregar-suscripcion');
+    if (btnAgregarSub) {
+        btnAgregarSub.addEventListener('click', (e) => {
+            e.stopPropagation();
+            abrirModalSuscripcion();
+        });
+    }
+
     const headerSuscripciones = document.querySelector('.subscriptions-main-card .card-header-row');
     if (headerSuscripciones) {
         headerSuscripciones.style.cursor = 'pointer';
@@ -106,6 +99,8 @@ function abrirModalSuscripcion(subId = null) {
     const inputMonto = document.getElementById('input-sub-monto');
     const inputCat = document.getElementById('input-sub-categoria');
     const btnEliminar = document.getElementById('btn-eliminar-sub');
+    const btnPagar = document.getElementById('btn-pagar-sub');
+    const btnCancelar = document.getElementById('btn-cancelar-sub');
     const modalTit = document.getElementById('modal-sub-titulo');
 
     if (subId) {
@@ -117,20 +112,83 @@ function abrirModalSuscripcion(subId = null) {
         inputNombre.value = sub.nombre;
         inputMonto.value = sub.monto || 9.99;
         inputCat.value = sub.categoria || 'General';
-        btnEliminar.style.display = 'inline-block';
+        if (btnEliminar) btnEliminar.style.display = 'inline-block';
+        if (btnPagar) btnPagar.style.display = 'inline-block';
+        if (btnCancelar) btnCancelar.style.display = 'inline-block';
     } else {
         modalTit.textContent = 'Nueva Suscripción';
         inputId.value = '';
         inputNombre.value = '';
         inputMonto.value = '9.99';
         inputCat.value = 'General';
-        btnEliminar.style.display = 'none';
+        if (btnEliminar) btnEliminar.style.display = 'none';
+        if (btnPagar) btnPagar.style.display = 'none';
+        if (btnCancelar) btnCancelar.style.display = 'none';
     }
 
     overlay.classList.add('active');
     modal.classList.add('active');
     inputNombre.focus();
 }
+
+function realizarPagoSuscripcionModal() {
+    const id = document.getElementById('input-sub-id').value;
+    const nombre = document.getElementById('input-sub-nombre').value.trim();
+    const monto = document.getElementById('input-sub-monto').value;
+    if (!nombre) return;
+
+    const fecha = new Date().toLocaleDateString('es-EC');
+    alert(`Pago exitoso de $${monto} para "${nombre}" realizado el ${fecha}.`);
+
+    let subs = JSON.parse(localStorage.getItem('control_one_suscripciones') || '[]');
+    const sub = subs.find(s => String(s.id) === String(id));
+    if (sub) {
+        sub.ultimo_pago = fecha;
+        sub.estado_pago = 'al_dia';
+        localStorage.setItem('control_one_suscripciones', JSON.stringify(subs));
+    }
+
+    fetch('http://127.0.0.1:5000/api/informacion/suscripciones/pago', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, monto, fecha })
+    }).catch(() => {});
+
+    cerrarModales();
+}
+
+function cancelarSuscripcionModal() {
+    const id = document.getElementById('input-sub-id').value;
+    const nombre = document.getElementById('input-sub-nombre').value.trim();
+    if (!id) return;
+
+    if (confirm(`¿Deseas cancelar la suscripción a "${nombre}"?`)) {
+        let subs = JSON.parse(localStorage.getItem('control_one_suscripciones') || '[]');
+        const sub = subs.find(s => String(s.id) === String(id));
+        if (sub) {
+            sub.activa = false;
+            localStorage.setItem('control_one_suscripciones', JSON.stringify(subs));
+        }
+
+        const row = document.querySelector(`.subscription-item-row[data-sub-id="${id}"]`);
+        if (row) {
+            row.classList.add('paused');
+            const toggle = row.querySelector('.sub-toggle-btn');
+            if (toggle) toggle.classList.remove('active');
+        }
+
+        fetch('http://127.0.0.1:5000/api/informacion/suscripciones/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, activa: false })
+        }).catch(() => {});
+
+        cerrarModales();
+    }
+}
+
+window.realizarPagoSuscripcionModal = realizarPagoSuscripcionModal;
+window.cancelarSuscripcionModal = cancelarSuscripcionModal;
 
 function guardarSuscripcionModal(e) {
     e.preventDefault();
@@ -141,40 +199,40 @@ function guardarSuscripcionModal(e) {
 
     if (!nombre) return;
 
+    let subs = JSON.parse(localStorage.getItem('control_one_suscripciones') || '[]');
     if (id) {
-        // Modificar existente
-        const row = document.querySelector(`.subscription-item-row[data-sub-id="${id}"]`);
-        if (row) {
-            const nameSpan = row.querySelector('.sub-name-text');
-            if (nameSpan) nameSpan.textContent = nombre;
-        }
-        const sub = estadoInformacion.suscripciones.find(s => String(s.id) === String(id));
+        const sub = subs.find(s => String(s.id) === String(id));
         if (sub) {
             sub.nombre = nombre;
             sub.monto = monto;
             sub.categoria = cat;
         }
+        const row = document.querySelector(`.subscription-item-row[data-sub-id="${id}"]`);
+        if (row) {
+            const span = row.querySelector('.sub-name-text');
+            if (span) span.textContent = nombre;
+        }
     } else {
-        // Crear nueva
-        const newId = 'sub_' + Date.now();
         const nuevaSub = {
-            id: newId,
-            nombre: nombre,
-            monto: monto,
+            id: 'sub_' + Date.now(),
+            nombre,
+            monto,
             categoria: cat,
             activa: true
         };
-        estadoInformacion.suscripciones.push(nuevaSub);
+        subs.push(nuevaSub);
         renderizarSuscripcionEnLista(nuevaSub, true);
-
-        fetch('http://localhost:8003/api/informacion/suscripciones', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(nuevaSub)
-        }).catch(() => {});
     }
+    localStorage.setItem('control_one_suscripciones', JSON.stringify(subs));
 
-    localStorage.setItem('control_one_suscripciones', JSON.stringify(estadoInformacion.suscripciones));
+    fetch('http://127.0.0.1:5000/api/informacion/suscripciones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id || null, nombre, monto, categoria: cat })
+    })
+        .then(() => sincronizarConBackendPython())
+        .catch(() => {});
+
     cerrarModales();
 }
 
@@ -216,25 +274,18 @@ function eliminarSuscripcionModal() {
     if (!id) return;
 
     if (confirm('¿Deseas eliminar esta suscripción?')) {
-        const row = document.querySelector(`.subscription-item-row[data-sub-id="${id}"]`);
-        if (row) row.remove();
-
-        estadoInformacion.suscripciones = estadoInformacion.suscripciones.filter(s => String(s.id) !== String(id));
-        localStorage.setItem('control_one_suscripciones', JSON.stringify(estadoInformacion.suscripciones));
-
-        fetch('http://localhost:8003/api/informacion/suscripciones/eliminar', {
+        fetch('http://127.0.0.1:5000/api/informacion/suscripciones/eliminar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id })
-        }).catch(() => {});
+            body: JSON.stringify({ id })
+        })
+            .then(() => sincronizarConBackendPython())
+            .catch(() => {});
 
         cerrarModales();
     }
 }
 
-/* =========================================================
-   3. GESTIÓN DE FAVORITOS
-   ========================================================= */
 function initFavoritesInteractions() {
     const btnEditFavs = document.getElementById('btn-edit-favoritos');
     if (btnEditFavs) {
@@ -290,32 +341,22 @@ function guardarFavoritoModal(e) {
     if (!titulo) return;
 
     if (id) {
+
         const row = document.querySelector(`.favorite-item-row[data-fav-id="${id}"]`);
         if (row) {
             const span = row.querySelector('.fav-item-text');
             if (span) span.textContent = titulo;
         }
-        const fav = estadoInformacion.favoritos.find(f => String(f.id) === String(id));
-        if (fav) fav.titulo = titulo;
     } else {
-        const newId = 'fav_' + Date.now();
-        const nuevoFav = {
-            id: newId,
-            titulo: titulo,
-            tipo_elemento: 'general',
-            fecha_agregado: new Date().toISOString()
-        };
-        estadoInformacion.favoritos.push(nuevoFav);
-        renderizarFavoritoEnLista(nuevoFav, true);
-
-        fetch('http://localhost:8003/api/informacion/favoritos', {
+        fetch('http://127.0.0.1:5000/api/informacion/favoritos', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(nuevoFav)
-        }).catch(() => {});
+            body: JSON.stringify({ titulo, tipo_elemento: 'general' })
+        })
+            .then(() => sincronizarConBackendPython())
+            .catch(() => {});
     }
 
-    localStorage.setItem('control_one_favoritos', JSON.stringify(estadoInformacion.favoritos));
     cerrarModales();
 }
 
@@ -348,25 +389,18 @@ function eliminarFavoritoModal() {
     if (!id) return;
 
     if (confirm('¿Deseas eliminar este favorito?')) {
-        const row = document.querySelector(`.favorite-item-row[data-fav-id="${id}"]`);
-        if (row) row.remove();
-
-        estadoInformacion.favoritos = estadoInformacion.favoritos.filter(f => String(f.id) !== String(id));
-        localStorage.setItem('control_one_favoritos', JSON.stringify(estadoInformacion.favoritos));
-
-        fetch('http://localhost:8003/api/informacion/favoritos/eliminar', {
+        fetch('http://127.0.0.1:5000/api/informacion/favoritos/eliminar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id })
-        }).catch(() => {});
+            body: JSON.stringify({ id })
+        })
+            .then(() => sincronizarConBackendPython())
+            .catch(() => {});
 
         cerrarModales();
     }
 }
 
-/* =========================================================
-   4. GESTIÓN DE HISTORIAL
-   ========================================================= */
 function initHistoryInteractions() {
     const histItems = document.querySelectorAll('.history-item-row');
     histItems.forEach(item => {
@@ -378,9 +412,6 @@ function initHistoryInteractions() {
     });
 }
 
-/* =========================================================
-   5. BÚSQUEDA EN TIEMPO REAL
-   ========================================================= */
 function initLiveSearch() {
     const desktopSearch = document.getElementById('desktop-search-input');
     const mobileSearchBtn = document.getElementById('mobile-search-trigger');
@@ -388,19 +419,16 @@ function initLiveSearch() {
     function ejecutarBusqueda(query) {
         const q = query.toLowerCase().trim();
 
-        // 1. Filtrar Favoritos
         document.querySelectorAll('.favorite-item-row').forEach(row => {
             const text = row.textContent.toLowerCase();
             row.style.display = (!q || text.includes(q)) ? 'flex' : 'none';
         });
 
-        // 2. Filtrar Historial
         document.querySelectorAll('.history-item-row').forEach(row => {
             const text = row.textContent.toLowerCase();
             row.style.display = (!q || text.includes(q)) ? 'flex' : 'none';
         });
 
-        // 3. Filtrar Suscripciones
         document.querySelectorAll('.subscription-item-row').forEach(row => {
             const text = row.textContent.toLowerCase();
             row.style.display = (!q || text.includes(q)) ? 'flex' : 'none';
@@ -419,9 +447,6 @@ function initLiveSearch() {
     }
 }
 
-/* =========================================================
-   6. COLAPSABLES EN MÓVIL
-   ========================================================= */
 function initMobileCollapsibles() {
     const chevrons = document.querySelectorAll('.mobile-chevron, .card-chevron-btn');
 
@@ -442,9 +467,6 @@ function initMobileCollapsibles() {
     });
 }
 
-/* =========================================================
-   7. CONTROL DE MODALES FLOTANTES
-   ========================================================= */
 function cerrarModales() {
     const overlay = document.getElementById('modal-overlay');
     if (overlay) overlay.classList.remove('active');
@@ -462,9 +484,6 @@ if (overlayElem) {
     });
 }
 
-/* =========================================================
-   8. PERSISTENCIA LOCAL Y SINCRONIZACIÓN CON PYTHON
-   ========================================================= */
 function cargarDatosLocales() {
     const favsGuardados = JSON.parse(localStorage.getItem('control_one_favoritos') || 'null');
     if (favsGuardados) estadoInformacion.favoritos = favsGuardados;
@@ -475,7 +494,7 @@ function cargarDatosLocales() {
 
 async function sincronizarConBackendPython() {
     try {
-        const res = await fetch('http://localhost:8003/api/informacion/resumen', {
+        const res = await fetch('http://127.0.0.1:5000/api/informacion/resumen', {
             signal: AbortSignal.timeout(1500)
         });
         if (!res.ok) return;
@@ -485,9 +504,66 @@ async function sincronizarConBackendPython() {
         estadoInformacion.historial = data.historial || [];
         estadoInformacion.suscripciones = data.suscripciones || [];
 
+        renderizarDesdeBackend(data);
         console.log('[Control One - Información] Sincronizado exitosamente con Python Backend');
     } catch (e) {
         console.log('[Control One - Información] Operando en modo local/desconectado');
+    }
+}
+
+function renderizarDesdeBackend(data) {
+    
+    const favList = document.getElementById('favorites-list-container');
+    if (favList && Array.isArray(data.favoritos)) {
+        favList.innerHTML = data.favoritos.map(f => `
+            <article class="favorite-item-row" data-fav-id="${f.id}">
+                <div class="fav-star-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#eab308" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+                <span class="fav-item-text">${escapeHTML(f.titulo)}</span>
+            </article>
+        `).join('') || '<p style="padding:8px;opacity:.7;">Aún no tienes favoritos.</p>';
+    }
+
+    const histList = document.getElementById('history-items-container');
+    if (histList && Array.isArray(data.historial)) {
+        histList.innerHTML = data.historial.map(h => `
+            <div class="history-item-row" data-hist-id="${h.id}">
+                <div class="history-time-badge">
+                    <span class="time-hour">${h.hora_linea1 || ''}</span>
+                    <span class="time-min">${h.hora_linea2 || ''}</span>
+                </div>
+                <div class="history-desc-col">
+                    <span class="history-desc-text">${escapeHTML(h.descripcion)}</span>
+                </div>
+            </div>
+        `).join('') || '<p style="padding:8px;opacity:.7;">Aún no hay actividad registrada.</p>';
+        initHistoryInteractions();
+    }
+
+    const subList = document.getElementById('subscriptions-list-container');
+    if (subList && Array.isArray(data.suscripciones)) {
+        subList.innerHTML = data.suscripciones.map(s => `
+            <article class="subscription-item-row ${!s.activa ? 'paused' : ''}" data-sub-id="${s.id}">
+                <div class="sub-toggle-btn ${s.activa ? 'active' : ''}" title="Activar / Pausar">
+                    <span class="toggle-slider-circle"></span>
+                </div>
+                <div class="sub-bookmark-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <span class="sub-name-text">${escapeHTML(s.nombre)}</span>
+                <div class="sub-card-icon">
+                    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                </div>
+            </article>
+        `).join('') || '<p style="padding:8px;opacity:.7;">Aún no tienes suscripciones.</p>';
     }
 }
 

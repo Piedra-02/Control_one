@@ -6,74 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control One - Organización</title>
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
-    <!-- CSS de Organización -->
     <link rel="stylesheet" href="../CSS/Organizacion.css">
+    <link rel="stylesheet" href="../CSS/nav-global.css">
 </head>
 
 <body>
 
     <div class="app">
 
-        <!-- =========================================
-             1. HEADER SUPERIOR (DESKTOP)
-        ========================================== -->
         <header class="desktop-header">
-            <!-- Logo -->
+            
             <a href="Panel principal.html" class="header-logo" title="Volver al Panel Principal">
                 <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                 <span class="logo-fallback">1</span>
             </a>
 
-            <!-- Barra de búsqueda central -->
             <div class="desktop-search">
-                <svg class="search-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
+                <i data-lucide="search" class="search-svg" width="18" height="18"></i>
                 <input type="text" id="organizacion-search" placeholder="BUSCAR" autocomplete="off">
             </div>
 
-            <!-- Botones de Acción Derecha -->
             <div class="desktop-actions">
-                <a href="Actividades.html" class="icon-btn" title="Capas / Actividades">
-                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                        <polyline points="2 17 12 22 22 17"></polyline>
-                        <polyline points="2 12 12 17 22 12"></polyline>
-                    </svg>
-                </a>
-
-                <a href="Automatizacion.html" class="icon-btn" title="Automatización">
-                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
-                        <rect x="9" y="9" width="6" height="6"></rect>
-                        <line x1="9" y1="1" x2="9" y2="4"></line>
-                        <line x1="15" y1="1" x2="15" y2="4"></line>
-                        <line x1="9" y1="20" x2="9" y2="23"></line>
-                        <line x1="15" y1="20" x2="15" y2="23"></line>
-                        <line x1="20" y1="9" x2="23" y2="9"></line>
-                        <line x1="20" y1="14" x2="23" y2="14"></line>
-                        <line x1="1" y1="9" x2="4" y2="9"></line>
-                        <line x1="1" y1="14" x2="4" y2="14"></line>
-                    </svg>
-                </a>
-
-                <button class="icon-btn" id="btn-chat-org" title="Chat">
-                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                </button>
+                <a href="Panel principal.html" class="nav-icon-link" data-label="Inicio" title="Panel Principal"><i data-lucide="home" width="22" height="22"></i></a>
+                <a href="Organizacion.html" class="nav-icon-link active-screen" data-label="Organización" title="Organización"><i data-lucide="layout-dashboard" width="22" height="22"></i></a>
+                <a href="Actividades.html" class="nav-icon-link" data-label="Actividades" title="Actividades"><i data-lucide="layers" width="22" height="22"></i></a>
+                <a href="Automatizacion.html" class="nav-icon-link" data-label="Automatización" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i></a>
+                <a href="Informacion.html" class="nav-icon-link" data-label="Info" title="Información"><i data-lucide="info" width="22" height="22"></i></a>
+                <a href="perfil.html" class="nav-icon-link" data-label="Perfil" title="Perfil"><i data-lucide="user" width="22" height="22"></i></a>
             </div>
         </header>
 
-        <!-- =========================================
-             2. HEADER SUPERIOR (MOBILE)
-        ========================================== -->
         <header class="mobile-header">
             <a href="Panel principal.html" class="mobile-logo" title="Inicio">
                 <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -86,10 +52,6 @@
             </div>
         </header>
 
-
-        <!-- =========================================
-             3. NAVEGACIÓN SECUNDARIA (DESKTOP)
-        ========================================== -->
         <nav class="desktop-subnav">
             <div class="subnav-container">
                 <a href="#seccion-calendario" class="subnav-btn active">CALENDARIO</a>
@@ -98,18 +60,11 @@
             </div>
         </nav>
 
-
-        <!-- =========================================
-             4. CONTENIDO PRINCIPAL DE ORGANIZACIÓN
-        ========================================== -->
         <main class="organizacion-grid">
 
-            <!-- =====================================
-                 COLUMNA IZQUIERDA: CALENDARIO
-            ====================================== -->
             <section id="seccion-calendario" class="calendar-card-container">
                 <div class="calendar-dark-card">
-                    <!-- Cabecera del Calendario -->
+                    
                     <div class="calendar-header">
                         <div class="calendar-title-wrap">
                             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -128,9 +83,8 @@
                         </div>
                     </div>
 
-                    <!-- Tabla del Calendario -->
                     <div class="calendar-table-box">
-                        <!-- Días de la semana -->
+                        
                         <div class="calendar-weekdays-row">
                             <span>dom</span>
                             <span>lun</span>
@@ -141,13 +95,11 @@
                             <span>sáb</span>
                         </div>
 
-                        <!-- Grilla de Días Dinámica -->
                         <div class="calendar-days-grid" id="calendar-days-container">
-                            <!-- Los días se renderizan automáticamente con JS -->
+                            
                         </div>
                     </div>
 
-                    <!-- Botón para añadir evento al día seleccionado -->
                     <div class="calendar-bottom-action">
                         <button class="calendar-add-btn" id="btn-add-calendar-event">
                             + Agregar Evento en Fecha Seleccionada
@@ -156,13 +108,8 @@
                 </div>
             </section>
 
-
-            <!-- =====================================
-                 COLUMNA DERECHA: CATEGORÍAS/PRIORIDADES Y ESTADÍSTICAS
-            ====================================== -->
             <div class="organizacion-right-col">
 
-                <!-- 1. Fila de Tarjetas de Categorías / Importancia -->
                 <section id="seccion-categorias" class="categories-section-wrapper">
                     
                     <div class="categories-top-bar">
@@ -179,7 +126,7 @@
                     </div>
 
                     <div class="categories-row">
-                        <!-- Tarjeta Categoría 1: IMPORTANTE -->
+                        
                         <article class="category-cyan-card" id="card-cat-1">
                             <div class="cat-card-header">
                                 <button class="cat-icon-btn cat-btn-back" title="Alternar Categoría" onclick="alternarCategoria('cat1')">
@@ -203,11 +150,10 @@
                                 </button>
                             </div>
                             <ul class="cat-items-list" id="list-cat-1">
-                                <!-- Ítems de tareas clasificadas -->
+                                
                             </ul>
                         </article>
 
-                        <!-- Tarjeta Categoría 2: OBLIGATORIO / SECUNDARIO -->
                         <article class="category-cyan-card" id="card-cat-2">
                             <div class="cat-card-header">
                                 <button class="cat-icon-btn cat-btn-back" title="Alternar Categoría" onclick="alternarCategoria('cat2')">
@@ -231,15 +177,13 @@
                                 </button>
                             </div>
                             <ul class="cat-items-list" id="list-cat-2">
-                                <!-- Ítems de tareas clasificadas -->
+                                
                             </ul>
                         </article>
                     </div>
 
                 </section>
 
-
-                <!-- 2. Tarjeta Azul de Estadísticas de Actividad -->
                 <section id="seccion-estadisticas" class="stats-blue-card" onclick="abrirModalEstadisticasDetalle()" title="Clic para ver detalle de actividad">
                     <div class="stats-header">
                         <div class="stats-title-left">
@@ -253,7 +197,6 @@
                         <span class="stats-badge-live">● EN VIVO</span>
                     </div>
 
-                    <!-- Métricas de tiempo de conexión y movimientos -->
                     <div class="stats-live-metrics-row">
                         <div class="stat-metric-pill">
                             <span class="metric-label">Tiempo Conectado</span>
@@ -266,33 +209,28 @@
                     </div>
 
                     <div class="stats-chart-wrapper">
-                        <!-- Gráfico SVG dinámico y funcional de actividad -->
+                        
                         <svg class="stats-svg-chart" id="stats-svg-chart-elem" viewBox="0 0 380 135">
                             <defs>
-                                <!-- Gradiente para el área bajo la curva -->
+                                
                                 <linearGradient id="activity-gradient" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="0%" stop-color="#ffffff" stop-opacity="0.4" />
                                     <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02" />
                                 </linearGradient>
                             </defs>
 
-                            <!-- Líneas de guía horizontales -->
                             <line x1="20" y1="25" x2="360" y2="25" stroke="rgba(255,255,255,0.18)" stroke-dasharray="3,3" />
                             <line x1="20" y1="65" x2="360" y2="65" stroke="rgba(255,255,255,0.18)" stroke-dasharray="3,3" />
                             <line x1="20" y1="105" x2="360" y2="105" stroke="rgba(255,255,255,0.3)" />
 
-                            <!-- Área sombreada bajo la curva -->
                             <path id="stats-chart-area" fill="url(#activity-gradient)" d="M 25,105 L 25,105 L 355,105 Z" />
 
-                            <!-- Línea de tendencia continua en vivo -->
                             <path id="stats-chart-line" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M 25,105 L 355,105" />
 
-                            <!-- Grupo de puntos dinámicos en los picos -->
                             <g id="stats-chart-points-group">
-                                <!-- Se renderizan dinámicamente con JS -->
+                                
                             </g>
 
-                            <!-- Etiquetas del eje de tiempo X -->
                             <g class="chart-x-labels" fill="rgba(255,255,255,0.75)" font-size="9.5" font-weight="700" text-anchor="middle">
                                 <text x="25" y="122">Inicio</text>
                                 <text x="80" y="122">-4m</text>
@@ -310,10 +248,6 @@
 
         </main>
 
-
-        <!-- =========================================
-             5. BOTTOM NAVIGATION BAR (MOBILE)
-        ========================================== -->
         <nav class="mobile-bottom-dock">
             <a href="Actividades.html" class="dock-btn" title="Capas">
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -362,12 +296,8 @@
 
     </div>
 
-    <!-- =========================================
-         TARJETAS MODALES (FLOTANTES EN LA MISMA PANTALLA)
-    ========================================== -->
     <div class="modal-overlay" id="modal-overlay-org">
 
-        <!-- 1. Modal: Evento del Calendario (Crear / Modificar / Eliminar) -->
         <div class="modal-card" id="modal-evento-org">
             <div class="modal-card-header modal-header-calendario">
                 <h3 id="modal-evento-org-titulo">Evento en Calendario</h3>
@@ -399,6 +329,14 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="input-org-evento-imagen">Imagen representativa</label>
+                        <input type="file" id="input-org-evento-imagen" accept="image/*">
+                        <input type="hidden" id="input-org-evento-imagen-data">
+                        <div id="preview-org-evento-imagen" style="margin-top:6px; display:none;">
+                            <img id="img-org-evento-preview" src="" alt="Vista previa" style="max-height:80px; border-radius:8px; object-fit:cover; border:1px solid #ddd;">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-danger" id="btn-org-eliminar-evento" style="display: none;" onclick="eliminarEventoOrg()">Eliminar</button>
@@ -408,7 +346,6 @@
             </form>
         </div>
 
-        <!-- 2. Modal: Modificar / Crear Categoría -->
         <div class="modal-card" id="modal-categoria-org">
             <div class="modal-card-header modal-header-cat">
                 <h3 id="modal-cat-org-titulo">Categoría / Nivel de Prioridad</h3>
@@ -434,7 +371,6 @@
             </form>
         </div>
 
-        <!-- 3. Modal: Tarea Individual desde Categoría -->
         <div class="modal-card" id="modal-tarea-org">
             <div class="modal-card-header modal-header-cat">
                 <h3 id="modal-tarea-org-titulo">Tarea / Proyecto</h3>
@@ -468,7 +404,6 @@
             </form>
         </div>
 
-        <!-- 4. Modal Ampliado: Ver Todas las Categorías -->
         <div class="modal-card modal-card-large" id="modal-todas-categorias">
             <div class="modal-card-header modal-header-cat">
                 <div class="modal-header-with-action">
@@ -480,7 +415,7 @@
             <div class="modal-body modal-body-expanded">
                 <p class="modal-subtitle-text">Aquí puedes visualizar todas las tareas agrupadas por sus niveles de importancia o categorías:</p>
                 <div class="all-categories-grid" id="all-categories-container">
-                    <!-- Se genera dinámicamente con JS -->
+                    
                 </div>
             </div>
             <div class="modal-footer">
@@ -488,7 +423,6 @@
             </div>
         </div>
 
-        <!-- 5. Modal Detalle: Estadísticas de Actividad en la Web -->
         <div class="modal-card" id="modal-estadisticas-detalle">
             <div class="modal-card-header modal-header-stats">
                 <h3>📊 Detalle de Actividad y Conexión</h3>
@@ -521,7 +455,7 @@
                 <div class="recent-actions-section">
                     <label class="form-group-label">Últimas acciones registradas:</label>
                     <ul class="recent-actions-list" id="modal-stat-acciones-list">
-                        <!-- Se llena dinámicamente con las acciones del usuario -->
+                        
                     </ul>
                 </div>
             </div>
@@ -533,7 +467,17 @@
 
     </div>
 
-    <!-- Script de Organización -->
+    <nav class="mobile-bottom-nav">
+        <a href="Panel principal.html" class="dock-item" title="Inicio"><i data-lucide="home" width="22" height="22"></i><span>Inicio</span><span class="dock-dot"></span></a>
+        <a href="Organizacion.html" class="dock-item active-screen" title="Organización"><i data-lucide="layout-dashboard" width="22" height="22"></i><span>Organizar</span><span class="dock-dot"></span></a>
+        <a href="Actividades.html" class="dock-item" title="Actividades"><i data-lucide="layers" width="22" height="22"></i><span>Actividad</span><span class="dock-dot"></span></a>
+        <a href="Automatizacion.html" class="dock-item" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i><span>Auto</span><span class="dock-dot"></span></a>
+        <a href="Informacion.html" class="dock-item" title="Información"><i data-lucide="info" width="22" height="22"></i><span>Info</span><span class="dock-dot"></span></a>
+        <a href="perfil.html" class="dock-item" title="Perfil"><i data-lucide="user" width="22" height="22"></i><span>Perfil</span><span class="dock-dot"></span></a>
+    </nav>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
     <script src="../../backend/JS/organizacion.js"></script>
 
 </body>
