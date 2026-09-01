@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTaskClickToEdit();
     initEventClickToEdit();
     initReminderClickToEdit();
+    initReminderCreateButton();
     initLiveSearch();
     initReminderStars();
     initMobileCollapsibles();
@@ -119,6 +120,13 @@ function initReminderClickToEdit() {
             abrirModalRecordatorio(id, { titulo: tit, subtitulo: sub, hora: hora });
         });
     });
+}
+
+function initReminderCreateButton() {
+    const addButton = document.getElementById('btn-agregar-recordatorio');
+    if (addButton) {
+        addButton.addEventListener('click', () => abrirModalRecordatorio());
+    }
 }
 
 function cerrarModales() {
@@ -361,7 +369,7 @@ function abrirModalRecordatorio(id = null, datos = {}) {
     inputNom.focus();
 }
 
-function guardarRecordatorioModal(e) {
+async function guardarRecordatorioModal(e) {
     e.preventDefault();
     const id = document.getElementById('input-recordatorio-id').value;
     const nombre = document.getElementById('input-recordatorio-nombre').value.trim();
@@ -370,25 +378,38 @@ function guardarRecordatorioModal(e) {
 
     if (!nombre) return;
 
-    if (id) {
-        const card = document.querySelector(`.reminder-item-card[data-reminder-id="${id}"]`);
-        if (card) {
-            const h4 = card.querySelector('h4');
-            const p = card.querySelector('p');
-            const timeSpan = card.querySelector('.time-capsule span');
-            if (h4) h4.textContent = nombre;
-            if (p) p.textContent = sub;
-            if (timeSpan) timeSpan.textContent = hora;
+    try {
+        if (id) {
+            const card = document.querySelector(`.reminder-item-card[data-reminder-id="${id}"]`);
+            if (card) {
+                const h4 = card.querySelector('h4');
+                const p = card.querySelector('p');
+                const timeSpan = card.querySelector('.time-capsule span');
+                if (h4) h4.textContent = nombre;
+                if (p) p.textContent = sub;
+                if (timeSpan) timeSpan.textContent = hora;
+            }
+
+            const respuesta = await fetch(`http://127.0.0.1:5000/api/panel/recordatorios/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ titulo: nombre })
+            });
+            if (!respuesta.ok) return;
+        } else {
+            const fecha = new Date();
+            const fechaLocal = `${fecha.getFullYear()}-${String(fecha.getMonth() + 1).padStart(2, '0')}-${String(fecha.getDate()).padStart(2, '0')}`;
+            const respuesta = await fetch('http://127.0.0.1:5000/api/panel/recordatorios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ titulo: nombre, fecha_hora: `${fechaLocal}T${hora}` })
+            });
+            if (!respuesta.ok) return;
         }
 
-        fetch(`http://127.0.0.1:5000/api/panel/recordatorios/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ titulo: nombre })
-        }).catch(() => {});
-    }
-
-    cerrarModales();
+        await sincronizarConBackendPython();
+        cerrarModales();
+    } catch (error) {}
 }
 
 function eliminarRecordatorioModal() {
