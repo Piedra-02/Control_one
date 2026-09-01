@@ -143,6 +143,10 @@ document.getElementById('btnGuardar').addEventListener('click', async () => {
   actualizarVistaPrevia();
 
   await cargarHistorial();
+
+  // Efecto de entrada para el elemento recién agregado
+  const primerItem = historialList.querySelector('li');
+  if (primerItem) primerItem.classList.add('historial-item-nuevo');
 });
 
 // ---------- Inicializar ----------
