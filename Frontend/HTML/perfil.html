@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control One — Perfil</title>
+<link rel="stylesheet" href="../CSS/perfil.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="logo-mark">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <path d="M12 3a9 9 0 1 0 9 9" stroke-linecap="round"/>
+        <path d="M12 3v6l4-2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="searchbar">
+      <i data-lucide="search" width="18" height="18"></i>
+      <input type="text" placeholder="BUSCAR">
+    </div>
+    <div class="topbar-icons">
+      <i data-lucide="layers" width="20" height="20" title="Módulos"></i>
+      <i data-lucide="cpu" width="20" height="20" title="Automatización"></i>
+      <i data-lucide="message-circle" width="20" height="20" title="Contacto"></i>
+    </div>
+  </header>
+
+  <nav class="tabs-primary">
+    <button class="tab-pill active" data-tab="perfil">PERFIL</button>
+    <button class="tab-pill" data-tab="contactos">CONTACTOS</button>
+    <button class="tab-pill" data-tab="otros">OTROS</button>
+  </nav>
+
+  <main class="perfil-grid">
+
+    <!-- Sidebar: avatar + contactos (igual al Figma, siempre visible) -->
+    <aside class="perfil-sidebar">
+      <div class="avatar-wrap">
+        <div class="avatar-circle">
+          <i data-lucide="user" width="36" height="36"></i>
+        </div>
+      </div>
+      <h2 class="perfil-nombre" id="perfilNombre">PEDRO SANCHEZ</h2>
+      <p class="perfil-alias" id="perfilAlias">@Alias_guacho</p>
+
+      <ul class="contactos-list" id="contactosList"></ul>
+    </aside>
+
+    <!-- Panel principal: siempre el listado de "Otros", igual al Figma -->
+    <section class="panel-otros">
+      <div class="otros-row" data-action="ver-ocultos">
+        <i data-lucide="eye" width="18" height="18"></i> Ocultos
+      </div>
+      <div class="otros-row" data-action="ver-archivados">
+        <i data-lucide="archive" width="18" height="18"></i> Archivados
+      </div>
+      <div class="otros-row" data-action="editar-perfil">
+        <i data-lucide="at-sign" width="18" height="18"></i> Editar perfil
+      </div>
+      <div class="otros-row" data-action="config-correo">
+        <i data-lucide="sliders-horizontal" width="18" height="18"></i> Configuración de correos
+      </div>
+
+      <div class="acciones-perfil otros-actions">
+        <button class="btn btn-danger" id="btnCerrarSesion">
+          <i data-lucide="log-out" width="16" height="16"></i> Cerrar sesión
+        </button>
+        <button class="btn btn-success" id="btnGuardarGeneral">
+          <i data-lucide="check" width="16" height="16"></i> Guardar
+        </button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Modal genérico: aquí se inyecta el contenido de cada tarjeta -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal-card">
+    <button class="modal-close" id="modalClose"><i data-lucide="x" width="18" height="18"></i></button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="../../backend/JS/perfil.js"></script>
+</body>
+</html>
