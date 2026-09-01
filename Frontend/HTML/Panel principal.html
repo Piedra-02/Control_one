@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control One</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans y Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS del Panel Principal -->
+    <link rel="stylesheet" href="../CSS/Panel principal.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- =========================================
+             1. HEADER SUPERIOR (DESKTOP)
+        ========================================== -->
+        <header class="desktop-header">
+            <!-- Logo -->
+            <a href="Panel principal.html" class="header-logo" title="Control One">
+                <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="logo-fallback">1</span>
+            </a>
+
+            <!-- Barra de búsqueda central -->
+            <div class="desktop-search">
+                <svg class="search-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="desktop-search-input" placeholder="BUSCAR" autocomplete="off">
+            </div>
+
+            <!-- Botones de Acción Derecha -->
+            <div class="desktop-actions">
+                <!-- Stack / Actividades -->
+                <a href="Actividades.html" class="icon-btn" title="Actividades / Capas">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </a>
+
+                <!-- Chip / Automatización -->
+                <a href="Automatizacion.html" class="icon-btn" title="Automatización">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                        <rect x="9" y="9" width="6" height="6"></rect>
+                        <line x1="9" y1="1" x2="9" y2="4"></line>
+                        <line x1="15" y1="1" x2="15" y2="4"></line>
+                        <line x1="9" y1="20" x2="9" y2="23"></line>
+                        <line x1="15" y1="20" x2="15" y2="23"></line>
+                        <line x1="20" y1="9" x2="23" y2="9"></line>
+                        <line x1="20" y1="14" x2="23" y2="14"></line>
+                        <line x1="1" y1="9" x2="4" y2="9"></line>
+                        <line x1="1" y1="14" x2="4" y2="14"></line>
+                    </svg>
+                </a>
+
+                <!-- Chat / Mensajes -->
+                <button class="icon-btn" id="btn-chat" title="Chat / Notificaciones">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </button>
+
+                <!-- Información -->
+                <a href="Informacion.html" class="icon-btn" title="Información">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                </a>
+            </div>
+        </header>
+
+        <!-- =========================================
+             2. HEADER SUPERIOR (MOBILE)
+        ========================================== -->
+        <header class="mobile-header">
+            <a href="Panel principal.html" class="mobile-logo" title="Control One">
+                <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="logo-fallback">1</span>
+            </a>
+            <div class="mobile-nav-pills">
+                <a href="#seccion-tareas" class="nav-pill active">TAREAS</a>
+                <a href="#seccion-recordatorios" class="nav-pill">RECORDATORIOS</a>
+                <a href="#seccion-eventos" class="nav-pill">EVENTOS</a>
+            </div>
+        </header>
+
+
+        <!-- =========================================
+             3. NAVEGACIÓN SECUNDARIA (DESKTOP)
+        ========================================== -->
+        <nav class="desktop-subnav">
+            <div class="subnav-container">
+                <a href="#seccion-tareas" class="subnav-btn active">TAREAS</a>
+                <a href="#seccion-recordatorios" class="subnav-btn">RECORDATORIOS</a>
+                <a href="#seccion-eventos" class="subnav-btn">EVENTOS</a>
+            </div>
+        </nav>
+
+
+        <!-- =========================================
+             4. CONTENIDO PRINCIPAL (DASHBOARD)
+        ========================================== -->
+        <main class="dashboard-main">
+
+            <!-- =====================================
+                 SECCIÓN: EVENTOS
+            ====================================== -->
+            <section id="seccion-eventos" class="section-container section-eventos">
+                
+                <div class="section-heading">
+                    <div class="heading-left">
+                        <svg class="heading-icon gift-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                            <rect x="2" y="7" width="20" height="5"></rect>
+                            <line x1="12" y1="22" x2="12" y2="7"></line>
+                            <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                            <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+                        </svg>
+                        <h2>Eventos</h2>
+                    </div>
+                    <span class="mobile-chevron">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </span>
+                </div>
+
+                <div class="events-content-box">
+                    <div class="events-grid">
+                        <!-- Cuadro Verde Turquesa -->
+                        <div class="event-teal-card" id="btn-add-event-box" title="Espacio para nuevos eventos"></div>
+
+                        <!-- Tarjeta de Evento Cumpleaños -->
+                        <article class="event-main-card">
+                            <div class="event-card-header">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                <h3>Cumpleaños Mama</h3>
+                            </div>
+
+                            <div class="event-card-body">
+                                <div class="event-desc-col">
+                                    <p>hoy es</p>
+                                    <p>el</p>
+                                    <p>cumpleaños</p>
+                                    <p>de tu</p>
+                                    <p>Mama</p>
+                                </div>
+
+                                <div class="event-separator"></div>
+
+                                <div class="event-info-col">
+                                    <p class="event-status-text">Tienes un evento</p>
+                                    <p class="event-status-text">pendiente el</p>
+                                    <p class="event-date-text">30/08/2026</p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 FILA INFERIOR (TAREAS Y RECORDATORIOS)
+            ====================================== -->
+            <div class="bottom-row-grid">
+
+                <!-- =====================================
+                     SECCIÓN: TAREAS
+                ====================================== -->
+                <section id="seccion-tareas" class="section-container section-tareas">
+                    
+                    <div class="section-heading">
+                        <div class="heading-left">
+                            <svg class="heading-icon flag-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                <line x1="4" y1="22" x2="4" y2="15"></line>
+                            </svg>
+                            <h2>Tareas</h2>
+                        </div>
+                        <span class="mobile-chevron">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <div class="tasks-orange-box">
+                        <div class="tasks-grid">
+                            
+                            <!-- Tarea 1 -->
+                            <article class="task-item-card" data-task-id="t1">
+                                <label class="task-check-wrapper">
+                                    <input type="checkbox" checked>
+                                    <span class="custom-checkmark">
+                                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </span>
+                                </label>
+                                <span class="task-item-text">Hacer las compras del mes</span>
+                            </article>
+
+                            <!-- Tarea 2 -->
+                            <article class="task-item-card" data-task-id="t2">
+                                <label class="task-check-wrapper">
+                                    <input type="checkbox" checked>
+                                    <span class="custom-checkmark">
+                                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </span>
+                                </label>
+                                <span class="task-item-text">Hacer las compras del mes</span>
+                            </article>
+
+                            <!-- Tarea 3 -->
+                            <article class="task-item-card" data-task-id="t3">
+                                <label class="task-check-wrapper">
+                                    <input type="checkbox" checked>
+                                    <span class="custom-checkmark">
+                                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </span>
+                                </label>
+                                <span class="task-item-text">Hacer las compras del mes</span>
+                            </article>
+
+                            <!-- Tarea 4 -->
+                            <article class="task-item-card" data-task-id="t4">
+                                <label class="task-check-wrapper">
+                                    <input type="checkbox" checked>
+                                    <span class="custom-checkmark">
+                                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </span>
+                                </label>
+                                <span class="task-item-text">Hacer las compras del mes</span>
+                            </article>
+
+                            <!-- Tareas extras visibles en mobile según mock -->
+                            <article class="task-item-card mobile-only-task" data-task-id="t5">
+                                <label class="task-check-wrapper">
+                                    <input type="checkbox" checked>
+                                    <span class="custom-checkmark">
+                                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </span>
+                                </label>
+                                <span class="task-item-text">Ir a entregar el pedido</span>
+                            </article>
+
+                            <article class="task-item-card mobile-only-task" data-task-id="t6">
+                                <label class="task-check-wrapper">
+                                    <input type="checkbox" checked>
+                                    <span class="custom-checkmark">
+                                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                    </span>
+                                </label>
+                                <span class="task-item-text">Terminar de Decorar la Habitacion</span>
+                            </article>
+
+                        </div>
+                    </div>
+
+                </section>
+
+
+                <!-- =====================================
+                     SECCIÓN: RECORDATORIOS
+                ====================================== -->
+                <section id="seccion-recordatorios" class="section-container section-recordatorios">
+                    
+                    <div class="section-heading">
+                        <div class="heading-left">
+                            <svg class="heading-icon bell-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                            <h2>Recordatorios</h2>
+                        </div>
+                        <span class="mobile-chevron">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </span>
+                    </div>
+
+                    <div class="reminders-green-box">
+                        <div class="reminders-grid">
+                            
+                            <!-- Recordatorio 1 -->
+                            <article class="reminder-item-card" data-reminder-id="r1">
+                                <div class="reminder-top-row">
+                                    <div class="reminder-tag-icon">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                                        </svg>
+                                    </div>
+                                    <button class="reminder-star-icon" title="Destacar">
+                                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="reminder-center-content">
+                                    <h4>TITULO</h4>
+                                    <p>SUBTITULO</p>
+                                </div>
+
+                                <div class="reminder-bottom-time">
+                                    <div class="time-capsule">
+                                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        <span>18:00</span>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <!-- Recordatorio 2 -->
+                            <article class="reminder-item-card" data-reminder-id="r2">
+                                <div class="reminder-top-row">
+                                    <div class="reminder-tag-icon">
+                                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                                        </svg>
+                                    </div>
+                                    <button class="reminder-star-icon" title="Destacar">
+                                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="reminder-center-content">
+                                    <h4>TITULO</h4>
+                                    <p>SUBTITULO</p>
+                                </div>
+
+                                <div class="reminder-bottom-time">
+                                    <div class="time-capsule">
+                                        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                        <span>18:00</span>
+                                    </div>
+                                </div>
+                            </article>
+
+                        </div>
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+
+        <!-- =========================================
+             5. BOTTOM NAVIGATION BAR (DOCK EN MOBILE)
+        ========================================== -->
+        <nav class="mobile-bottom-dock">
+            <!-- Capas / Actividades -->
+            <a href="Actividades.html" class="dock-btn" title="Capas">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+            </a>
+
+            <!-- Info -->
+            <a href="Informacion.html" class="dock-btn" title="Información">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+            </a>
+
+            <!-- Botón Central de Búsqueda (Elevado) -->
+            <button class="dock-search-btn" id="mobile-search-trigger" title="Buscar">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+
+            <!-- Chip / Automatización -->
+            <a href="Automatizacion.html" class="dock-btn" title="Automatización">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                    <rect x="9" y="9" width="6" height="6"></rect>
+                    <line x1="9" y1="1" x2="9" y2="4"></line>
+                    <line x1="15" y1="1" x2="15" y2="4"></line>
+                    <line x1="9" y1="20" x2="9" y2="23"></line>
+                    <line x1="15" y1="20" x2="15" y2="23"></line>
+                    <line x1="20" y1="9" x2="23" y2="9"></line>
+                    <line x1="20" y1="14" x2="23" y2="14"></line>
+                    <line x1="1" y1="9" x2="4" y2="9"></line>
+                    <line x1="1" y1="14" x2="4" y2="14"></line>
+                </svg>
+            </a>
+
+            <!-- Chat -->
+            <button class="dock-btn" id="mobile-chat-btn" title="Chat">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- =========================================
+         TARJETAS MODALES (EMERGENTES EN LA MISMA PANTALLA)
+    ========================================== -->
+    <div class="modal-overlay" id="modal-overlay">
+
+        <!-- 1. Tarjeta Modal: Tarea -->
+        <div class="modal-card" id="modal-tarea">
+            <div class="modal-card-header modal-header-tarea">
+                <h3 id="modal-tarea-titulo">Nueva Tarea</h3>
+                <button class="modal-close-btn" onclick="cerrarModales()">&times;</button>
+            </div>
+            <form id="form-tarea" onsubmit="guardarTareaModal(event)">
+                <input type="hidden" id="input-tarea-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="input-tarea-texto">Descripción de la Tarea</label>
+                        <input type="text" id="input-tarea-texto" placeholder="Ej. Hacer las compras del mes" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="input-tarea-prioridad">Prioridad</label>
+                            <select id="input-tarea-prioridad">
+                                <option value="alta">Alta</option>
+                                <option value="media" selected>Media</option>
+                                <option value="baja">Baja</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-tarea-fecha">Fecha</label>
+                            <input type="date" id="input-tarea-fecha">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-danger" id="btn-eliminar-tarea" style="display: none;" onclick="eliminarTareaModal()">Eliminar</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModales()">Cancelar</button>
+                    <button type="submit" class="btn-primary btn-primary-tarea">Guardar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 2. Tarjeta Modal: Evento -->
+        <div class="modal-card" id="modal-evento">
+            <div class="modal-card-header modal-header-evento">
+                <h3 id="modal-evento-titulo">Nuevo Evento</h3>
+                <button class="modal-close-btn" onclick="cerrarModales()">&times;</button>
+            </div>
+            <form id="form-evento" onsubmit="guardarEventoModal(event)">
+                <input type="hidden" id="input-evento-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="input-evento-nombre">Título del Evento</label>
+                        <input type="text" id="input-evento-nombre" placeholder="Ej. Cumpleaños Mama" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-evento-desc">Descripción</label>
+                        <textarea id="input-evento-desc" rows="2" placeholder="Ej. hoy es el cumpleaños de tu Mama"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="input-evento-fecha">Fecha del Evento</label>
+                            <input type="date" id="input-evento-fecha" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-evento-categoria">Categoría</label>
+                            <select id="input-evento-categoria">
+                                <option value="Familia">Familia</option>
+                                <option value="Trabajo">Trabajo</option>
+                                <option value="Personal">Personal</option>
+                                <option value="General" selected>General</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-danger" id="btn-eliminar-evento" style="display: none;" onclick="eliminarEventoModal()">Eliminar</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModales()">Cancelar</button>
+                    <button type="submit" class="btn-primary btn-primary-evento">Guardar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 3. Tarjeta Modal: Recordatorio -->
+        <div class="modal-card" id="modal-recordatorio">
+            <div class="modal-card-header modal-header-recordatorio">
+                <h3 id="modal-recordatorio-titulo">Nuevo Recordatorio</h3>
+                <button class="modal-close-btn" onclick="cerrarModales()">&times;</button>
+            </div>
+            <form id="form-recordatorio" onsubmit="guardarRecordatorioModal(event)">
+                <input type="hidden" id="input-recordatorio-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="input-recordatorio-nombre">Título</label>
+                        <input type="text" id="input-recordatorio-nombre" placeholder="Ej. TITULO" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-recordatorio-sub">Subtítulo</label>
+                        <input type="text" id="input-recordatorio-sub" placeholder="Ej. SUBTITULO">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="input-recordatorio-hora">Hora</label>
+                            <input type="time" id="input-recordatorio-hora" value="18:00" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-danger" id="btn-eliminar-recordatorio" style="display: none;" onclick="eliminarRecordatorioModal()">Eliminar</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModales()">Cancelar</button>
+                    <button type="submit" class="btn-primary btn-primary-recordatorio">Guardar</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Script de interactividad y conexión Python -->
+    <script src="../../backend/JS/panel_principal.js"></script>
+
+</body>
+
+</html>
