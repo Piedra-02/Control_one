@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control One — Automatización</title>
+<link rel="stylesheet" href="../CSS/automatizacion.css">
+<link rel="stylesheet" href="../CSS/nav-global.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <header class="desktop-header">
+    <a href="Panel principal.html" class="header-logo" title="Control One">
+      <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <span class="logo-fallback">1</span>
+    </a>
+    <div class="desktop-search">
+      <i data-lucide="search" class="search-svg" width="18" height="18"></i>
+      <input type="text" placeholder="BUSCAR">
+    </div>
+    <div class="desktop-actions">
+      <a href="Panel principal.html" class="nav-icon-link" data-label="Inicio" title="Panel Principal"><i data-lucide="home" width="22" height="22"></i></a>
+      <a href="Organizacion.html" class="nav-icon-link" data-label="Organización" title="Organización"><i data-lucide="layout-dashboard" width="22" height="22"></i></a>
+      <a href="Actividades.html" class="nav-icon-link" data-label="Actividades" title="Actividades"><i data-lucide="layers" width="22" height="22"></i></a>
+      <a href="Automatizacion.html" class="nav-icon-link active-screen" data-label="Automatización" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i></a>
+      <a href="Informacion.html" class="nav-icon-link" data-label="Info" title="Información"><i data-lucide="info" width="22" height="22"></i></a>
+      <a href="perfil.html" class="nav-icon-link" data-label="Perfil" title="Perfil"><i data-lucide="user" width="22" height="22"></i></a>
+    </div>
+  </header>
+
+  <nav class="desktop-subnav">
+    <div class="subnav-container">
+      <button class="subnav-btn tab-pill" data-target="panel-reglas">REGLAS</button>
+      <button class="subnav-btn tab-pill active" data-target="panel-acciones">ACCIONES</button>
+      <button class="subnav-btn tab-pill" data-target="panel-vista-previa">VISTA PREVIA</button>
+    </div>
+  </nav>
+
+  <main class="automatizacion-grid">
+
+    <section class="card panel active" id="panel-acciones">
+      <h2><i data-lucide="square-pen" width="20" height="20"></i> Acciones</h2>
+
+      <label for="nombre">Nombre</label>
+      <input type="text" id="nombre" placeholder="Ingrese el nombre">
+
+      <label for="area">Área a automatizar</label>
+      <select id="area" style="width:100%; padding:10px; border-radius:8px; border:1px solid #cbd5e1; margin-bottom:12px; font-family:inherit;">
+        <option value="Tareas">Tareas</option>
+        <option value="Recordatorios">Recordatorios</option>
+        <option value="Notas">Notas</option>
+        <option value="Categorías">Categorías</option>
+        <option value="Correo electrónico">Correo electrónico</option>
+      </select>
+
+      <label for="descripcion">Descripción / Acción configurada</label>
+      <input type="text" id="descripcion" placeholder="Ingrese la acción o descripción">
+
+      <button class="btn btn-success" id="btnGuardar" style="margin-top:18px;">
+        <i data-lucide="check" width="16" height="16"></i> Guardar automatización
+      </button>
+
+      <h3 style="margin-top:24px;">Historial de acciones</h3>
+      <ul class="historial-list" id="historialList">
+        
+      </ul>
+    </section>
+
+    <section class="card panel" id="panel-reglas">
+      <h2># Reglas</h2>
+      <div class="regla-options" id="reglaOptions">
+        <div class="regla-option" data-value="bidireccional">
+          <i data-lucide="circle" width="16" height="16"></i> Bidireccional
+        </div>
+        <div class="regla-option" data-value="direccional">
+          <i data-lucide="circle" width="16" height="16"></i> Direccional
+        </div>
+        <div class="regla-option" data-value="solo_si_se_cumple_condicion">
+          <i data-lucide="circle" width="16" height="16"></i> Solo cuando se cumpla condición
+        </div>
+        <div class="regla-option" data-value="depurador_detallado">
+          <i data-lucide="circle" width="16" height="16"></i> Depurador detallado
+        </div>
+        <div class="regla-option" data-value="solo_si_no_se_cumple_condicion">
+          <i data-lucide="circle" width="16" height="16"></i> Solo cuando no se cumpla la condición
+        </div>
+      </div>
+
+      <label for="condicion">Condición</label>
+      <textarea id="condicion" placeholder="Ingrese la condición"></textarea>
+    </section>
+
+    <section class="card-neutral panel" id="panel-vista-previa">
+      <h2 style="color:var(--navy);"><i data-lucide="scan-eye" width="20" height="20"></i> Vista previa</h2>
+      <div id="previewBox" class="preview-box">
+        <p class="text-secondary">Completa "Acciones" y "Reglas" para ver aquí el resumen.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<nav class="mobile-bottom-nav">
+    <a href="Panel principal.html" class="dock-item" title="Inicio"><i data-lucide="home" width="22" height="22"></i><span>Inicio</span><span class="dock-dot"></span></a>
+    <a href="Organizacion.html" class="dock-item" title="Organización"><i data-lucide="layout-dashboard" width="22" height="22"></i><span>Organizar</span><span class="dock-dot"></span></a>
+    <a href="Actividades.html" class="dock-item" title="Actividades"><i data-lucide="layers" width="22" height="22"></i><span>Actividad</span><span class="dock-dot"></span></a>
+    <a href="Automatizacion.html" class="dock-item active-screen" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i><span>Auto</span><span class="dock-dot"></span></a>
+    <a href="Informacion.html" class="dock-item" title="Información"><i data-lucide="info" width="22" height="22"></i><span>Info</span><span class="dock-dot"></span></a>
+    <a href="perfil.html" class="dock-item" title="Perfil"><i data-lucide="user" width="22" height="22"></i><span>Perfil</span><span class="dock-dot"></span></a>
+</nav>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="../../backend/JS/automatizacion.js"></script>
+</body>
+</html>

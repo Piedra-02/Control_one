@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control One - Actividades</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../CSS/Actividades.css">
+    <link rel="stylesheet" href="../CSS/nav-global.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <header class="desktop-header">
+            
+            <a href="Panel principal.html" class="header-logo" title="Control One">
+                <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="logo-fallback">1</span>
+            </a>
+
+            <div class="desktop-search">
+                <i data-lucide="search" class="search-svg" width="18" height="18"></i>
+                <input type="text" id="desktop-search-input" placeholder="BUSCAR" autocomplete="off">
+            </div>
+
+            <div class="desktop-actions">
+                <a href="Panel principal.html" class="nav-icon-link" data-label="Inicio" title="Panel Principal"><i data-lucide="home" width="22" height="22"></i></a>
+                <a href="Organizacion.html" class="nav-icon-link" data-label="Organización" title="Organización"><i data-lucide="layout-dashboard" width="22" height="22"></i></a>
+                <a href="Actividades.html" class="nav-icon-link active-screen" data-label="Actividades" title="Actividades"><i data-lucide="layers" width="22" height="22"></i></a>
+                <a href="Automatizacion.html" class="nav-icon-link" data-label="Automatización" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i></a>
+                <a href="Informacion.html" class="nav-icon-link" data-label="Info" title="Información"><i data-lucide="info" width="22" height="22"></i></a>
+                <a href="perfil.html" class="nav-icon-link" data-label="Perfil" title="Perfil"><i data-lucide="user" width="22" height="22"></i></a>
+            </div>
+        </header>
+
+        <header class="mobile-header">
+            <a href="Panel principal.html" class="mobile-logo" title="Control One">
+                <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="logo-fallback">1</span>
+            </a>
+            <div class="mobile-nav-pills">
+                <a href="#seccion-notas" class="nav-pill active">NOTAS</a>
+                <a href="#seccion-documentos" class="nav-pill">DOCUMENTOS</a>
+                <a href="#seccion-correos" class="nav-pill">CORREOS</a>
+            </div>
+        </header>
+
+        <nav class="desktop-subnav">
+            <div class="subnav-container">
+                <a href="#seccion-notas" class="subnav-btn">NOTAS</a>
+                <a href="#seccion-documentos" class="subnav-btn">DOCUMENTOS</a>
+                <a href="#seccion-correos" class="subnav-btn active">CORREOS</a>
+            </div>
+        </nav>
+
+        <main class="actividades-main-layout">
+
+            <section id="seccion-correos" class="activity-card emails-main-card">
+                
+                <div class="card-header-row">
+                    <div class="card-title-group">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        <h2>Correos</h2>
+                    </div>
+                    <button class="card-chevron-btn" title="Colapsar / Expandir">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="emails-body-content">
+                    
+                    <div class="email-actions-bar">
+                        <button class="btn-redactar" id="btn-redactar-correo">
+                            <span>Redactar</span>
+                            <span class="plus-symbol">+</span>
+                        </button>
+
+                        <div class="email-category-icons">
+                            
+                            <button class="email-filter-icon-btn active" data-cat="todos" title="Bandeja Principal">
+                                <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                            </button>
+
+                            <button class="email-filter-icon-btn" data-cat="social" title="Social y Grupos">
+                                <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                            </button>
+
+                            <button class="email-filter-icon-btn" data-cat="promociones" title="Promociones y Etiquetas">
+                                <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                                    <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="emails-list-container" id="email-items-container">
+
+                        <article class="email-item-row" data-email-id="c1" data-cat="principal">
+                            <label class="email-check-wrapper" title="Seleccionar">
+                                <input type="checkbox">
+                                <span class="custom-checkmark">
+                                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                            </label>
+                            <button class="email-star-btn active" title="Destacar">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="#f59e0b" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </button>
+                            <div class="email-sender-col">
+                                <span class="email-sender-name">Equipos de Gmail</span>
+                            </div>
+                            <div class="email-subject-col">
+                                <span class="email-subject-text">Organízate mejor con la bandeja</span>
+                            </div>
+                        </article>
+
+                        <article class="email-item-row" data-email-id="c2" data-cat="principal">
+                            <label class="email-check-wrapper" title="Seleccionar">
+                                <input type="checkbox">
+                                <span class="custom-checkmark">
+                                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                            </label>
+                            <button class="email-star-btn active" title="Destacar">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="#f59e0b" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </button>
+                            <div class="email-sender-col">
+                                <span class="email-sender-name">Equipos de Gmail</span>
+                            </div>
+                            <div class="email-subject-col">
+                                <span class="email-subject-text">Lo mejor de Gmail</span>
+                            </div>
+                        </article>
+
+                        <article class="email-item-row" data-email-id="c3" data-cat="principal">
+                            <label class="email-check-wrapper" title="Seleccionar">
+                                <input type="checkbox">
+                                <span class="custom-checkmark">
+                                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                            </label>
+                            <button class="email-star-btn" title="Destacar">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </button>
+                            <div class="email-sender-col">
+                                <span class="email-sender-name">Equipos de Gmail</span>
+                            </div>
+                            <div class="email-subject-col">
+                                <span class="email-subject-text">Consejos para usar el correo</span>
+                            </div>
+                        </article>
+
+                        <article class="email-item-row" data-email-id="c4" data-cat="principal">
+                            <label class="email-check-wrapper" title="Seleccionar">
+                                <input type="checkbox">
+                                <span class="custom-checkmark">
+                                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                            </label>
+                            <button class="email-star-btn" title="Destacar">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </button>
+                            <div class="email-sender-col">
+                                <span class="email-sender-name">Equipos de Gmail</span>
+                            </div>
+                            <div class="email-subject-col">
+                                <span class="email-subject-text">Consejos para usar el correo</span>
+                            </div>
+                        </article>
+
+                        <article class="email-item-row" data-email-id="c5" data-cat="principal">
+                            <label class="email-check-wrapper" title="Seleccionar">
+                                <input type="checkbox">
+                                <span class="custom-checkmark">
+                                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                            </label>
+                            <button class="email-star-btn" title="Destacar">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </button>
+                            <div class="email-sender-col">
+                                <span class="email-sender-name">Equipos de Gmail</span>
+                            </div>
+                            <div class="email-subject-col">
+                                <span class="email-subject-text">Consejos para usar el correo</span>
+                            </div>
+                        </article>
+
+                        <article class="email-item-row" data-email-id="c6" data-cat="social">
+                            <label class="email-check-wrapper" title="Seleccionar">
+                                <input type="checkbox">
+                                <span class="custom-checkmark">
+                                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                            </label>
+                            <button class="email-star-btn" title="Destacar">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </button>
+                            <div class="email-sender-col">
+                                <span class="email-sender-name">Equipos de Gmail</span>
+                            </div>
+                            <div class="email-subject-col">
+                                <span class="email-subject-text">Consejos para usar el correo</span>
+                            </div>
+                        </article>
+
+                        <article class="email-item-row" data-email-id="c7" data-cat="promociones">
+                            <label class="email-check-wrapper" title="Seleccionar">
+                                <input type="checkbox">
+                                <span class="custom-checkmark">
+                                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                </span>
+                            </label>
+                            <button class="email-star-btn" title="Destacar">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </button>
+                            <div class="email-sender-col">
+                                <span class="email-sender-name">Equipos de Gmail</span>
+                            </div>
+                            <div class="email-subject-col">
+                                <span class="email-subject-text">Consejos para usar el correo</span>
+                            </div>
+                        </article>
+
+                    </div>
+                </div>
+            </section>
+
+            <div class="actividades-right-col">
+
+                <section id="seccion-documentos" class="activity-card documents-main-card">
+                    
+                    <div class="card-header-row">
+                        <div class="card-title-group">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <h2>Documentos</h2>
+                        </div>
+                        <button class="card-chevron-btn" title="Colapsar / Expandir">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="documents-grid-container" id="documents-folders-grid">
+
+                        <div class="folder-item" data-folder-id="f_downloads" title="Carpeta Downloads">
+                            <div class="folder-icon-wrapper">
+                                <svg class="folder-base-svg" viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    <line x1="12" y1="11" x2="12" y2="17"></line>
+                                    <polyline points="9 14 12 17 15 14"></polyline>
+                                </svg>
+                            </div>
+                            <span class="folder-label">Downloads</span>
+                        </div>
+
+                        <div class="folder-item" data-folder-id="f_usuario" title="Carpeta Usuario">
+                            <div class="folder-icon-wrapper">
+                                <svg class="folder-base-svg" viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    <path d="M16 17v-1a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v1"></path>
+                                    <circle cx="12" cy="11" r="2"></circle>
+                                </svg>
+                            </div>
+                            <span class="folder-label">Usuario</span>
+                        </div>
+
+                        <div class="folder-item" data-folder-id="f_documentos" title="Carpeta Documentos">
+                            <div class="folder-icon-wrapper">
+                                <svg class="folder-base-svg" viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    <line x1="9" y1="12" x2="15" y2="12"></line>
+                                    <line x1="9" y1="15" x2="13" y2="15"></line>
+                                </svg>
+                            </div>
+                            <span class="folder-label">Documentos</span>
+                        </div>
+
+                        <div class="folder-item" data-folder-id="f_videos" title="Carpeta Videos">
+                            <div class="folder-icon-wrapper">
+                                <svg class="folder-base-svg" viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    <polygon points="10 11 15 14 10 17 10 11"></polygon>
+                                </svg>
+                            </div>
+                            <span class="folder-label">Videos</span>
+                        </div>
+
+                        <div class="folder-item" data-folder-id="f_imagenes" title="Carpeta Imagenes">
+                            <div class="folder-icon-wrapper">
+                                <svg class="folder-base-svg" viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    <rect x="8" y="10" width="8" height="6" rx="1"></rect>
+                                    <circle cx="10.5" cy="12.5" r="0.8"></circle>
+                                </svg>
+                            </div>
+                            <span class="folder-label">Imagenes</span>
+                        </div>
+
+                        <div class="folder-item" data-folder-id="f_musica" title="Carpeta Musica">
+                            <div class="folder-icon-wrapper">
+                                <svg class="folder-base-svg" viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    <circle cx="10" cy="15" r="1.5"></circle>
+                                    <circle cx="14" cy="14" r="1.5"></circle>
+                                    <path d="M11.5 15V11l4-1v4"></path>
+                                </svg>
+                            </div>
+                            <span class="folder-label">Musica</span>
+                        </div>
+
+                        <div class="folder-item" data-folder-id="f_papelera" title="Carpeta Papelera">
+                            <div class="folder-icon-wrapper">
+                                <svg class="folder-base-svg" viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    <polyline points="9 11 12 14 15 11"></polyline>
+                                    <line x1="12" y1="14" x2="12" y2="17"></line>
+                                </svg>
+                            </div>
+                            <span class="folder-label">Papelera</span>
+                        </div>
+
+                        <div class="folder-item" data-folder-id="f_escritorio" title="Carpeta Escritorio">
+                            <div class="folder-icon-wrapper">
+                                <svg class="folder-base-svg" viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    <polyline points="9 16 12 12 15 16"></polyline>
+                                </svg>
+                            </div>
+                            <span class="folder-label">Escritorio</span>
+                        </div>
+
+                        <div class="folder-item" data-folder-id="f_programas" title="Carpeta Programas x32">
+                            <div class="folder-icon-wrapper">
+                                <svg class="folder-base-svg" viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    <polyline points="9 12 11 14 9 16"></polyline>
+                                    <line x1="13" y1="16" x2="15" y2="16"></line>
+                                </svg>
+                            </div>
+                            <span class="folder-label">Programas x32</span>
+                        </div>
+
+                        <div class="folder-item" data-folder-id="f_tmp" title="Carpeta Tmp">
+                            <div class="folder-icon-wrapper">
+                                <svg class="folder-base-svg" viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                    <circle cx="12" cy="14" r="2.5"></circle>
+                                    <polyline points="12 12.5 12 14 13.5 14"></polyline>
+                                </svg>
+                            </div>
+                            <span class="folder-label">Tmp</span>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section id="seccion-notas" class="activity-card notes-main-card">
+                    
+                    <div class="card-header-row">
+                        <div class="card-title-group">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            </svg>
+                            <h2>Notas</h2>
+                        </div>
+                        <button class="card-chevron-btn" title="Colapsar / Expandir">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="notes-body">
+                        
+                        <div class="note-input-container note-title-box">
+                            <input type="text" id="nota-titulo-input" value="Título de la nota" placeholder="Título de la nota" autocomplete="off">
+                            <button class="note-edit-icon-btn" id="btn-edit-title-icon" title="Editar título">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="note-input-container note-content-box">
+                            <textarea id="nota-contenido-textarea" placeholder="contenido de la nota" rows="5">contenido de la nota</textarea>
+                            <button class="note-edit-icon-btn note-content-pencil" id="btn-edit-content-icon" title="Editar contenido">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+        </main>
+
+        <nav class="mobile-bottom-dock">
+            
+            <a href="Actividades.html" class="dock-btn active" title="Capas">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+            </a>
+
+            <a href="Informacion.html" class="dock-btn" title="Información">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+            </a>
+
+            <button class="dock-search-btn" id="mobile-search-trigger" title="Buscar">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+
+            <a href="Automatizacion.html" class="dock-btn" title="Automatización">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                    <rect x="9" y="9" width="6" height="6"></rect>
+                    <line x1="9" y1="1" x2="9" y2="4"></line>
+                    <line x1="15" y1="1" x2="15" y2="4"></line>
+                    <line x1="9" y1="20" x2="9" y2="23"></line>
+                    <line x1="15" y1="20" x2="15" y2="23"></line>
+                    <line x1="20" y1="9" x2="23" y2="9"></line>
+                    <line x1="20" y1="14" x2="23" y2="14"></line>
+                    <line x1="1" y1="9" x2="4" y2="9"></line>
+                    <line x1="1" y1="14" x2="4" y2="14"></line>
+                </svg>
+            </a>
+
+            <button class="dock-btn" id="mobile-chat-btn" title="Chat">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </button>
+        </nav>
+
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay">
+
+        <div class="modal-card" id="modal-redactar-correo">
+            <div class="modal-card-header modal-header-correo">
+                <div class="modal-header-icon-title">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    <h3>Nuevo Mensaje</h3>
+                </div>
+                <button class="modal-close-btn" onclick="cerrarModales()">&times;</button>
+            </div>
+            <form id="form-redactar-correo" onsubmit="guardarCorreoNuevo(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="input-correo-destinatario">Para (Destinatario)</label>
+                        <input type="email" id="input-correo-destinatario" placeholder="ejemplo@correo.com" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group flex-2">
+                            <label for="input-correo-asunto">Asunto</label>
+                            <input type="text" id="input-correo-asunto" placeholder="Asunto del correo" required>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="input-correo-categoria">Categoría</label>
+                            <select id="input-correo-categoria">
+                                <option value="principal" selected>Principal</option>
+                                <option value="social">Social</option>
+                                <option value="promociones">Promociones</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="input-correo-cuerpo">Mensaje</label>
+                        <textarea id="input-correo-cuerpo" rows="4" placeholder="Escribe tu mensaje aquí..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="cerrarModales()">Cancelar</button>
+                    <button type="submit" class="btn-primary btn-primary-correo">Enviar Mensaje</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="modal-card" id="modal-detalle-correo">
+            <div class="modal-card-header modal-header-correo">
+                <h3 id="detalle-correo-asunto">Detalle del Correo</h3>
+                <button class="modal-close-btn" onclick="cerrarModales()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="detalle-correo-id">
+                <div class="email-detail-meta">
+                    <div class="email-avatar-circle">G</div>
+                    <div class="email-meta-text">
+                        <strong id="detalle-correo-remitente">Equipos de Gmail</strong>
+                        <span id="detalle-correo-email">&lt;mail-noreply@google.com&gt;</span>
+                    </div>
+                </div>
+                <div class="email-detail-body">
+                    <p id="detalle-correo-cuerpo">Cargando contenido...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-danger" onclick="eliminarCorreoDetalle()">Eliminar</button>
+                <button type="button" class="btn-secondary" onclick="cerrarModales()">Cerrar</button>
+                <button type="button" class="btn-primary btn-primary-correo" onclick="alert('Respuesta rápida enviada.')">Responder</button>
+            </div>
+        </div>
+
+        <div class="modal-card modal-card-large" id="modal-carpeta">
+            <div class="modal-card-header modal-header-documentos">
+                <div class="modal-header-icon-title">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    <h3 id="modal-carpeta-titulo">Carpeta: Documentos</h3>
+                </div>
+                <button class="modal-close-btn" onclick="cerrarModales()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modal-carpeta-id">
+                <div class="carpeta-actions-bar">
+                    <span class="carpeta-count-label">Archivos almacenados:</span>
+                    <button type="button" class="btn-add-file" onclick="agregarArchivoCarpetaPrompt()">+ Agregar Archivo</button>
+                </div>
+                <div class="carpeta-archivos-container" id="carpeta-archivos-lista">
+                    
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="cerrarModales()">Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+
+    <nav class="mobile-bottom-nav">
+        <a href="Panel principal.html" class="dock-item" title="Inicio"><i data-lucide="home" width="22" height="22"></i><span>Inicio</span><span class="dock-dot"></span></a>
+        <a href="Organizacion.html" class="dock-item" title="Organización"><i data-lucide="layout-dashboard" width="22" height="22"></i><span>Organizar</span><span class="dock-dot"></span></a>
+        <a href="Actividades.html" class="dock-item active-screen" title="Actividades"><i data-lucide="layers" width="22" height="22"></i><span>Actividad</span><span class="dock-dot"></span></a>
+        <a href="Automatizacion.html" class="dock-item" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i><span>Auto</span><span class="dock-dot"></span></a>
+        <a href="Informacion.html" class="dock-item" title="Información"><i data-lucide="info" width="22" height="22"></i><span>Info</span><span class="dock-dot"></span></a>
+        <a href="perfil.html" class="dock-item" title="Perfil"><i data-lucide="user" width="22" height="22"></i><span>Perfil</span><span class="dock-dot"></span></a>
+    </nav>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <script src="../../backend/JS/actividades.js"></script>
+
+</body>
+
+</html>
