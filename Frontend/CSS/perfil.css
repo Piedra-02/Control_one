@@ -341,6 +341,13 @@ input::placeholder { color: var(--grey); }
   transition: background 0.15s ease, transform 0.15s ease;
 }
 .otros-row:hover { background: rgba(255,255,255,0.25); transform: translateX(2px); }
+.otros-row-danger {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #8f1d1d;
+  text-align: left;
+}
 
 .acciones-perfil {
   display: flex;
