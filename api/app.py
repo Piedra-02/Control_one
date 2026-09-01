@@ -27,12 +27,19 @@ from db import (
     RecordatorioPanelRepository,
     OrganizacionRepository,
     PanelResumenRepository,
+    NotaRepository,
+    FavoritoHistorialHelper,
+    FavoritoRepository,
+    HistorialGeneralRepository,
+    SuscripcionRepository,
+    NotificadorCorreo,
 )
 
 app = Flask(__name__)
 CORS(app)  # permite que perfil.html / automatizacion.html (abiertos por separado) llamen a esta API
 
 bd = BaseDeDatos()
+notificador = NotificadorCorreo(bd)
 contactos_repo = ContactoRepository(bd)
 perfil_repo = PerfilRepository(bd)
 config_repo = ConfiguracionRepository(bd)
@@ -45,9 +52,37 @@ recordatorios_panel_repo = RecordatorioPanelRepository(bd)
 organizacion_repo = OrganizacionRepository(categorias_repo, eventos_repo)
 panel_repo = PanelResumenRepository(bd, tareas_repo, eventos_repo, recordatorios_panel_repo)
 
+notas_repo = NotaRepository(bd)
+fav_hist_helper = FavoritoHistorialHelper(bd)
+favoritos_repo = FavoritoRepository(bd, fav_hist_helper)
+historial_repo = HistorialGeneralRepository(bd, fav_hist_helper)
+suscripciones_repo = SuscripcionRepository(bd, historial_repo)
+
 
 def error(mensaje, codigo=400):
     return jsonify({"error": mensaje}), codigo
+
+
+# ---------------------------------------------------------
+# LOGIN
+# ---------------------------------------------------------
+@app.post("/api/login")
+def login():
+    datos = request.get_json(force=True)
+    usuario = (datos.get("usuario") or "").strip()
+    contrasena = datos.get("contrasena") or ""
+    if not usuario or not contrasena:
+        return error("Usuario y contraseña son obligatorios.")
+
+    resultado = bd.ejecutar(
+        """SELECT usuario, nombre_completo, alias FROM usuarios
+           WHERE usuario = %s AND contrasena_hash = crypt(%s, contrasena_hash)""",
+        (usuario, contrasena),
+        retornar="one",
+    )
+    if not resultado:
+        return error("Usuario o contraseña incorrectos.", 401)
+    return jsonify(resultado)
 
 
 # ---------------------------------------------------------
@@ -203,7 +238,9 @@ def organizacion_crear_tarea():
     categoria_id = datos.get("categoria_id")
     if not titulo or not categoria_id:
         return error("Título y categoría son obligatorios.")
-    return jsonify(tareas_repo.crear_en_categoria(titulo, categoria_id)), 201
+    nueva = tareas_repo.crear_en_categoria(titulo, categoria_id)
+    notificador.notificar_creacion("tarea", titulo)
+    return jsonify(nueva), 201
 
 
 @app.post("/api/organizacion/eventos")
@@ -212,6 +249,7 @@ def organizacion_guardar_evento():
     titulo = (datos.get("titulo") or "").strip()
     if not titulo:
         return error("El título del evento es obligatorio.")
+    es_nuevo = not datos.get("id")
     evento = eventos_repo.guardar(
         evento_id=datos.get("id") or None,
         titulo=titulo,
@@ -219,6 +257,8 @@ def organizacion_guardar_evento():
         fecha=datos.get("fecha"),
         ubicacion=datos.get("ubicacion", ""),
     )
+    if es_nuevo:
+        notificador.notificar_creacion("evento", titulo, f"Fecha: {datos.get('fecha', '')}")
     return jsonify(evento), 201
 
 
@@ -262,6 +302,7 @@ def panel_crear_evento():
         fecha_inicio=fecha_inicio,
         fecha_fin=fecha_fin,
     )
+    notificador.notificar_creacion("evento", titulo, f"Desde: {fecha_inicio} hasta {fecha_fin}")
     return jsonify(nuevo), 201
 
 
@@ -283,6 +324,7 @@ def panel_crear_tarea():
         prioridad=datos.get("prioridad", "media"),
         fecha_vencimiento=datos.get("fecha_vencimiento"),
     )
+    notificador.notificar_creacion("tarea", titulo, datos.get("descripcion", ""))
     return jsonify(nueva), 201
 
 
@@ -317,7 +359,21 @@ def panel_cambiar_estado_tarea():
 @app.get("/api/panel/recordatorios")
 def panel_listar_recordatorios():
     solo_pendientes = request.args.get("pendientes") == "true"
-    return jsonify(recordatorios_panel_repo.listar(solo_pendientes=solo_pendientes))
+    filtro = request.args.get("filtro", "todos")
+    return jsonify(recordatorios_panel_repo.listar(solo_pendientes=solo_pendientes, filtro=filtro))
+
+
+@app.patch("/api/panel/recordatorios/<recordatorio_id>")
+def panel_actualizar_flags_recordatorio(recordatorio_id):
+    datos = request.get_json(force=True)
+    resultado = recordatorios_panel_repo.actualizar_flags(
+        recordatorio_id,
+        oculto=datos.get("oculto"),
+        archivado=datos.get("archivado"),
+    )
+    if resultado is None:
+        return error("No se envió ningún campo para actualizar (oculto/archivado).")
+    return jsonify(resultado)
 
 
 @app.post("/api/panel/recordatorios")
@@ -328,6 +384,7 @@ def panel_crear_recordatorio():
     if not titulo or not fecha_hora:
         return error("Título y fecha_hora son obligatorios.")
     nuevo = recordatorios_panel_repo.crear(titulo, fecha_hora)
+    notificador.notificar_creacion("recordatorio", titulo, f"Programado para: {fecha_hora}")
     return jsonify(nuevo), 201
 
 
@@ -350,6 +407,134 @@ def panel_eliminar_recordatorio(recordatorio_id):
 def panel_buscar():
     q = request.args.get("q", "")
     return jsonify(panel_repo.buscar(q))
+
+
+# ---------------------------------------------------------
+# ACTIVIDADES (solo Notas — Correos y Carpetas quedan como
+# demo local, no están conectados a la base de datos)
+# ---------------------------------------------------------
+@app.get("/api/actividades/notas")
+def actividades_obtener_nota():
+    return jsonify(notas_repo.obtener_activa())
+
+
+@app.post("/api/actividades/notas")
+def actividades_guardar_nota():
+    datos = request.get_json(force=True)
+    titulo = (datos.get("titulo") or "Título de la nota").strip()
+    contenido = (datos.get("contenido") or "").strip()
+    return jsonify(notas_repo.guardar_activa(titulo, contenido))
+
+
+@app.get("/api/actividades/resumen")
+def actividades_resumen():
+    return jsonify({
+        "nota_actual": notas_repo.obtener_activa(),
+        "todas_las_notas": notas_repo.listar(),
+    })
+
+
+# ---------------------------------------------------------
+# INFORMACIÓN (Favoritos, Historial, Suscripciones)
+# ---------------------------------------------------------
+@app.get("/api/informacion/favoritos")
+def informacion_listar_favoritos():
+    return jsonify(favoritos_repo.listar())
+
+
+@app.post("/api/informacion/favoritos")
+def informacion_crear_favorito():
+    datos = request.get_json(force=True)
+    titulo = (datos.get("titulo") or "").strip()
+    if not titulo:
+        return error("El título del favorito es obligatorio.")
+    nuevo = favoritos_repo.crear(
+        titulo,
+        tipo_elemento=datos.get("tipo_elemento", "general"),
+        elemento_id=datos.get("elemento_id"),
+    )
+    return jsonify(nuevo), 201
+
+
+@app.post("/api/informacion/favoritos/eliminar")
+def informacion_eliminar_favorito():
+    datos = request.get_json(force=True)
+    fav_id = datos.get("id")
+    if not fav_id:
+        return error("Falta el id del favorito.")
+    favoritos_repo.eliminar(fav_id)
+    return jsonify({"success": True})
+
+
+@app.get("/api/informacion/historial")
+def informacion_listar_historial():
+    limite = request.args.get("limite", 30, type=int)
+    return jsonify(historial_repo.listar(limite=limite))
+
+
+@app.post("/api/informacion/historial/limpiar")
+def informacion_limpiar_historial():
+    historial_repo.limpiar()
+    return jsonify({"success": True})
+
+
+@app.get("/api/informacion/suscripciones")
+def informacion_listar_suscripciones():
+    return jsonify(suscripciones_repo.listar())
+
+
+@app.post("/api/informacion/suscripciones")
+def informacion_guardar_suscripcion():
+    datos = request.get_json(force=True)
+    sub_id = datos.get("id")
+    nombre = (datos.get("nombre") or "").strip()
+    if not nombre:
+        return error("El nombre de la suscripción es obligatorio.")
+    monto = datos.get("monto", 9.99)
+    categoria = datos.get("categoria", "General")
+
+    if sub_id:
+        return jsonify(suscripciones_repo.modificar(sub_id, nombre, monto, categoria))
+    nueva = suscripciones_repo.crear(nombre, monto=monto, categoria=categoria)
+    notificador.notificar_creacion("suscripción", nombre, f"Monto: {monto} — Categoría: {categoria}")
+    return jsonify(nueva), 201
+
+
+@app.post("/api/informacion/suscripciones/toggle")
+def informacion_toggle_suscripcion():
+    datos = request.get_json(force=True)
+    sub_id = datos.get("id")
+    if not sub_id:
+        return error("Falta el id de la suscripción.")
+    return jsonify(suscripciones_repo.toggle(sub_id, activa=datos.get("activa")))
+
+
+@app.post("/api/informacion/suscripciones/eliminar")
+def informacion_eliminar_suscripcion():
+    datos = request.get_json(force=True)
+    sub_id = datos.get("id")
+    if not sub_id:
+        return error("Falta el id de la suscripción.")
+    suscripciones_repo.eliminar(sub_id)
+    return jsonify({"success": True})
+
+
+@app.get("/api/informacion/resumen")
+def informacion_resumen():
+    favoritos = favoritos_repo.listar()
+    historial = historial_repo.listar()
+    suscripciones = suscripciones_repo.listar()
+    return jsonify({
+        "favoritos": favoritos,
+        "historial": historial,
+        "suscripciones": suscripciones,
+        "estadisticas": {
+            "total_favoritos": len(favoritos),
+            "total_historial": len(historial),
+            "total_suscripciones": len(suscripciones),
+            "suscripciones_activas": len([s for s in suscripciones if s.get("activa")]),
+        },
+    })
 
 
 if __name__ == "__main__":

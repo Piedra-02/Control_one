@@ -67,7 +67,7 @@
 
       <div class="acciones-perfil otros-actions">
         <button class="btn btn-danger" id="btnCerrarSesion">
-          <i data-lucide="log-out" width="16" height="16"></i> Cerrar sesión
+          <i data-lucide="log-in" width="16" height="16"></i> Iniciar sesión
         </button>
         <button class="btn btn-success" id="btnGuardarGeneral">
           <i data-lucide="check" width="16" height="16"></i> Guardar
@@ -77,6 +77,15 @@
 
   </main>
 </div>
+
+<!-- Dock inferior (solo visible en móvil) -->
+<nav class="mobile-bottom-dock">
+  <a href="Actividades.html" class="dock-btn" title="Actividades"><i data-lucide="layers" width="22" height="22"></i></a>
+  <a href="Informacion.html" class="dock-btn" title="Información"><i data-lucide="info" width="22" height="22"></i></a>
+  <button class="dock-search-btn" title="Buscar"><i data-lucide="search" width="20" height="20"></i></button>
+  <a href="Automatizacion.html" class="dock-btn" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i></a>
+  <button class="dock-btn" title="Chat"><i data-lucide="message-circle" width="22" height="22"></i></button>
+</nav>
 
 <!-- Modal genérico: aquí se inyecta el contenido de cada tarjeta -->
 <div class="modal-overlay hidden" id="modalOverlay">
