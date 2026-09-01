@@ -1,9 +1,13 @@
-
+/* =========================================================
+   CONTROL ONE — Perfil / Preferencias
+   Hoja de estilos independiente para esta pantalla.
+   Basada en la paleta y tipografía del UI Kit de Figma.
+   ========================================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=IBM+Plex+Mono:wght@500;600;700&family=Iceberg&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
-  
+  /* Paleta (UI Kit) */
   --bg-app: #A8DDF6;
   --bg-search: #FFFBF9;
   --bg-card-neutral: #FDF6F6;
@@ -18,8 +22,16 @@
   --success: #22C55E;
   --error: #EC221F;
 
+  /* Panel "Otros": derivado de teal-dark con transparencia,
+     para el tono grisáceo-azulado que se ve en el Figma sin
+     inventar un color fuera de la paleta oficial. */
   --slate-panel: rgba(56, 100, 109, 0.55);
 
+  /* Tipografía
+     Nota: "Intel One Mono" e "Iceberg Bold" del Figma se
+     sustituyen por IBM Plex Mono e Iceberg (esta sí es una
+     Google Font real) por ser las más cercanas disponibles.
+     Tamaños escalados de 78/56/48/28/24px del Figma a uso web. */
   --font-display: 'Inter', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
   --font-accent: 'Iceberg', sans-serif;
@@ -52,6 +64,7 @@ body {
   padding: 20px 24px 40px;
 }
 
+/* ---------- Topbar (idéntico al de Organización / Panel Principal) ---------- */
 .desktop-header {
   background: var(--bg-search);
   border-radius: 40px;
@@ -130,6 +143,7 @@ body {
 }
 .icon-btn:hover { transform: scale(1.1); color: #111; }
 
+/* ---------- Tabs (idénticas a subnav de Organización / Panel Principal) ---------- */
 .desktop-subnav {
   display: flex;
   justify-content: center;
@@ -159,6 +173,7 @@ body {
 }
 .subnav-btn:hover, .subnav-btn.active { background: #f0f0f0; }
 
+/* ---------- Tarjetas ---------- */
 .card-neutral {
   background: var(--bg-card-neutral);
   border-radius: var(--radius-card);
@@ -176,6 +191,7 @@ body {
   gap: 8px;
 }
 
+/* ---------- Formularios ---------- */
 label {
   display: block;
   font-family: var(--font-display);
@@ -200,6 +216,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus {
 }
 input::placeholder { color: var(--grey); }
 
+/* ---------- Botones ---------- */
 .btn {
   font-family: var(--font-mono);
   font-weight: 700;
@@ -236,9 +253,13 @@ input::placeholder { color: var(--grey); }
 }
 .icon-btn:hover { transform: scale(1.12); }
 
+/* ---------- Utilidades ---------- */
 .hidden { display: none !important; }
 .text-secondary { font-family: var(--font-accent); color: var(--grey); font-size: var(--fs-texto-sec); }
 
+/* =========================================================
+   Layout específico: Perfil
+   ========================================================= */
 .perfil-grid {
   display: grid;
   grid-template-columns: 280px 1fr;
@@ -318,6 +339,7 @@ input::placeholder { color: var(--grey); }
 }
 .contacto-item button:hover { transform: scale(1.2); }
 
+/* Panel "Otros" — siempre visible, igual al Figma */
 .panel-otros {
   background: var(--slate-panel);
   border-radius: var(--radius-card);
@@ -341,13 +363,6 @@ input::placeholder { color: var(--grey); }
   transition: background 0.15s ease, transform 0.15s ease;
 }
 .otros-row:hover { background: rgba(255,255,255,0.25); transform: translateX(2px); }
-.otros-row-danger {
-  width: 100%;
-  background: transparent;
-  border: none;
-  color: #8f1d1d;
-  text-align: left;
-}
 
 .acciones-perfil {
   display: flex;
@@ -356,6 +371,7 @@ input::placeholder { color: var(--grey); }
 }
 .otros-actions { margin-top: auto; }
 
+/* ---------- Modal (tarjetas flotantes) ---------- */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -365,7 +381,7 @@ input::placeholder { color: var(--grey); }
   align-items: center;
   justify-content: center;
   z-index: 50;
-  animation: modalFadeIn 0.1s ease-out;
+  animation: modalFadeIn 0.2s ease-out;
 }
 @keyframes modalFadeIn {
   from { opacity: 0; }
@@ -381,10 +397,10 @@ input::placeholder { color: var(--grey); }
   position: relative;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
   border: 2px solid #111111;
-  animation: modalPopIn 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: modalPopIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 @keyframes modalPopIn {
-  from { opacity: 0; transform: scale(0.96) translateY(4px); }
+  from { opacity: 0; transform: scale(0.92) translateY(10px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 .modal-close {
@@ -434,6 +450,7 @@ input::placeholder { color: var(--grey); }
   .app-shell { padding: 16px; }
 }
 
+/* ---------- Dock inferior (móvil, igual al resto de la app) ---------- */
 .mobile-bottom-dock { display: none; }
 
 @media (max-width: 768px) {
@@ -482,3 +499,109 @@ input::placeholder { color: var(--grey); }
     box-shadow: 0 3px 8px rgba(0, 150, 219, 0.3);
   }
 }
+/* =========================================================
+   Tarjeta de Login (según Figma)
+   ========================================================= */
+.modal-card.login-modal {
+  background: #100a33;
+  border: 2px solid #111111;
+  text-align: center;
+  padding: 34px 30px 22px;
+}
+.modal-card.login-modal .modal-close { color: #fff; }
+.modal-card.login-modal .modal-close:hover { color: #ccc; }
+
+.login-logo {
+  width: 92px;
+  height: 92px;
+  margin: 0 auto 22px;
+  background: #fff;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-logo svg { color: #1B0942; }
+
+.login-label {
+  color: #fff;
+  text-align: left;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13.5px;
+  margin: 14px 0 6px;
+}
+.login-input {
+  width: 100%;
+  background: #E4FBFF;
+  border: 2px solid #6155F5;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: #1B0942;
+  outline: none;
+}
+.login-input::placeholder {
+  color: #7a7a9a;
+}
+.login-error {
+  color: #ffd3d3;
+  background: rgba(236, 34, 31, 0.18);
+  border: 1px solid #EC221F;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  margin-top: 14px;
+  text-align: left;
+}
+.login-submit-btn {
+  margin-top: 22px;
+  padding: 10px 42px;
+  border-radius: 20px;
+  border: none;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.login-submit-btn:hover { transform: translateY(-1px); }
+.login-submit-btn.estado-normal { background: #7FBF8E; color: #0d3a1a; }
+.login-submit-btn.estado-error { background: #EC221F; color: #fff; }
+
+.login-footer {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: #A9A9C0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+/* =========================================================
+   Tarjeta de confirmación (reemplaza confirm()/alert() nativos)
+   ========================================================= */
+.confirm-card {
+  text-align: left;
+  max-width: 360px;
+}
+.confirm-card #confirmMensaje {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--navy);
+  margin: 4px 0 20px;
+  line-height: 1.5;
+}
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.btn-secondary {
+  background: #E0E0E0;
+  color: var(--grey-dark);
+}
+.btn-secondary:hover { filter: brightness(0.95); transform: translateY(-1px); }
