@@ -1,5 +1,5 @@
 /* =========================================================
-   CONTROL ONE — Automatización
+   CONTROL ONE — Perfil / Preferencias
    Hoja de estilos independiente para esta pantalla.
    Basada en la paleta y tipografía del UI Kit de Figma.
    ========================================================= */
@@ -12,16 +12,20 @@
   --bg-search: #FFFBF9;
   --bg-card-neutral: #FDF6F6;
   --teal-dark: #38646D;
-  --teal-darker: #006164;
   --teal-bright: #00C8B3;
-  --pale-teal: #C3F9F4;
   --navy: #1B0942;
   --grey: #747474;
   --grey-dark: #3A3A3A;
+  --purple: #6155F5;
   --cyan: #00C3D0;
   --blue: #1C71BC;
   --success: #22C55E;
   --error: #EC221F;
+
+  /* Panel "Otros": derivado de teal-dark con transparencia,
+     para el tono grisáceo-azulado que se ve en el Figma sin
+     inventar un color fuera de la paleta oficial. */
+  --slate-panel: rgba(56, 100, 109, 0.55);
 
   /* Tipografía
      Nota: "Intel One Mono" e "Iceberg Bold" del Figma se
@@ -32,7 +36,6 @@
   --font-mono: 'IBM Plex Mono', monospace;
   --font-accent: 'Iceberg', sans-serif;
 
-  --fs-subtitulo: 1.75rem;
   --fs-card-title: 1.375rem;
   --fs-texto: 1rem;
   --fs-texto-sec: 0.875rem;
@@ -137,31 +140,23 @@ body {
   border-color: var(--teal-bright);
   color: #fff;
 }
-.tab-pill:hover:not(.active) { background: var(--pale-teal); }
+.tab-pill:hover:not(.active) { background: #DAFFFD; }
 
 /* ---------- Tarjetas ---------- */
-.card {
-  background: var(--teal-dark);
-  border-radius: var(--radius-card);
-  padding: 20px;
-  color: #fff;
-}
-.card h2, .card h3 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  margin: 0 0 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.card h2 { font-size: var(--fs-subtitulo); }
-.card h3 { font-size: var(--fs-card-title); }
-
 .card-neutral {
   background: var(--bg-card-neutral);
   border-radius: var(--radius-card);
   padding: 20px;
   color: var(--navy);
+}
+.card-neutral h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-card-title);
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* ---------- Formularios ---------- */
@@ -172,7 +167,7 @@ label {
   font-size: var(--fs-texto-sec);
   margin: 14px 0 6px;
 }
-input[type="text"], textarea {
+input[type="text"], input[type="email"], input[type="tel"] {
   width: 100%;
   font-family: var(--font-mono);
   font-size: var(--fs-texto);
@@ -182,8 +177,7 @@ input[type="text"], textarea {
   background: #fff;
   color: var(--grey-dark);
 }
-textarea { resize: vertical; min-height: 90px; }
-input::placeholder, textarea::placeholder { color: var(--grey); }
+input::placeholder { color: var(--grey); }
 
 /* ---------- Botones ---------- */
 .btn {
@@ -201,10 +195,61 @@ input::placeholder, textarea::placeholder { color: var(--grey); }
   color: #fff;
 }
 .btn-success { background: var(--success); }
-.btn-success:hover { filter: brightness(1.05); }
+.btn-danger { background: var(--error); }
+.btn-success:hover, .btn-danger:hover { filter: brightness(1.05); }
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+}
 
-/* ---------- Historial ---------- */
-.historial-list {
+/* ---------- Utilidades ---------- */
+.hidden { display: none !important; }
+.text-secondary { font-family: var(--font-accent); color: var(--grey); font-size: var(--fs-texto-sec); }
+
+/* =========================================================
+   Layout específico: Perfil
+   ========================================================= */
+.perfil-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.perfil-sidebar { text-align: left; }
+.avatar-wrap {
+  width: 88px;
+  margin-bottom: 12px;
+}
+.avatar-circle {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--bg-search);
+  border: 2px solid var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--navy);
+}
+.perfil-nombre {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-card-title);
+  margin: 4px 0 0;
+}
+.perfil-alias {
+  font-family: var(--font-accent);
+  color: var(--grey);
+  font-size: var(--fs-texto-sec);
+  margin: 0 0 18px;
+}
+
+.contactos-list {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -212,76 +257,118 @@ input::placeholder, textarea::placeholder { color: var(--grey); }
   flex-direction: column;
   gap: 10px;
 }
-.historial-list li {
-  background: var(--teal-darker);
-  border-radius: var(--radius-input);
-  padding: 12px 14px;
+.contacto-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-family: var(--font-mono);
+  gap: 8px;
+  background: #F1E6F0;
+  border: 1.5px solid var(--purple);
+  border-radius: var(--radius-pill);
+  padding: 8px 12px;
   font-size: var(--fs-texto-sec);
+  font-weight: 600;
 }
-.historial-list li i { color: var(--pale-teal); flex-shrink: 0; }
-
-/* ---------- Utilidades ---------- */
-.text-secondary { font-family: var(--font-accent); color: var(--grey); font-size: var(--fs-texto-sec); }
-
-/* =========================================================
-   Layout específico: Automatización
-   ========================================================= */
-.automatizacion-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 20px;
-  align-items: start;
+.contacto-item .contacto-icono { color: var(--purple); flex-shrink: 0; }
+.contacto-item .contacto-telefono { flex: 1; }
+.contacto-item button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--navy);
+  display: flex;
 }
+.contacto-item.contacto-oculto { opacity: 0.55; }
 
-.regla-options {
+/* Panel "Otros" — siempre visible, igual al Figma */
+.panel-otros {
+  background: var(--slate-panel);
+  border-radius: var(--radius-card);
+  padding: 22px;
+  min-height: 380px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 6px;
 }
-.regla-option {
+.otros-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: var(--fs-texto-sec);
-  cursor: pointer;
-  padding: 6px 4px;
-  border-radius: 8px;
-  transition: background 0.15s ease;
-}
-.regla-option:hover { background: rgba(255,255,255,0.08); }
-.regla-option.selected i { color: var(--teal-bright); }
-.regla-option.selected { color: var(--pale-teal); }
-
-.preview-box {
-  background: #fff;
-  border-radius: var(--radius-input);
-  padding: 16px;
-  min-height: 160px;
-}
-.preview-box dl { margin: 0; }
-.preview-box dt {
+  gap: 12px;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: var(--fs-texto-sec);
-  color: var(--teal-darker);
-  margin-top: 10px;
+  font-size: 1.05rem;
+  color: var(--navy);
+  padding: 12px 6px;
+  cursor: pointer;
+  border-radius: 8px;
 }
-.preview-box dt:first-child { margin-top: 0; }
-.preview-box dd { margin: 2px 0 0; font-family: var(--font-mono); font-size: var(--fs-texto); }
+.otros-row:hover { background: rgba(255,255,255,0.25); }
+
+.acciones-perfil {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+.otros-actions { margin-top: auto; }
+
+/* ---------- Modal (tarjetas flotantes) ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(27, 9, 66, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+.modal-card {
+  background: var(--bg-card-neutral);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  width: min(90vw, 420px);
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--navy);
+}
+.modal-card h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-card-title);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-texto-sec);
+  font-weight: 600;
+  margin-top: 14px;
+  color: var(--grey-dark);
+}
+.checkbox-label input { width: auto; }
+.modal-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
 @media (max-width: 900px) {
-  .automatizacion-grid { grid-template-columns: 1fr; }
-  .panel { display: none; }
-  .panel.active { display: block; }
+  .perfil-grid { grid-template-columns: 1fr; }
 }
-
 @media (max-width: 860px) {
   .app-shell { padding: 16px; }
 }
