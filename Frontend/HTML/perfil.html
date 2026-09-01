@@ -9,29 +9,30 @@
 <body>
 <div class="app-shell">
 
-  <!-- Topbar -->
-  <header class="topbar">
-    <div class="logo-mark">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-        <path d="M12 3a9 9 0 1 0 9 9" stroke-linecap="round"/>
-        <path d="M12 3v6l4-2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <div class="searchbar">
-      <i data-lucide="search" width="18" height="18"></i>
+  <!-- Topbar (idéntico al de Organización / Panel Principal) -->
+  <header class="desktop-header">
+    <a href="perfil.html" class="header-logo" title="Control One">
+      <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <span class="logo-fallback">1</span>
+    </a>
+    <div class="desktop-search">
+      <i data-lucide="search" class="search-svg" width="18" height="18"></i>
       <input type="text" placeholder="BUSCAR">
     </div>
-    <div class="topbar-icons">
-      <i data-lucide="layers" width="20" height="20" title="Módulos"></i>
-      <i data-lucide="cpu" width="20" height="20" title="Automatización"></i>
-      <i data-lucide="message-circle" width="20" height="20" title="Contacto"></i>
+    <div class="desktop-actions">
+      <a href="Actividades.html" class="icon-btn" title="Actividades"><i data-lucide="layers" width="22" height="22"></i></a>
+      <a href="Automatizacion.html" class="icon-btn" title="Automatización"><i data-lucide="cpu" width="22" height="22"></i></a>
+      <button class="icon-btn" title="Chat / Notificaciones"><i data-lucide="message-circle" width="22" height="22"></i></button>
+      <a href="Informacion.html" class="icon-btn" title="Información"><i data-lucide="info" width="22" height="22"></i></a>
     </div>
   </header>
 
-  <nav class="tabs-primary">
-    <button class="tab-pill active" data-tab="perfil">PERFIL</button>
-    <button class="tab-pill" data-tab="contactos">CONTACTOS</button>
-    <button class="tab-pill" data-tab="otros">OTROS</button>
+  <nav class="desktop-subnav">
+    <div class="subnav-container">
+      <button class="subnav-btn tab-pill active" data-tab="perfil">PERFIL</button>
+      <button class="subnav-btn tab-pill" data-tab="contactos">CONTACTOS</button>
+      <button class="subnav-btn tab-pill" data-tab="otros">OTROS</button>
+    </div>
   </nav>
 
   <main class="perfil-grid">

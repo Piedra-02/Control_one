@@ -44,6 +44,7 @@
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 16px;
+    scrollbar-gutter: stable;
 }
 
 body {

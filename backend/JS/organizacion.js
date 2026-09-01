@@ -57,6 +57,7 @@ let activityBuffer = new Array(CHART_SAMPLES).fill(0); // muestras históricas
 let currentIntervalMoves = 0;                          // movimientos en el intervalo en curso
 
 document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
     cargarDatosStorage();
     initEstadisticasTracker();
     initCalendario();
@@ -543,7 +544,7 @@ function guardarCategoriaOrg(e) {
             registrarAccion(`Modificó categoría a "${nombre}"`);
         }
 
-        fetch('http://localhost:8001/api/organizacion/categorias', {
+        fetch('http://127.0.0.1:5000/api/organizacion/categorias', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: id, nombre: nombre })
@@ -565,7 +566,7 @@ function guardarCategoriaOrg(e) {
 
         registrarAccion(`Creó nueva categoría "${nombre}"`);
 
-        fetch('http://localhost:8001/api/organizacion/categorias', {
+        fetch('http://127.0.0.1:5000/api/organizacion/categorias', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nombre: nombre })
@@ -595,7 +596,7 @@ function eliminarCategoriaOrg() {
 
         registrarAccion(`Eliminó categoría "${nombre}"`);
 
-        fetch('http://localhost:8001/api/organizacion/categorias/eliminar', {
+        fetch('http://127.0.0.1:5000/api/organizacion/categorias/eliminar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: id })
@@ -695,7 +696,7 @@ function guardarTareaDesdeOrg(e) {
         tareasList.push(nueva);
         registrarAccion(`Creó tarea "${texto}"`);
 
-        fetch('http://localhost:8001/api/organizacion/tareas', {
+        fetch('http://127.0.0.1:5000/api/organizacion/tareas', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(nueva)
@@ -955,7 +956,7 @@ function guardarEventoOrg(e) {
     }
     localStorage.setItem('control_one_eventos', JSON.stringify(eventos));
 
-    fetch('http://localhost:8001/api/organizacion/eventos', {
+    fetch('http://127.0.0.1:5000/api/organizacion/eventos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(nuevoEvento)
@@ -977,7 +978,7 @@ function eliminarEventoOrg() {
         eventos = eventos.filter(e => e.id !== id);
         localStorage.setItem('control_one_eventos', JSON.stringify(eventos));
 
-        fetch('http://localhost:8001/api/organizacion/eventos/eliminar', {
+        fetch('http://127.0.0.1:5000/api/organizacion/eventos/eliminar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: id })
@@ -1030,7 +1031,7 @@ function obtenerEventosStorage() {
 
 async function cargarDatosBackend() {
     try {
-        const res = await fetch('http://localhost:8001/api/organizacion/datos');
+        const res = await fetch('http://127.0.0.1:5000/api/organizacion/datos');
         if (res.ok) {
             const data = await res.json();
             if (data.categorias && data.categorias.length > 0) {

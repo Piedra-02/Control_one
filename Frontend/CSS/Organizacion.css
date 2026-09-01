@@ -37,6 +37,7 @@
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 16px;
+    scrollbar-gutter: stable;
 }
 
 body {
@@ -1169,4 +1170,3 @@ body {
     background: #b2ebf2;
     color: #006064;
 }
-
