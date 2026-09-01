@@ -1,5 +1,3 @@
-
-
 const API_BASE = 'http://127.0.0.1:5000/api';
 
 lucide.createIcons();
@@ -137,7 +135,7 @@ async function cargarHistorial() {
         </div>
       </div>
       <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-        <button class="btn-toggle-auto" onclick="alternarEstadoAutomatizacion('${item.id || index}')" style="background:${activa ? '#e0f2fe' : '#f1f5f9'}; color:${activa ? '#0284c7' : '#64748b'}; border:none; border-radius:4px; padding:4px 8px; font-size:11px; cursor:pointer; font-weight:600;">
+        <button class="btn-toggle-auto" onclick="alternarEstadoAutomatizacion('${item.automatizacion_id || item.id || index}')" style="background:${activa ? '#e0f2fe' : '#f1f5f9'}; color:${activa ? '#0284c7' : '#64748b'}; border:none; border-radius:4px; padding:4px 8px; font-size:11px; cursor:pointer; font-weight:600;">
           ${activa ? 'Activa' : 'Pausada'}
         </button>
         <span class="text-secondary" style="font-size:11px;">${fecha} ${hora}</span>
@@ -151,23 +149,38 @@ async function cargarHistorial() {
   lucide.createIcons();
 }
 
-function alternarEstadoAutomatizacion(idOrIndex) {
+async function alternarEstadoAutomatizacion(idOrIndex) {
+  // Intenta actualizar en la base de datos real primero (solo si es un id
+  // real de la BD, no uno generado localmente como "auto_..." o "exec_...")
+  const esIdReal = idOrIndex && !String(idOrIndex).startsWith('auto_') && !String(idOrIndex).startsWith('exec_');
+  if (esIdReal) {
+    await apiFetch(`/automatizaciones/${idOrIndex}/toggle`, { method: 'POST' });
+  }
+
   let historial = obtenerHistorialLocal();
-  const item = historial.find(h => String(h.id) === String(idOrIndex)) || historial[idOrIndex];
+  const item = historial.find(h => String(h.id) === String(idOrIndex) || String(h.automatizacion_id) === String(idOrIndex)) || historial[idOrIndex];
   if (item) {
     item.activa = item.activa === false ? true : false;
     guardarHistorialLocal(historial);
-    cargarHistorial();
   }
+  await cargarHistorial();
 }
 
-function eliminarAutomatizacion(idOrIndex) {
-  if (confirm('¿Eliminar esta automatización del historial?')) {
-    let historial = obtenerHistorialLocal();
-    historial = historial.filter((h, idx) => String(h.id) !== String(idOrIndex) && String(idx) !== String(idOrIndex));
-    guardarHistorialLocal(historial);
-    cargarHistorial();
+async function eliminarAutomatizacion(idOrIndex) {
+  if (!confirm('¿Eliminar esta automatización del historial?')) return;
+
+  // Intenta eliminar en la base de datos real primero (solo si es un id
+  // real de la BD, no uno generado localmente como "auto_..." o "exec_...")
+  const esIdReal = idOrIndex && !String(idOrIndex).startsWith('auto_') && !String(idOrIndex).startsWith('exec_');
+  if (esIdReal) {
+    await apiFetch(`/automatizaciones/historial/${idOrIndex}`, { method: 'DELETE' });
   }
+
+  let historial = obtenerHistorialLocal();
+  historial = historial.filter((h, idx) => String(h.id) !== String(idOrIndex) && String(idx) !== String(idOrIndex));
+  guardarHistorialLocal(historial);
+
+  await cargarHistorial();
 }
 
 window.alternarEstadoAutomatizacion = alternarEstadoAutomatizacion;
