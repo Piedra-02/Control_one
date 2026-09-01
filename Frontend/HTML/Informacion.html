@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control One - Información</title>
+
+    <!-- Google Fonts: Plus Jakarta Sans y Space Grotesk -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- CSS de Información -->
+    <link rel="stylesheet" href="../CSS/Informacion.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- =========================================
+             1. HEADER SUPERIOR (DESKTOP)
+        ========================================== -->
+        <header class="desktop-header">
+            <!-- Logo -->
+            <a href="Panel principal.html" class="header-logo" title="Control One">
+                <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="logo-fallback">1</span>
+            </a>
+
+            <!-- Barra de búsqueda central -->
+            <div class="desktop-search">
+                <svg class="search-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="desktop-search-input" placeholder="BUSCAR" autocomplete="off">
+            </div>
+
+            <!-- Botones de Acción Derecha -->
+            <div class="desktop-actions">
+                <!-- Stack / Actividades -->
+                <a href="Actividades.html" class="icon-btn" title="Actividades / Capas">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </a>
+
+                <!-- Chip / Automatización -->
+                <a href="Automatizacion.html" class="icon-btn" title="Automatización">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                        <rect x="9" y="9" width="6" height="6"></rect>
+                        <line x1="9" y1="1" x2="9" y2="4"></line>
+                        <line x1="15" y1="1" x2="15" y2="4"></line>
+                        <line x1="9" y1="20" x2="9" y2="23"></line>
+                        <line x1="15" y1="20" x2="15" y2="23"></line>
+                        <line x1="20" y1="9" x2="23" y2="9"></line>
+                        <line x1="20" y1="14" x2="23" y2="14"></line>
+                        <line x1="1" y1="9" x2="4" y2="9"></line>
+                        <line x1="1" y1="14" x2="4" y2="14"></line>
+                    </svg>
+                </a>
+
+                <!-- Chat / Mensajes -->
+                <button class="icon-btn" id="btn-chat" title="Chat / Notificaciones">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </button>
+
+                <!-- Información (Activo) -->
+                <a href="Informacion.html" class="icon-btn active-icon" title="Información">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                </a>
+            </div>
+        </header>
+
+        <!-- =========================================
+             2. HEADER SUPERIOR (MOBILE)
+        ========================================== -->
+        <header class="mobile-header">
+            <a href="Panel principal.html" class="mobile-logo" title="Control One">
+                <img src="../SRC/Logo.png" alt="Control One Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="logo-fallback">1</span>
+            </a>
+            <div class="mobile-nav-pills">
+                <a href="#seccion-favoritos" class="nav-pill active">FAVORITOS</a>
+                <a href="#seccion-historial" class="nav-pill">HISTORIAL</a>
+                <a href="#seccion-suscripciones" class="nav-pill">SUSCRIPCIONES</a>
+            </div>
+        </header>
+
+        <!-- =========================================
+             3. NAVEGACIÓN SECUNDARIA (DESKTOP)
+        ========================================== -->
+        <nav class="desktop-subnav">
+            <div class="subnav-container">
+                <a href="#seccion-favoritos" class="subnav-btn">FAVORITOS</a>
+                <a href="#seccion-historial" class="subnav-btn active">HISTORIAL</a>
+                <a href="#seccion-suscripciones" class="subnav-btn">SUSCRIPCIONES</a>
+            </div>
+        </nav>
+
+        <!-- =========================================
+             4. CONTENIDO PRINCIPAL DE INFORMACIÓN
+        ========================================== -->
+        <main class="informacion-main-layout">
+
+            <!-- =====================================
+                 TARJETA 1: HISTORIAL (GRIS PIZARRA)
+            ====================================== -->
+            <section id="seccion-historial" class="activity-card history-main-card">
+                <!-- Cabecera de Historial -->
+                <div class="card-header-row">
+                    <div class="card-title-group">
+                        <h2>Historial</h2>
+                    </div>
+                    <button class="card-chevron-btn" title="Colapsar / Expandir">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="history-body-container">
+                    <!-- Barra de acento cyan lateral -->
+                    <div class="history-cyan-bar"></div>
+
+                    <!-- Lista de Ítems del Historial -->
+                    <div class="history-list-items" id="history-items-container">
+
+                        <!-- Item 1 -->
+                        <div class="history-item-row" data-hist-id="h1">
+                            <div class="history-time-badge">
+                                <span class="time-hour">22:</span>
+                                <span class="time-min">01</span>
+                            </div>
+                            <div class="history-desc-col">
+                                <span class="history-desc-text">Suscripcion de netflix</span>
+                            </div>
+                        </div>
+
+                        <!-- Item 2 -->
+                        <div class="history-item-row" data-hist-id="h2">
+                            <div class="history-time-badge">
+                                <span class="time-hour">22:</span>
+                                <span class="time-min">06</span>
+                            </div>
+                            <div class="history-desc-col">
+                                <span class="history-desc-text">Nuevo favorito agregado</span>
+                            </div>
+                        </div>
+
+                        <!-- Item 3 -->
+                        <div class="history-item-row" data-hist-id="h3">
+                            <div class="history-time-badge">
+                                <span class="time-hour">22:</span>
+                                <span class="time-min">12</span>
+                            </div>
+                            <div class="history-desc-col">
+                                <span class="history-desc-text">Recordatorio: Feliz cumpleaños mama</span>
+                            </div>
+                        </div>
+
+                        <!-- Item 4 -->
+                        <div class="history-item-row" data-hist-id="h4">
+                            <div class="history-time-badge">
+                                <span class="time-hour">22:</span>
+                                <span class="time-min">33</span>
+                            </div>
+                            <div class="history-desc-col">
+                                <span class="history-desc-text">Revision de correo</span>
+                            </div>
+                        </div>
+
+                        <!-- Item 5 -->
+                        <div class="history-item-row" data-hist-id="h5">
+                            <div class="history-time-badge">
+                                <span class="time-hour">22:</span>
+                                <span class="time-min">56</span>
+                            </div>
+                            <div class="history-desc-col">
+                                <span class="history-desc-text">Suscripcion de Disney</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- =====================================
+                 TARJETA 2: SUSCRIPCIONES (BURDEOS OSCURO)
+            ====================================== -->
+            <section id="seccion-suscripciones" class="activity-card subscriptions-main-card">
+                <!-- Cabecera de Suscripciones -->
+                <div class="card-header-row">
+                    <div class="card-title-group">
+                        <h2>Suscripciones</h2>
+                    </div>
+                    <button class="card-chevron-btn" title="Colapsar / Expandir">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="subscriptions-list-wrapper" id="subscriptions-list-container">
+
+                    <!-- Suscripción 1 -->
+                    <article class="subscription-item-row" data-sub-id="sub1">
+                        <div class="sub-toggle-btn active" title="Activar / Pausar">
+                            <span class="toggle-slider-circle"></span>
+                        </div>
+                        <div class="sub-bookmark-icon">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <span class="sub-name-text">Play Station Plus</span>
+                        <div class="sub-card-icon">
+                            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                        </div>
+                    </article>
+
+                    <!-- Suscripción 2 -->
+                    <article class="subscription-item-row" data-sub-id="sub2">
+                        <div class="sub-toggle-btn active" title="Activar / Pausar">
+                            <span class="toggle-slider-circle"></span>
+                        </div>
+                        <div class="sub-bookmark-icon">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <span class="sub-name-text">Directv Go</span>
+                        <div class="sub-card-icon">
+                            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                        </div>
+                    </article>
+
+                    <!-- Suscripción 3 -->
+                    <article class="subscription-item-row" data-sub-id="sub3">
+                        <div class="sub-toggle-btn active" title="Activar / Pausar">
+                            <span class="toggle-slider-circle"></span>
+                        </div>
+                        <div class="sub-bookmark-icon">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <span class="sub-name-text">DAZN</span>
+                        <div class="sub-card-icon">
+                            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                        </div>
+                    </article>
+
+                    <!-- Suscripción 4 -->
+                    <article class="subscription-item-row" data-sub-id="sub4">
+                        <div class="sub-toggle-btn active" title="Activar / Pausar">
+                            <span class="toggle-slider-circle"></span>
+                        </div>
+                        <div class="sub-bookmark-icon">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <span class="sub-name-text">Spotify</span>
+                        <div class="sub-card-icon">
+                            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                        </div>
+                    </article>
+
+                    <!-- Suscripción 5 -->
+                    <article class="subscription-item-row" data-sub-id="sub5">
+                        <div class="sub-toggle-btn active" title="Activar / Pausar">
+                            <span class="toggle-slider-circle"></span>
+                        </div>
+                        <div class="sub-bookmark-icon">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <span class="sub-name-text">Duolingo Plus</span>
+                        <div class="sub-card-icon">
+                            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                        </div>
+                    </article>
+
+                    <!-- Suscripción 6 -->
+                    <article class="subscription-item-row" data-sub-id="sub6">
+                        <div class="sub-toggle-btn active" title="Activar / Pausar">
+                            <span class="toggle-slider-circle"></span>
+                        </div>
+                        <div class="sub-bookmark-icon">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        </div>
+                        <span class="sub-name-text">Gemini Pro</span>
+                        <div class="sub-card-icon">
+                            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                        </div>
+                    </article>
+
+                </div>
+            </section>
+
+
+            <!-- =====================================
+                 TARJETA 3: FAVORITOS (VERDE PETRÓLEO / TEAL)
+            ====================================== -->
+            <section id="seccion-favoritos" class="activity-card favorites-main-card">
+                <!-- Cabecera de Favoritos -->
+                <div class="card-header-row">
+                    <div class="card-title-group">
+                        <h2>Favoritos</h2>
+                    </div>
+                    <div class="card-header-actions">
+                        <button class="fav-edit-header-btn" id="btn-edit-favoritos" title="Administrar Favoritos">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </button>
+                        <button class="card-chevron-btn" title="Colapsar / Expandir">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="favorites-list-container" id="favorites-list-container">
+
+                    <!-- Favorito 1 -->
+                    <article class="favorite-item-row" data-fav-id="fav1">
+                        <div class="fav-star-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#eab308" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                        </div>
+                        <span class="fav-item-text">Cumpleaños de Mama</span>
+                    </article>
+
+                    <!-- Favorito 2 -->
+                    <article class="favorite-item-row" data-fav-id="fav2">
+                        <div class="fav-star-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#eab308" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                        </div>
+                        <span class="fav-item-text">Revision de correo Social de Discrod</span>
+                    </article>
+
+                    <!-- Favorito 3 -->
+                    <article class="favorite-item-row" data-fav-id="fav3">
+                        <div class="fav-star-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#eab308" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                        </div>
+                        <span class="fav-item-text">Suscripcion de Disney</span>
+                    </article>
+
+                </div>
+            </section>
+
+        </main>
+
+
+        <!-- =========================================
+             5. BOTTOM NAVIGATION BAR (DOCK EN MOBILE)
+        ========================================== -->
+        <nav class="mobile-bottom-dock">
+            <!-- Capas / Actividades -->
+            <a href="Actividades.html" class="dock-btn" title="Capas">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+            </a>
+
+            <!-- Info (Activo) -->
+            <a href="Informacion.html" class="dock-btn active" title="Información">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+            </a>
+
+            <!-- Botón Central de Búsqueda (Elevado) -->
+            <button class="dock-search-btn" id="mobile-search-trigger" title="Buscar">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </button>
+
+            <!-- Chip / Automatización -->
+            <a href="Automatizacion.html" class="dock-btn" title="Automatización">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                    <rect x="9" y="9" width="6" height="6"></rect>
+                    <line x1="9" y1="1" x2="9" y2="4"></line>
+                    <line x1="15" y1="1" x2="15" y2="4"></line>
+                    <line x1="9" y1="20" x2="9" y2="23"></line>
+                    <line x1="15" y1="20" x2="15" y2="23"></line>
+                    <line x1="20" y1="9" x2="23" y2="9"></line>
+                    <line x1="20" y1="14" x2="23" y2="14"></line>
+                    <line x1="1" y1="9" x2="4" y2="9"></line>
+                    <line x1="1" y1="14" x2="4" y2="14"></line>
+                </svg>
+            </a>
+
+            <!-- Chat -->
+            <button class="dock-btn" id="mobile-chat-btn" title="Chat">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </button>
+        </nav>
+
+    </div>
+
+
+    <!-- =========================================
+         TARJETAS MODALES FLOTANTES (EN LA MISMA PÁGINA)
+    ========================================== -->
+    <div class="modal-overlay" id="modal-overlay">
+
+        <!-- 1. Modal: Crear / Modificar Suscripción -->
+        <div class="modal-card" id="modal-suscripcion">
+            <div class="modal-card-header modal-header-sub">
+                <div class="modal-header-icon-title">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                    <h3 id="modal-sub-titulo">Suscripción</h3>
+                </div>
+                <button class="modal-close-btn" onclick="cerrarModales()">&times;</button>
+            </div>
+            <form id="form-suscripcion" onsubmit="guardarSuscripcionModal(event)">
+                <input type="hidden" id="input-sub-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="input-sub-nombre">Nombre del Servicio</label>
+                        <input type="text" id="input-sub-nombre" placeholder="Ej. Netflix, Spotify, Claude Pro" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group flex-1">
+                            <label for="input-sub-monto">Monto Mensual ($)</label>
+                            <input type="number" step="0.01" id="input-sub-monto" value="9.99" required>
+                        </div>
+                        <div class="form-group flex-1">
+                            <label for="input-sub-categoria">Categoría</label>
+                            <select id="input-sub-categoria">
+                                <option value="Streaming" selected>Streaming</option>
+                                <option value="Gaming">Gaming</option>
+                                <option value="Música">Música</option>
+                                <option value="Inteligencia Artificial">IA / Software</option>
+                                <option value="General">General</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-danger" id="btn-eliminar-sub" style="display: none;" onclick="eliminarSuscripcionModal()">Eliminar</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModales()">Cancelar</button>
+                    <button type="submit" class="btn-primary btn-primary-sub">Guardar Suscripción</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 2. Modal: Crear / Modificar Favorito -->
+        <div class="modal-card" id="modal-favorito">
+            <div class="modal-card-header modal-header-fav">
+                <div class="modal-header-icon-title">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#eab308" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <h3 id="modal-fav-titulo-header">Favorito</h3>
+                </div>
+                <button class="modal-close-btn" onclick="cerrarModales()">&times;</button>
+            </div>
+            <form id="form-favorito" onsubmit="guardarFavoritoModal(event)">
+                <input type="hidden" id="input-fav-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="input-fav-titulo">Título del Elemento Favorito</label>
+                        <input type="text" id="input-fav-titulo" placeholder="Ej. Cumpleaños de Mama" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-danger" id="btn-eliminar-fav" style="display: none;" onclick="eliminarFavoritoModal()">Eliminar</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModales()">Cancelar</button>
+                    <button type="submit" class="btn-primary btn-primary-fav">Guardar Favorito</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Script de interactividad y conexión Python -->
+    <script src="../../backend/JS/informacion.js"></script>
+
+</body>
+
+</html>
