@@ -179,6 +179,7 @@ body {
   border-radius: var(--radius-card);
   padding: 20px;
   color: var(--navy);
+  border: 2px solid #111111;
 }
 .card-neutral h2 {
   font-family: var(--font-display);
@@ -235,6 +236,12 @@ input::placeholder { color: var(--grey); }
 .btn-danger { background: var(--error); }
 .btn-success:hover, .btn-danger:hover { filter: brightness(1.05); transform: translateY(-1px); }
 .btn:active { transform: translateY(0); }
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: none;
+  transform: none;
+}
 .icon-btn {
   background: none;
   border: none;
@@ -340,6 +347,7 @@ input::placeholder { color: var(--grey); }
   min-height: 380px;
   display: flex;
   flex-direction: column;
+  border: 2px solid #111111;
 }
 .otros-row {
   display: flex;
@@ -388,6 +396,7 @@ input::placeholder { color: var(--grey); }
   overflow-y: auto;
   position: relative;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.25);
+  border: 2px solid #111111;
   animation: modalPopIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 @keyframes modalPopIn {
@@ -439,4 +448,54 @@ input::placeholder { color: var(--grey); }
 }
 @media (max-width: 860px) {
   .app-shell { padding: 16px; }
+}
+
+/* ---------- Dock inferior (móvil, igual al resto de la app) ---------- */
+.mobile-bottom-dock { display: none; }
+
+@media (max-width: 768px) {
+  body { padding-bottom: 85px; }
+
+  .mobile-bottom-dock {
+    position: fixed;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(92%, 360px);
+    height: 52px;
+    background: #fff;
+    border-radius: 35px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+    border: 1.8px solid #6cbcd8;
+    z-index: 1000;
+  }
+  .dock-btn {
+    background: transparent;
+    border: none;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 6px;
+    cursor: pointer;
+  }
+  .dock-search-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2.2px solid #0096db;
+    color: #0096db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transform: translateY(-5px);
+    box-shadow: 0 3px 8px rgba(0, 150, 219, 0.3);
+  }
 }

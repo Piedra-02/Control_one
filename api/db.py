@@ -9,6 +9,10 @@ eliminar) para que app.py no tenga SQL suelto en las rutas.
 import os
 import uuid
 import datetime
+import ssl
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import psycopg2
 import psycopg2.extras
 from dotenv import load_dotenv
@@ -335,10 +339,19 @@ class RecordatorioPanelRepository:
     def __init__(self, bd: BaseDeDatos):
         self.bd = bd
 
-    def listar(self, solo_pendientes=False, limite=10):
-        sql = "SELECT id, titulo, fecha_hora, enviado, tarea_id, evento_id FROM recordatorios"
+    def listar(self, solo_pendientes=False, limite=10, filtro="todos"):
+        sql = "SELECT id, titulo, fecha_hora, enviado, tarea_id, evento_id, oculto, archivado FROM recordatorios"
+        condiciones = []
+        if filtro == "ocultos":
+            condiciones.append("oculto = TRUE")
+        elif filtro == "archivados":
+            condiciones.append("archivado = TRUE")
+        else:
+            condiciones.append("oculto = FALSE AND archivado = FALSE")
         if solo_pendientes:
-            sql += " WHERE enviado = FALSE"
+            condiciones.append("enviado = FALSE")
+        if condiciones:
+            sql += " WHERE " + " AND ".join(condiciones)
         sql += " ORDER BY fecha_hora ASC LIMIT %s"
         filas = self.bd.ejecutar(sql, (limite,))
         for r in filas:
@@ -347,6 +360,23 @@ class RecordatorioPanelRepository:
             r["subtitulo"] = "Recordatorio programado"
             r["destacado"] = False
         return filas
+
+    def actualizar_flags(self, recordatorio_id, oculto=None, archivado=None):
+        campos, valores = [], []
+        if oculto is not None:
+            campos.append("oculto = %s")
+            valores.append(oculto)
+        if archivado is not None:
+            campos.append("archivado = %s")
+            valores.append(archivado)
+        if not campos:
+            return None
+        valores.append(recordatorio_id)
+        return self.bd.ejecutar(
+            f"UPDATE recordatorios SET {', '.join(campos)} WHERE id = %s RETURNING id, titulo, oculto, archivado",
+            tuple(valores),
+            retornar="one",
+        )
 
     def crear(self, titulo, fecha_hora, tarea_id=None, evento_id=None):
         return self.bd.ejecutar(
@@ -390,6 +420,229 @@ class OrganizacionRepository:
                 "total_categorias": len(categorias),
             },
         }
+
+
+class NotaRepository:
+    """La pantalla de Actividades maneja una sola nota activa a la vez
+    (no una lista completa), así que siempre se opera sobre la nota
+    más antigua/única existente, creándola si todavía no existe."""
+
+    def __init__(self, bd: BaseDeDatos):
+        self.bd = bd
+
+    def obtener_activa(self):
+        existente = self.bd.ejecutar(
+            "SELECT id, titulo, contenido FROM notas ORDER BY fecha_creacion ASC LIMIT 1",
+            retornar="one",
+        )
+        if existente:
+            return existente
+        return self.bd.ejecutar(
+            """INSERT INTO notas (titulo, contenido) VALUES ('Título de la nota', 'contenido de la nota')
+               RETURNING id, titulo, contenido""",
+            retornar="one",
+        )
+
+    def guardar_activa(self, titulo, contenido):
+        activa = self.obtener_activa()
+        return self.bd.ejecutar(
+            "UPDATE notas SET titulo = %s, contenido = %s WHERE id = %s RETURNING id, titulo, contenido",
+            (titulo, contenido, activa["id"]),
+            retornar="one",
+        )
+
+    def listar(self):
+        return self.bd.ejecutar(
+            "SELECT id, titulo, contenido, fecha_actualizacion FROM notas ORDER BY fecha_actualizacion DESC"
+        )
+
+
+class FavoritoHistorialHelper:
+    """Favoritos e Historial solo guardan tipo_elemento + elemento_id;
+    esta clase resuelve el título real consultando la tabla correcta."""
+
+    TABLAS = {
+        "tarea": ("tareas", "titulo"),
+        "evento": ("eventos", "titulo"),
+        "nota": ("notas", "titulo"),
+        "archivo": ("archivos", "nombre"),
+        "suscripcion": ("suscripciones", "nombre"),
+    }
+
+    def __init__(self, bd: BaseDeDatos):
+        self.bd = bd
+
+    def titulo_de(self, tipo_elemento, elemento_id):
+        info = self.TABLAS.get(tipo_elemento)
+        if not info or not elemento_id:
+            return "(elemento general)"
+        tabla, columna = info
+        fila = self.bd.ejecutar(
+            f"SELECT {columna} AS titulo FROM {tabla} WHERE id = %s", (elemento_id,), retornar="one"
+        )
+        return fila["titulo"] if fila else "(elemento eliminado)"
+
+
+class FavoritoRepository:
+    def __init__(self, bd: BaseDeDatos, helper: FavoritoHistorialHelper):
+        self.bd = bd
+        self.helper = helper
+
+    def listar(self):
+        favoritos = self.bd.ejecutar(
+            "SELECT id, tipo_elemento, elemento_id, fecha_agregado FROM favoritos ORDER BY fecha_agregado DESC"
+        )
+        for f in favoritos:
+            f["titulo"] = self.helper.titulo_de(f["tipo_elemento"], f["elemento_id"])
+        return favoritos
+
+    def crear(self, titulo, tipo_elemento="general", elemento_id=None):
+        # Como "general" no es un tipo válido en la base (solo referencias
+        # reales), un favorito "libre" se guarda como una nota nueva y se
+        # referencia esa nota, para no perder el título que escribió el usuario.
+        if tipo_elemento not in FavoritoHistorialHelper.TABLAS:
+            nota = self.bd.ejecutar(
+                "INSERT INTO notas (titulo, contenido) VALUES (%s, '') RETURNING id",
+                (titulo,),
+                retornar="one",
+            )
+            tipo_elemento = "nota"
+            elemento_id = nota["id"]
+
+        nuevo = self.bd.ejecutar(
+            """INSERT INTO favoritos (tipo_elemento, elemento_id)
+               VALUES (%s, %s) RETURNING id, tipo_elemento, elemento_id, fecha_agregado""",
+            (tipo_elemento, elemento_id),
+            retornar="one",
+        )
+        nuevo["titulo"] = titulo
+        return nuevo
+
+    def eliminar(self, favorito_id):
+        self.bd.ejecutar("DELETE FROM favoritos WHERE id = %s", (favorito_id,), retornar="none")
+
+
+class HistorialGeneralRepository:
+    def __init__(self, bd: BaseDeDatos, helper: FavoritoHistorialHelper):
+        self.bd = bd
+        self.helper = helper
+
+    def listar(self, limite=30):
+        filas = self.bd.ejecutar(
+            "SELECT id, tipo_elemento, elemento_id, accion, fecha FROM historial ORDER BY fecha DESC LIMIT %s",
+            (limite,),
+        )
+        for h in filas:
+            titulo = self.helper.titulo_de(h["tipo_elemento"], h["elemento_id"])
+            h["descripcion"] = f"{h['accion'].capitalize()}: {titulo}"
+            fecha_str = h.get("fecha") or ""
+            hora = fecha_str[11:16] if len(fecha_str) >= 16 else ""
+            h["hora"] = hora
+            if ":" in hora:
+                h["hora_linea1"], h["hora_linea2"] = hora.split(":")
+            else:
+                h["hora_linea1"], h["hora_linea2"] = "", ""
+        return filas
+
+    def registrar(self, tipo_elemento, elemento_id, accion):
+        return self.bd.ejecutar(
+            """INSERT INTO historial (tipo_elemento, elemento_id, accion)
+               VALUES (%s, %s, %s) RETURNING id""",
+            (tipo_elemento, elemento_id, accion),
+            retornar="one",
+        )
+
+    def limpiar(self):
+        self.bd.ejecutar("DELETE FROM historial", retornar="none")
+
+
+class SuscripcionRepository:
+    def __init__(self, bd: BaseDeDatos, historial: "HistorialGeneralRepository" = None):
+        self.bd = bd
+        self.historial = historial
+
+    def listar(self):
+        return self.bd.ejecutar(
+            "SELECT id, nombre, monto, moneda, activa, categoria, metodo_pago FROM suscripciones ORDER BY nombre ASC"
+        )
+
+    def crear(self, nombre, monto=9.99, moneda="USD", categoria="General", metodo_pago=None):
+        nueva = self.bd.ejecutar(
+            """INSERT INTO suscripciones (nombre, monto, moneda, categoria, metodo_pago)
+               VALUES (%s, %s, %s, %s, %s)
+               RETURNING id, nombre, monto, moneda, activa, categoria, metodo_pago""",
+            (nombre, monto, moneda, categoria, metodo_pago),
+            retornar="one",
+        )
+        if self.historial:
+            self.historial.registrar("suscripcion", nueva["id"], "creado")
+        return nueva
+
+    def modificar(self, sub_id, nombre, monto, categoria):
+        return self.bd.ejecutar(
+            """UPDATE suscripciones SET nombre = %s, monto = %s, categoria = %s
+               WHERE id = %s RETURNING id, nombre, monto, moneda, activa, categoria, metodo_pago""",
+            (nombre, monto, categoria, sub_id),
+            retornar="one",
+        )
+
+    def toggle(self, sub_id, activa=None):
+        if activa is None:
+            actual = self.bd.ejecutar("SELECT activa FROM suscripciones WHERE id = %s", (sub_id,), retornar="one")
+            activa = not actual["activa"] if actual else True
+        resultado = self.bd.ejecutar(
+            "UPDATE suscripciones SET activa = %s WHERE id = %s RETURNING id, nombre, activa",
+            (activa, sub_id),
+            retornar="one",
+        )
+        if self.historial and resultado:
+            estado = "activada" if activa else "pausada"
+            self.historial.registrar("suscripcion", sub_id, "editado")
+        return resultado
+
+    def eliminar(self, sub_id):
+        self.bd.ejecutar("DELETE FROM suscripciones WHERE id = %s", (sub_id,), retornar="none")
+
+
+class NotificadorCorreo:
+    """Envía un correo por Gmail cada vez que se crea una suscripción,
+    recordatorio, tarea o evento, si el usuario lo tiene activado en
+    Configuración de correos. Reutiliza las mismas credenciales que
+    gmail_notifier.py (GMAIL_USUARIO / GMAIL_APP_PASSWORD en el .env)."""
+
+    def __init__(self, bd: BaseDeDatos):
+        self.bd = bd
+        self.remitente = os.getenv("GMAIL_USUARIO")
+        self.contrasena_app = os.getenv("GMAIL_APP_PASSWORD")
+
+    def notificar_creacion(self, tipo, titulo, detalle=""):
+        if not self.remitente or not self.contrasena_app:
+            print("[AVISO] GMAIL_USUARIO/GMAIL_APP_PASSWORD no configurados; no se envía correo.")
+            return
+
+        config = self.bd.ejecutar(
+            "SELECT correo_notificacion, notificar_por_correo FROM configuracion WHERE id = 1",
+            retornar="one",
+        )
+        if not config or not config.get("notificar_por_correo") or not config.get("correo_notificacion"):
+            return
+
+        asunto = f"Control One: nuevo/a {tipo} — {titulo}"
+        cuerpo = f"Se creó {tipo} '{titulo}' en Control One.\n\n{detalle}"
+
+        try:
+            mensaje = MIMEMultipart()
+            mensaje["From"] = self.remitente
+            mensaje["To"] = config["correo_notificacion"]
+            mensaje["Subject"] = asunto
+            mensaje.attach(MIMEText(cuerpo, "plain"))
+
+            contexto = ssl.create_default_context()
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=contexto) as servidor:
+                servidor.login(self.remitente, self.contrasena_app)
+                servidor.sendmail(self.remitente, config["correo_notificacion"], mensaje.as_string())
+        except Exception as e:
+            print(f"[AVISO] No se pudo enviar el correo de notificación: {e}")
 
 
 class PanelResumenRepository:

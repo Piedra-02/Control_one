@@ -12,6 +12,7 @@ let estadoInformacion = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
     initNavScroll();
     initSubscriptionToggles();
     initFavoritesInteractions();
@@ -72,7 +73,7 @@ function initSubscriptionToggles() {
             row.classList.toggle('paused', !isActive);
 
             // Enviar a Python Backend
-            fetch('http://localhost:8003/api/informacion/suscripciones/toggle', {
+            fetch('http://127.0.0.1:5000/api/informacion/suscripciones/toggle', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: subId, activa: isActive })
@@ -89,7 +90,16 @@ function initSubscriptionToggles() {
         abrirModalSuscripcion(subId);
     });
 
-    // Botón para agregar suscripción en cabecera
+    // Botón "+" en la cabecera para agregar suscripción
+    const btnAgregarSub = document.getElementById('btn-agregar-suscripcion');
+    if (btnAgregarSub) {
+        btnAgregarSub.addEventListener('click', (e) => {
+            e.stopPropagation();
+            abrirModalSuscripcion();
+        });
+    }
+
+    // Botón para agregar suscripción en cabecera (doble clic, se conserva como atajo)
     const headerSuscripciones = document.querySelector('.subscriptions-main-card .card-header-row');
     if (headerSuscripciones) {
         headerSuscripciones.style.cursor = 'pointer';
@@ -141,40 +151,14 @@ function guardarSuscripcionModal(e) {
 
     if (!nombre) return;
 
-    if (id) {
-        // Modificar existente
-        const row = document.querySelector(`.subscription-item-row[data-sub-id="${id}"]`);
-        if (row) {
-            const nameSpan = row.querySelector('.sub-name-text');
-            if (nameSpan) nameSpan.textContent = nombre;
-        }
-        const sub = estadoInformacion.suscripciones.find(s => String(s.id) === String(id));
-        if (sub) {
-            sub.nombre = nombre;
-            sub.monto = monto;
-            sub.categoria = cat;
-        }
-    } else {
-        // Crear nueva
-        const newId = 'sub_' + Date.now();
-        const nuevaSub = {
-            id: newId,
-            nombre: nombre,
-            monto: monto,
-            categoria: cat,
-            activa: true
-        };
-        estadoInformacion.suscripciones.push(nuevaSub);
-        renderizarSuscripcionEnLista(nuevaSub, true);
+    fetch('http://127.0.0.1:5000/api/informacion/suscripciones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id || null, nombre, monto, categoria: cat })
+    })
+        .then(() => sincronizarConBackendPython())
+        .catch(() => {});
 
-        fetch('http://localhost:8003/api/informacion/suscripciones', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(nuevaSub)
-        }).catch(() => {});
-    }
-
-    localStorage.setItem('control_one_suscripciones', JSON.stringify(estadoInformacion.suscripciones));
     cerrarModales();
 }
 
@@ -216,17 +200,13 @@ function eliminarSuscripcionModal() {
     if (!id) return;
 
     if (confirm('¿Deseas eliminar esta suscripción?')) {
-        const row = document.querySelector(`.subscription-item-row[data-sub-id="${id}"]`);
-        if (row) row.remove();
-
-        estadoInformacion.suscripciones = estadoInformacion.suscripciones.filter(s => String(s.id) !== String(id));
-        localStorage.setItem('control_one_suscripciones', JSON.stringify(estadoInformacion.suscripciones));
-
-        fetch('http://localhost:8003/api/informacion/suscripciones/eliminar', {
+        fetch('http://127.0.0.1:5000/api/informacion/suscripciones/eliminar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id })
-        }).catch(() => {});
+            body: JSON.stringify({ id })
+        })
+            .then(() => sincronizarConBackendPython())
+            .catch(() => {});
 
         cerrarModales();
     }
@@ -290,32 +270,25 @@ function guardarFavoritoModal(e) {
     if (!titulo) return;
 
     if (id) {
+        // Nota: el título de un favorito existente se deriva del elemento
+        // real al que apunta (tarea, evento, nota...), así que renombrarlo
+        // aquí solo actualiza la vista; para cambiarlo de verdad hay que
+        // editar el elemento original desde su propia pantalla.
         const row = document.querySelector(`.favorite-item-row[data-fav-id="${id}"]`);
         if (row) {
             const span = row.querySelector('.fav-item-text');
             if (span) span.textContent = titulo;
         }
-        const fav = estadoInformacion.favoritos.find(f => String(f.id) === String(id));
-        if (fav) fav.titulo = titulo;
     } else {
-        const newId = 'fav_' + Date.now();
-        const nuevoFav = {
-            id: newId,
-            titulo: titulo,
-            tipo_elemento: 'general',
-            fecha_agregado: new Date().toISOString()
-        };
-        estadoInformacion.favoritos.push(nuevoFav);
-        renderizarFavoritoEnLista(nuevoFav, true);
-
-        fetch('http://localhost:8003/api/informacion/favoritos', {
+        fetch('http://127.0.0.1:5000/api/informacion/favoritos', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(nuevoFav)
-        }).catch(() => {});
+            body: JSON.stringify({ titulo, tipo_elemento: 'general' })
+        })
+            .then(() => sincronizarConBackendPython())
+            .catch(() => {});
     }
 
-    localStorage.setItem('control_one_favoritos', JSON.stringify(estadoInformacion.favoritos));
     cerrarModales();
 }
 
@@ -348,17 +321,13 @@ function eliminarFavoritoModal() {
     if (!id) return;
 
     if (confirm('¿Deseas eliminar este favorito?')) {
-        const row = document.querySelector(`.favorite-item-row[data-fav-id="${id}"]`);
-        if (row) row.remove();
-
-        estadoInformacion.favoritos = estadoInformacion.favoritos.filter(f => String(f.id) !== String(id));
-        localStorage.setItem('control_one_favoritos', JSON.stringify(estadoInformacion.favoritos));
-
-        fetch('http://localhost:8003/api/informacion/favoritos/eliminar', {
+        fetch('http://127.0.0.1:5000/api/informacion/favoritos/eliminar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: id })
-        }).catch(() => {});
+            body: JSON.stringify({ id })
+        })
+            .then(() => sincronizarConBackendPython())
+            .catch(() => {});
 
         cerrarModales();
     }
@@ -475,7 +444,7 @@ function cargarDatosLocales() {
 
 async function sincronizarConBackendPython() {
     try {
-        const res = await fetch('http://localhost:8003/api/informacion/resumen', {
+        const res = await fetch('http://127.0.0.1:5000/api/informacion/resumen', {
             signal: AbortSignal.timeout(1500)
         });
         if (!res.ok) return;
@@ -485,9 +454,72 @@ async function sincronizarConBackendPython() {
         estadoInformacion.historial = data.historial || [];
         estadoInformacion.suscripciones = data.suscripciones || [];
 
+        renderizarDesdeBackend(data);
         console.log('[Control One - Información] Sincronizado exitosamente con Python Backend');
     } catch (e) {
         console.log('[Control One - Información] Operando en modo local/desconectado');
+    }
+}
+
+/**
+ * Reemplaza las tarjetas de ejemplo por las reales de la base de datos,
+ * usando la misma estructura y clases CSS del diseño original.
+ */
+function renderizarDesdeBackend(data) {
+    // --- FAVORITOS ---
+    const favList = document.getElementById('favorites-list-container');
+    if (favList && Array.isArray(data.favoritos)) {
+        favList.innerHTML = data.favoritos.map(f => `
+            <article class="favorite-item-row" data-fav-id="${f.id}">
+                <div class="fav-star-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#eab308" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+                <span class="fav-item-text">${escapeHTML(f.titulo)}</span>
+            </article>
+        `).join('') || '<p style="padding:8px;opacity:.7;">Aún no tienes favoritos.</p>';
+    }
+
+    // --- HISTORIAL ---
+    const histList = document.getElementById('history-items-container');
+    if (histList && Array.isArray(data.historial)) {
+        histList.innerHTML = data.historial.map(h => `
+            <div class="history-item-row" data-hist-id="${h.id}">
+                <div class="history-time-badge">
+                    <span class="time-hour">${h.hora_linea1 || ''}</span>
+                    <span class="time-min">${h.hora_linea2 || ''}</span>
+                </div>
+                <div class="history-desc-col">
+                    <span class="history-desc-text">${escapeHTML(h.descripcion)}</span>
+                </div>
+            </div>
+        `).join('') || '<p style="padding:8px;opacity:.7;">Aún no hay actividad registrada.</p>';
+        initHistoryInteractions();
+    }
+
+    // --- SUSCRIPCIONES ---
+    const subList = document.getElementById('subscriptions-list-container');
+    if (subList && Array.isArray(data.suscripciones)) {
+        subList.innerHTML = data.suscripciones.map(s => `
+            <article class="subscription-item-row ${!s.activa ? 'paused' : ''}" data-sub-id="${s.id}">
+                <div class="sub-toggle-btn ${s.activa ? 'active' : ''}" title="Activar / Pausar">
+                    <span class="toggle-slider-circle"></span>
+                </div>
+                <div class="sub-bookmark-icon">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <span class="sub-name-text">${escapeHTML(s.nombre)}</span>
+                <div class="sub-card-icon">
+                    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                    </svg>
+                </div>
+            </article>
+        `).join('') || '<p style="padding:8px;opacity:.7;">Aún no tienes suscripciones.</p>';
     }
 }
 

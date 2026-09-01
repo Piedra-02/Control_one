@@ -47,6 +47,7 @@
 html {
     scroll-behavior: smooth;
     scroll-padding-top: 20px;
+    scrollbar-gutter: stable;
 }
 
 body {
@@ -58,7 +59,7 @@ body {
 }
 
 .app {
-    width: min(100%, 1060px);
+    width: min(100%, 1020px);
     margin: 0 auto;
     padding: 18px 22px 40px;
 }

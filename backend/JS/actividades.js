@@ -14,6 +14,7 @@ let estadoActividades = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
     initNavScroll();
     initEmailInteractions();
     initFolderInteractions();
@@ -128,7 +129,7 @@ function toggleEstrellaCorreo(correoId, rowElem) {
     }
 
     // Enviar a Python
-    fetch('http://localhost:8002/api/actividades/correos/destacado', {
+    fetch('http://127.0.0.1:5000/api/actividades/correos/destacado', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: correoId, destacado: isDestacado })
@@ -186,7 +187,7 @@ function guardarCorreoNuevo(e) {
 
     // Guardar en Storage y Backend
     guardarCorreoEnStorage(nuevoCorreo);
-    fetch('http://localhost:8002/api/actividades/correos', {
+    fetch('http://127.0.0.1:5000/api/actividades/correos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(nuevoCorreo)
@@ -273,7 +274,7 @@ function eliminarCorreoDetalle() {
         estadoActividades.correos = estadoActividades.correos.filter(c => String(c.id) !== String(id));
         localStorage.setItem('control_one_correos', JSON.stringify(estadoActividades.correos));
 
-        fetch('http://localhost:8002/api/actividades/correos/eliminar', {
+        fetch('http://127.0.0.1:5000/api/actividades/correos/eliminar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: id })
@@ -367,7 +368,7 @@ function agregarArchivoCarpetaPrompt() {
 
     abrirModalCarpeta(folderId, document.getElementById('modal-carpeta-titulo').textContent.replace('Carpeta: ', ''));
 
-    fetch('http://localhost:8002/api/actividades/archivos', {
+    fetch('http://127.0.0.1:5000/api/actividades/archivos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ carpeta_id: folderId, nombre: nombre.trim() })
@@ -382,7 +383,7 @@ function eliminarArchivoUI(archivoId, folderId) {
         }
         abrirModalCarpeta(folderId, document.getElementById('modal-carpeta-titulo').textContent.replace('Carpeta: ', ''));
 
-        fetch('http://localhost:8002/api/actividades/archivos/eliminar', {
+        fetch('http://127.0.0.1:5000/api/actividades/archivos/eliminar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ carpeta_id: folderId, archivo_id: archivoId })
@@ -427,7 +428,7 @@ function initNotesEditor() {
             localStorage.setItem('control_one_nota_activa', JSON.stringify(estadoActividades.notaActual));
 
             // Enviar a Python Backend
-            fetch('http://localhost:8002/api/actividades/notas', {
+            fetch('http://127.0.0.1:5000/api/actividades/notas', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: 'n1', titulo: tit, contenido: cont })
@@ -554,7 +555,7 @@ function cargarDatosLocales() {
 
 async function sincronizarConBackendPython() {
     try {
-        const res = await fetch('http://localhost:8002/api/actividades/resumen', {
+        const res = await fetch('http://127.0.0.1:5000/api/actividades/resumen', {
             signal: AbortSignal.timeout(1500)
         });
         if (!res.ok) return;
