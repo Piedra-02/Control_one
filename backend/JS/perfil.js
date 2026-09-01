@@ -325,9 +325,9 @@ function abrirModalLogin() {
         </svg>
       </div>
       <label class="login-label" for="mUsuario">Nombre de usuario</label>
-      <input class="login-input" type="text" id="mUsuario" autocomplete="username">
+      <input class="login-input" type="text" id="mUsuario" placeholder="Ingresa tu usuario" autocomplete="username">
       <label class="login-label" for="mContrasena">Contraseña</label>
-      <input class="login-input" type="password" id="mContrasena" autocomplete="current-password">
+      <input class="login-input" type="password" id="mContrasena" placeholder="Ingresa tu contraseña" autocomplete="current-password">
       <p class="login-error hidden" id="loginError"></p>
       <button class="login-submit-btn estado-normal" id="mBtnLogin">Iniciar sesión</button>
       <div class="login-footer">
